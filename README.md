@@ -1,13 +1,4 @@
-<<<<<<< HEAD
 # previousExamSystem
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-# previousExamSystem
-=======
-=======
-# previousExamSystem
->>>>>>> 1a5fea0 (init model with express and react template)
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
