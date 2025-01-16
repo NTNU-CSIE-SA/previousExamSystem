@@ -1,76 +1,24 @@
 // TODO
-export interface Application {
-    email: string;
-    created: string;
-    updated: string;
-    status: string;
-}
 
 export interface Profile {
-    email: string;
+    school_id: string;
     name: string;
-    gender: string;
-    school: string;
-    birth: string;
-    personal_id: string;
-    phone: string;
-    blood_type: string;
-    facebook: string;
-    parent_name: string;
-    parent_relation: string;
-    parent_phone: string;
-    food_type: string;
-    allergy_source: string;
-    disease: string;
-    clothes_size: string;
-    self_intro: string;
-    motivation: string;
-    skill_experienced: string;
-    skill_mastered: string;
+    password: string;
+    ban: string;
+}
+export interface Document {
+    id: number;
+    upload: string;
+    upload_id: string;
+    pdf_locate: string;
+    subject: string;
+    semester: string;
+    exam_type: string;
+    varified: number;
 }
 
-export interface TaskProgress {
-    email: string;
-    profile: string;
-    avatar: string;
-    quiz: string;
-    // github: string;
-}
-
-export interface Voting {
-    email: string;
-    target: string;
-    vote: number;
-}
-
-export interface UserControl {
-    email: string;
-    can_update_profile: number;
-    can_apply: number;
-    can_give_up: number;
-    can_update_additional_info: number;
-}
-
-export interface Attachment {
-    email: string;
-    file: string;
-    time: string;
-}
-
-export interface Payment {
-    email: string;
-    account: string;
-    time: string;
-    updated: string;
-    correct: string;
-}
 
 export interface Database {
-    Application: Application;
     Profile: Profile;
-    TaskProgress: TaskProgress;
-    Voting: Voting;
-    UserControl: UserControl;
-    Attachment: Attachment;
-    Payment: Payment;
+    Document: Document;
 }
