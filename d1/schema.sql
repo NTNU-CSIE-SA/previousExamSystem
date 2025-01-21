@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS Profile (
     name TEXT,
     password TEXT NOT NULL,
     ban_until TEXT,-- end time
+    admin_level INT NOT NULL,
 );
 
 CREATE TABLE IF NOT EXISTS Document (
@@ -14,4 +15,10 @@ CREATE TABLE IF NOT EXISTS Document (
     semester TEXT NOT NULL,
     exam_type TEXT NOT NULL,
     varified INT NOT NULL,
+);
+
+CREATE TABLE IF NOT EXISTS Login (
+    token TEXT NOT NULL PRIMARY,
+    school_id TEXT NOT NULL,
+    expired_time TEXT NOT NULL,
 );
