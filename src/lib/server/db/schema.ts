@@ -4,12 +4,12 @@ export interface Profile {
     school_id: string;
     name: string;
     password: string;
-    ban: string;
+    ban_until: string;
 }
 export interface Document {
     id: number;
-    upload: string;
-    upload_id: string;
+    upload_time: string;
+    uploader_id: string;
     pdf_locate: string;
     subject: string;
     semester: string;
