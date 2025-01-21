@@ -14,7 +14,7 @@ export interface Document {
     subject: string;
     semester: string;
     exam_type: string;
-    varified: number;
+    verified: number;
 }
 
 
