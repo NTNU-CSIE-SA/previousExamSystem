@@ -14,7 +14,7 @@ export const db = new Kysely<Database>({dialect});
 export const loadSchema = () => {
     try {
       // 讀取 SQL 檔案
-      const SQL:string = fs.readFileSync('../../../d1/schema.sql', 'utf-8');
+      const SQL:string = fs.readFileSync('./d1/schema.sql', 'utf-8');
       const stmts = SQL.split(';')
 			  .map((s) => s.trim())
 			  .filter((s) => s.length > 0);
