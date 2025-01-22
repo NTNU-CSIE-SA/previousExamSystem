@@ -8,6 +8,7 @@ export default function Navbar() {
         師大資工系學會考古題系統
       </Link>
       <ul>
+        <CustomLink to="/">Home</CustomLink>
         <CustomLink to="/upload">Upload</CustomLink>
         <CustomLink to="/setting">Setting</CustomLink>
         <CustomLink to="/logout">logout</CustomLink>
