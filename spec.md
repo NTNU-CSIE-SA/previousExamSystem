@@ -102,3 +102,9 @@ google excel
 4. return modify success
 
 {file id: , semester: asdasd, subject: , exam type ,varify}
+#### some thing need to install
+npm install express body-parser --legacy-peer-deps
+npm install better-sqlite3 kysely --legacy-peer-deps
+npm install bcrypt jsonwebtoken --legacy-peer-deps
+npm install typescript ts-node @types/node --save-dev --legacy-peer-deps
+npm install --save-dev @types/bcrypt @types/jsonwebtoken @types/better-sqlite3 --legacy-peer-deps
