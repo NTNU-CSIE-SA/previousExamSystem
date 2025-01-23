@@ -14,11 +14,10 @@ if (!TOKEN_EXPIRY) {
     throw new Error('TOKEN_EXPIRY is not defined in .env file');
 }
 //登入路由
-router.post('/login', async (req: Request, res: Response) => {
+router.post('/login', async ( req: express.Request, res: express.Response ) => {
     const { school_id, password } = req.body;
-
     if (!school_id || !password) {
-        return res.status(400).json({ message: 'School ID and password are required' });
+        res.status(400).json({ message: 'School ID and password are required' });
     }
 
     try {
@@ -30,7 +29,7 @@ router.post('/login', async (req: Request, res: Response) => {
             .executeTakeFirst();
 
         if (!user || !(await bcrypt.compare(password, user.password))) {
-            return res.status(401).json({ message: 'Invalid school ID or password' });
+            res.status(401).json({ message: 'Invalid school ID or password' });
         }
         //生成 JWT Token
         const token = jwt.sign({ school_id }, JWT_SECRET, { expiresIn: TOKEN_EXPIRY });
@@ -60,7 +59,8 @@ router.post('/login', async (req: Request, res: Response) => {
 router.post('/logout', async (req: Request, res: Response) => {
     const token = req.headers.authorization?.split(' ')[1]; //從 https 的header提取 Token
     if (!token) {
-        return res.status(400).json({ message: 'Token is required' });
+        res.status(400).json({ message: 'Token is required' });
+        return;
     }
     try {
         //檢查 Token 是否存在
@@ -70,7 +70,7 @@ router.post('/logout', async (req: Request, res: Response) => {
             .where('token', '=', token)
             .executeTakeFirst();
         if (!tokenExists) {
-            return res.status(400).json({ message: 'Invalid token or session not found' });
+            res.status(400).json({ message: 'Invalid token or session not found' });
         }
         //刪除 Token
         await db
