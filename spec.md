@@ -114,5 +114,7 @@ google excel
 9. pnpm add dotenv-flow
 10. pnpm add kysely
 11. pnpm add sqlite3
+12. pnpm add multer
+13. pnpm add -D @types/multer
 #### start the server
 1. pnpm exec ts-node src/backend/server.ts
