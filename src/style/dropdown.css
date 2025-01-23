@@ -43,7 +43,7 @@
     pointer-events: all;
 }
 
-.dropdown-btn {
+.dropdown-btn, .upload_status_label {
     display: flex;
     align-items: center;
     width: 20rem;
@@ -52,6 +52,12 @@
     border-radius: 0.5rem;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     cursor: pointer;
+}
+
+.upload_status_label{
+    margin-top: 2rem;
+    width: fit-content;
+    height: fit-content;
 }
   
 .toggle-icon {
