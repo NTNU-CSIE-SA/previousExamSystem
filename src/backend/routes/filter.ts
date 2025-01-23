@@ -32,31 +32,40 @@ router.get('/tags', async (req: Request, res: Response) => {
 router.post('/file-lists', express.json(), async (req: Request, res: Response) => {
     const token = req.headers.authorization;
     if (!token) {
-        return res.status(400).json({ message: 'Token is required' });
+        res.status(400).json({ message: 'Token is required' });
+        return;
     }
-    const school_id = await db
+    const school_id= await db
         .selectFrom('Login')
         .select('school_id')
         .where('token', '=', token)
-        .execute();
+        .executeTakeFirst();
     // TODO: that may be replace to a function to update expiretime
     if (!school_id) {
-        return res.status(401).json({ message: 'Invalid token' });
+        res.status(401).json({ message: 'Invalid token' });
+        return;
     }
-
     const subject = req.body.subject;
     const semester = req.body.semester;
     const exam_type = req.body.exam_type;
     const admin_level = await db
         .selectFrom('Profile')
         .select('admin_level')
-        .where('school_id', '=', school_id)
+        .where('school_id', '=', school_id.school_id)
         .executeTakeFirst();
-    const unvarified_file_level = process.env.UNVARIFIED_FILE_LEVEL || 2;
-    if (!subject || !semester || !exam_type) {
-        return res.status(400).json({ message: 'Subject, semester and exam type are required' });
+    let unvarified_file_level = process.env.UNVARIFIED_FILE_LEVEL || 2;
+    if (typeof unvarified_file_level === 'string') {
+        unvarified_file_level = parseInt(unvarified_file_level);
     }
-    if (admin_level < unvarified_file_level) {
+    if (!subject || !semester || !exam_type) {
+        res.status(400).json({ message: 'Subject, semester and exam type are required' });
+        return;
+    }
+    if (!admin_level) {
+        res.status(401).json({ message: 'Invalid school ID' });
+        return;
+    }
+    if (admin_level.admin_level < unvarified_file_level) {
         const file_list = await db
             .selectFrom('Document')
             .select(['id', 'upload_time', 'subject', 'semester', 'exam_type'])
