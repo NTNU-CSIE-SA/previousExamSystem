@@ -69,20 +69,23 @@ router.post('/file-lists', express.json(), async (req: Request, res: Response) =
         const file_list = await db
             .selectFrom('Document')
             .select(['id', 'upload_time', 'subject', 'semester', 'exam_type'])
-            .where('subject', '=', subject)
-            .where('semester', '=', semester)
-            .where('exam_type', '=', exam_type)
+            .$if(subject.length > 0, (qb) => qb.where('subject', '=', subject))
+            .$if(semester.length > 0, (qb) => qb.where('semester', '=', semester))
+            .$if(exam_type.length > 0, (qb) => qb.where('exam_type', '=', exam_type))
             .where('verified', '=', 1)
             .execute();
         res.json(file_list);
     }
     else {
+        const varified = req.body.varify;
         const file_list = await db
             .selectFrom('Document')
             .select(['id', 'upload_time', 'subject', 'semester', 'exam_type'])
-            .where('subject', '=', subject)
-            .where('semester', '=', semester)
-            .where('exam_type', '=', exam_type)
+            .$if(subject.length > 0, (qb) => qb.where('subject', '=', subject))
+            .$if(semester.length > 0, (qb) => qb.where('semester', '=', semester))
+            .$if(exam_type.length > 0, (qb) => qb.where('exam_type', '=', exam_type))
+            .$if(varified !== undefined, (qb) => qb.where('verified', '=', varified))
+            .$if(varified === undefined, (qb) => qb.where('verified', '=', 1))
             .execute();
         res.json(file_list);
     }
