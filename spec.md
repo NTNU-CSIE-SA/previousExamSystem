@@ -103,8 +103,15 @@ google excel
 
 {file id: , semester: asdasd, subject: , exam type ,varify}
 #### some thing need to install
-1. npm install express body-parser --legacy-peer-deps
-2. npm install better-sqlite3 kysely --legacy-peer-deps
-3. npm install bcrypt jsonwebtoken --legacy-peer-deps
-4. npm install typescript ts-node @types/node --save-dev --legacy-peer-deps
-5. npm install --save-dev @types/bcrypt @types/jsonwebtoken @types/better-sqlite3 --legacy-peer-deps
+1. pnpm add express
+2. pnpm add -D @types/express
+3. pnpm add bcrypt
+4. pnpm add -D @types/bcrypt
+5. pnpm add better-sqlite3
+6. pnpm add -D @types/better-sqlite3
+7. pnpm add jsonwebtoken
+8. pnpm add -D @types/jsonwebtoken
+9. pnpm add dotenv
+10. pnpm add dotenv-flow
+11. pnpm add kysely
+12. pnpm add sqlite3
