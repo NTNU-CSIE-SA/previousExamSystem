@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import dotenvFlow from 'dotenv-flow';
 import { db } from '../db';
-dotenv.config();
+dotenvFlow.config();
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {

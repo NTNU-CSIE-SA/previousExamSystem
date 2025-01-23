@@ -111,7 +111,8 @@ google excel
 6. pnpm add -D @types/better-sqlite3
 7. pnpm add jsonwebtoken
 8. pnpm add -D @types/jsonwebtoken
-9. pnpm add dotenv
-10. pnpm add dotenv-flow
-11. pnpm add kysely
-12. pnpm add sqlite3
+9. pnpm add dotenv-flow
+10. pnpm add kysely
+11. pnpm add sqlite3
+#### start the server
+1. pnpm exec ts-node src/backend/server.ts
