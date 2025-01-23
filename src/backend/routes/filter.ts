@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { db } from '../db';
+import exp from 'constants';
 
 const router = express.Router();
 
@@ -77,3 +78,5 @@ router.post('/file-lists', express.json(), async (req: Request, res: Response) =
         res.json(file_list);
     }
 });
+
+export default router;
