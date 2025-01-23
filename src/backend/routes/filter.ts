@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
 import { db } from '../db';
-import exp from 'constants';
 
 const router = express.Router();
 
