@@ -15,11 +15,13 @@ function App() {
   //checking the token first before asking to login again.
 
   
+  /*
   const [token, setToken] = useState();
 
   if(!token) {
     return <Login setToken={setToken} />
   }
+  */
 
   
 

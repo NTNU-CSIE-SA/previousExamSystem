@@ -32,7 +32,11 @@ export default function Upload(){
     const [currentExam, modifyExam] = useState(NaN);
     const [examInput , setExamInput] = useState("請輸入考試名稱");
 
-    
+    //NaN = haven't clicked upload btn
+    //1 = uploading
+    //2 = success to upload
+    //3 = fail to upload
+    const [uploadStatus, updateUploadStatus] = useState("NaN");
 
     return(
         <>
@@ -69,9 +73,44 @@ export default function Upload(){
                 <></>
                 )
             }
+
+            <button
+            className={`upload-btn ${isValidToUpload() ? 'enabled' : 'disabled'}`}
+            disabled={!isValidToUpload()}
+            onClick={uploadFile}
+            >
+              上傳
+            </button>
+
+            {isNaN(uploadStatus) ? 
+              <></> :
+              (
+                uploadStatus === 1 ?
+                <div className="upload_status_label" style={{backgroundColor: '#ddb070'}}>上傳中...</div> :
+                (
+                  uploadStatus === 2 ?
+                  <div className="upload_status_label" style={{backgroundColor: '#3b7b2d'}}>上傳成功</div> :
+                  <div className="upload_status_label" style={{backgroundColor: '#7b2d2d'}}>上傳失敗</div>
+                )
+              )
+            }
+
         </div>
         </>
     )
+
+    function isValidToUpload() {
+      return !isNaN(currentSemester) && !isNaN(currentCourse) && !isNaN(currentExam);
+    }
+
+    async function uploadFile() {
+      updateUploadStatus(1);
+      
+      //should connect to backend and upload file here
+
+      //after upload, should updateUploadStatus according to success or failed
+
+    }
 
 }
 
