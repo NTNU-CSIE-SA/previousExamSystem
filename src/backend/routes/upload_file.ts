@@ -6,14 +6,19 @@ import path from 'path';
 import dotenvFlow from 'dotenv-flow';
 import { db } from '../db';
 
-dotenvFlow.config(); //讀取 .env 配置
-
 const router = express.Router();
 
 //從 .env 檔案中讀取檔案儲存路徑，預設為'./uploads'
 const UPLOADS_DIR = process.env.UPLOADS_DIR || './uploads';
 if (!fs.existsSync(UPLOADS_DIR)) {
     fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+}
+let UPLOADS_SIZE = process.env.UPLOADS_SIZE || 100;
+if (typeof UPLOADS_SIZE === 'string') {
+    UPLOADS_SIZE = parseInt(UPLOADS_SIZE);
+    if (isNaN(UPLOADS_SIZE)) {
+        UPLOADS_SIZE = 100;
+    }
 }
 
 //設定 multer
@@ -36,7 +41,7 @@ const upload = multer({
         cb(null, true);
     },
     limits: {
-        fileSize: 100 * 1024 * 1024, //最大 100MB
+        fileSize: UPLOADS_SIZE * 1024 * 1024, //最大 100MB
     },
 });
 
