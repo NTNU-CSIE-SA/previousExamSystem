@@ -3,40 +3,42 @@ import Navbar from './components/Navbar'
 import Login from './components/Login'
 import Footer from './components/Footer'
 import Upload from './components/Upload'
-import Setting from './components/Setting'
+import Setting from './components/Setting';
 import Home from './components/Home'
+import Management from './components/Management';
 import { Routes, Route } from "react-router-dom";
 
 function App() {
+  //set useState(true) to test pages without login
+  const [token, setToken] = useState(true);
 
-  //to test pages/components without login, just mark up the token test feature below
-  //the token check feature should be modified after connected to backend
-  //not sure the current token saving method, but the token checking system should contains 
-  //checking the token first before asking to login again.
-
-  
-  /*
-  const [token, setToken] = useState();
+  const [isAdmin, setIsAdmin] = useState(checkIsAdmin(token));
 
   if(!token) {
     return <Login setToken={setToken} />
   }
-  */
 
-  
+  function checkIsAdmin(token) {
+    //ToDo: check the token and return true if the user is admin
+    return false
+  }
 
   return (
     <>
-      <Navbar />
+      <Navbar isAdmin = {isAdmin}/>
         <Routes>
-          <Route path="/home" element={<Home />} /> 
+          {
+            isAdmin ? 
+            <Route path="/management" element={<Management />} /> :
+            <> </>
+          }
+          <Route path="/" element={<Home />} /> 
           <Route path="/upload" element={<Upload />} /> 
-          <Route path="/setting" element={<Setting />} /> 
+          <Route path="/setting" element={<Setting />} />
         </Routes>
       <Footer />
     </>
   );
 }
-
 
 export default App;
