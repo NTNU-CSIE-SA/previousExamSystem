@@ -76,6 +76,7 @@ router.get('/detail/:file_id', async (req: Request, res: Response) => {
             res.status(401).json({ message: 'Unauthorized: Invalid or expired token' });
             return;
         }
+        //檢查使用者是否被 ban
         const admin_level = await check_admin_level(session.school_id);
         if (admin_level === undefined || admin_level < 0) {
             res.status(403).json({message: 'User is banned'});
