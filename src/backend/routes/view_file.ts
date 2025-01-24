@@ -3,36 +3,33 @@ import fs from 'fs';
 import path from 'path';
 import { db } from '../db';
 import { check_admin_level } from './admin'
+import { school_id_from_token, check_is_banned } from './auth';
+
 const router = express.Router();
 const VERIFIED_DIR = process.env.VERIFIED_DIR || path.join(__dirname, '../../verified');
 //確保 VERIFIED_DIR 存在
 if (!fs.existsSync(VERIFIED_DIR)) {
     fs.mkdirSync(VERIFIED_DIR, { recursive: true });
 }
+let VIEW_UNVERIFIED_LEVEL = 2;
+if (process.env.VIEW_UNVERIFIED_LEVEL !== undefined) {
+    VIEW_UNVERIFIED_LEVEL = parseInt(process.env.VIEW_UNVERIFIED_LEVEL);
+    if (isNaN(VIEW_UNVERIFIED_LEVEL)) {
+        VIEW_UNVERIFIED_LEVEL = 2;
+    }
+}
 
 //查看檔案詳細資訊並下載
 router.get('/detail/:file_id', async (req: Request, res: Response) => {
     try {
-        const token = req.headers.cookie?.split('=')[1];
-        if (!token) {
-            res.status(401).json({ message: 'Unauthorized: Missing cookie' });
+        const school_id = await school_id_from_token(req, res);
+        if (!school_id) {
+            res.status(401).json({ message: 'Unauthorized' });
             return;
         }
-        //確認 token 是否有效且未過期
-        const session = await db
-            .selectFrom('Login')
-            .selectAll()
-            .where('token', '=', token)
-            .where('expired_time', '>', new Date().toISOString()) //確保未過期
-            .executeTakeFirst();
-        if (!session) {
-            res.status(401).json({ message: 'Unauthorized: Invalid or expired token' });
-            return;
-        }
-        //檢查使用者是否被 ban
-        const admin_level = await check_admin_level(session.school_id);
-        if (admin_level === undefined || admin_level < 0) {
-            res.status(403).json({message: 'User is banned'});
+        const ban_until = await check_is_banned(school_id);
+        if (ban_until !== false) {
+            res.status(403).json({ message: 'You are banned', Ban_until: ban_until });
             return;
         }
         const file_id = parseInt(req.params.file_id, 10);
@@ -50,8 +47,12 @@ router.get('/detail/:file_id', async (req: Request, res: Response) => {
             res.status(404).json({ message: 'File not found' });
             return;
         }
-        //檢查檔案是否已驗證
-        if (file.verified !== 1) {
+        const admin_level = await check_admin_level(school_id);
+        if (!admin_level) {
+            res.status(401).json({ message: 'Invalid school ID' });
+            return;
+        }
+        if (file.verified === 0 && admin_level < VIEW_UNVERIFIED_LEVEL) {
             res.status(403).json({ message: 'File is not verified' });
             return;
         }
