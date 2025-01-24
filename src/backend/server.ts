@@ -17,7 +17,7 @@ app.use("/api/filter", filterRouter);
 app.use("/api/upload_file", uploadRouter);
 app.use("/api/view_file", viewFileRouter);
 app.use("/api/admin", adminRouter);
-app.use("/modify-file", modifyRouter);
+app.use("/api/modify-file", modifyRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
