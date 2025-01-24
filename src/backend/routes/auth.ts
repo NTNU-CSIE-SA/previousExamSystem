@@ -13,6 +13,44 @@ const TOKEN_EXPIRY = process.env.TOKEN_EXPIRY;
 if (!TOKEN_EXPIRY) {
     throw new Error('TOKEN_EXPIRY is not defined in .env file');
 }
+
+export async function school_id_from_token(token: string) {
+    try{
+        const school_id_from_token = await db
+            .selectFrom('Login')
+            .select(['school_id', 'expired_time'])
+            .where('token', '=', token)
+            .executeTakeFirst();
+        if (!school_id_from_token) {
+            return undefined;
+        }
+        const school_id = school_id_from_token.school_id;
+        const expired_time = school_id_from_token.expired_time;
+        if (new Date(expired_time) < new Date()) {
+            return undefined;
+        }
+        // double check school_id is valid
+        const school_id_from_profile = await db
+            .selectFrom('Profile')
+            .select('school_id')
+            .where('school_id', '=', school_id)
+            .executeTakeFirst();
+        if (!school_id_from_profile) {
+            return undefined;
+        }
+        const updated_expired_time_result = await db
+            .updateTable('Login')
+            .set('expired_time', new Date().toISOString())
+            .where('school_id', '=', school_id)
+            .execute();
+        return school_id;
+    }
+    catch (err) {
+        console.error(err);
+        return undefined;
+    }
+}
+
 //登入路由
 router.post('/login', async ( req: express.Request, res: express.Response ) => {
     const { school_id, password } = req.body;
