@@ -5,6 +5,7 @@
 - `TOKEN_EXPIRY_DAYS`: token expiry time in days (default: 30)
 - `MAX_FILE_SIZE`: maximum file size allowed in MB (default: 10)
 - `JWT_SECRET`: secret key for JWT
+- `BCRYPT_SALT_ROUNDS`: number of salt rounds for bcrypt (default: 10)
 - `USER_LIST_LEVEL` : minimum user level required to view user list (default 2)
 - `VERIFY_LEVEL`: minimum user level required to view unverified files and filter with unverified tag (default 2)
 - `BAN_LEVEL`: minimum user level required to ban users (default 3)
@@ -209,13 +210,23 @@ POST
 
 ---
 
-## password
-send Plaintext
+## change password
+send Hashed password to server
+### Request
+POST `/api/auth/change_password`
+```json
+{
+  "old_password": "mypassword",
+  "new_password": "newpassword"
+}
+```
+
 
 ## login
 give a session token (add additional hash info inside)
 
 ### Request
+POST `/api/auth/login`
 ```json
 {
   "school_id": "123456",
@@ -245,12 +256,7 @@ and set cookie with `token`
 delete cookie and expire it
 
 ### Request
-**Headers:**
-```json
-{
-  "Authorization": "Bearer <token>"
-}
-```
+POST `/api/auth/logout`
 
 ### Response
 - **Success**
