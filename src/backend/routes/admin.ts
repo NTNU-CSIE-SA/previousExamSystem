@@ -47,6 +47,9 @@ router.get('user-lists', async (req: Request, res: Response) => {
         let user_list_level = process.env.USER_LIST_LEVEL || 2;
         if (typeof user_list_level === 'string') {
             user_list_level = parseInt(user_list_level);
+            if (isNaN(user_list_level)) {
+                user_list_level = 2;
+            }
         }
         if (admin_level < user_list_level) {
             res.status(403).json({ message: 'Permission denied' });
@@ -89,6 +92,9 @@ router.post('/ban', express.json(), async (req: Request, res: Response) => {
         let ban_level = process.env.BAN_LEVEL || 3;
         if (typeof ban_level === 'string') {
             ban_level = parseInt(ban_level);
+            if (isNaN(ban_level)) {
+                ban_level = 3;
+            }
         }
         if (admin_level < ban_level) {
             res.status(403).json({ message: 'Permission denied' });
@@ -152,6 +158,9 @@ router.post('/unban', express.json(), async (req: Request, res: Response) => {
         let ban_level = process.env.BAN_LEVEL || 3;
         if (typeof ban_level === 'string') {
             ban_level = parseInt(ban_level);
+            if (isNaN(ban_level)) {
+                ban_level = 3;
+            }
         }
         if (admin_level < ban_level) {
             res.status(403).json({ message: 'Permission denied' });

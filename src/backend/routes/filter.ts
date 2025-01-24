@@ -57,6 +57,9 @@ router.post('/file-lists', express.json(), async (req: Request, res: Response) =
         let unverified_file_level = process.env.UNVERIFIED_FILE_LEVEL || 2;
         if (typeof unverified_file_level === 'string') {
             unverified_file_level = parseInt(unverified_file_level);
+            if (isNaN(unverified_file_level)) {
+                unverified_file_level = 2;
+            }
         }
         if (!subject || !semester || !exam_type) {
             res.status(400).json({ message: 'Subject, semester and exam type are required' });
