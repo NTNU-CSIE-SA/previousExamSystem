@@ -1,6 +1,21 @@
 import express, { Request, Response } from 'express';
 import { db } from '../db';
 
+let USER_LIST_LEVEL = 2;
+if (process.env.USER_LIST_LEVEL !== undefined) {
+    USER_LIST_LEVEL = parseInt(process.env.USER_LIST_LEVEL);
+    if (isNaN(USER_LIST_LEVEL)) {
+        USER_LIST_LEVEL = 2;
+    }
+}
+let BAN_LEVEL = 3;
+if (process.env.BAN_LEVEL !== undefined) {
+    BAN_LEVEL = parseInt(process.env.BAN_LEVEL);
+    if (isNaN(BAN_LEVEL)) {
+        BAN_LEVEL = 3;
+    }
+}
+
 const router = express.Router();
 
 export async function check_admin_level(school_id: string){
@@ -44,14 +59,8 @@ router.get('user-lists', async (req: Request, res: Response) => {
             res.status(401).json({ message: 'Invalid school ID' });
             return;
         }
-        let user_list_level = process.env.USER_LIST_LEVEL || 2;
-        if (typeof user_list_level === 'string') {
-            user_list_level = parseInt(user_list_level);
-            if (isNaN(user_list_level)) {
-                user_list_level = 2;
-            }
-        }
-        if (admin_level < user_list_level) {
+        
+        if (admin_level < USER_LIST_LEVEL) {
             res.status(403).json({ message: 'Permission denied' });
             return;
         }
@@ -89,14 +98,8 @@ router.post('/ban', express.json(), async (req: Request, res: Response) => {
             res.status(401).json({ message: 'Invalid school ID' });
             return;
         }
-        let ban_level = process.env.BAN_LEVEL || 3;
-        if (typeof ban_level === 'string') {
-            ban_level = parseInt(ban_level);
-            if (isNaN(ban_level)) {
-                ban_level = 3;
-            }
-        }
-        if (admin_level < ban_level) {
+        
+        if (admin_level < BAN_LEVEL) {
             res.status(403).json({ message: 'Permission denied' });
             return;
         }
@@ -155,14 +158,7 @@ router.post('/unban', express.json(), async (req: Request, res: Response) => {
             res.status(401).json({ message: 'Invalid school ID' });
             return;
         }
-        let ban_level = process.env.BAN_LEVEL || 3;
-        if (typeof ban_level === 'string') {
-            ban_level = parseInt(ban_level);
-            if (isNaN(ban_level)) {
-                ban_level = 3;
-            }
-        }
-        if (admin_level < ban_level) {
+        if (admin_level < BAN_LEVEL) {
             res.status(403).json({ message: 'Permission denied' });
             return;
         }

@@ -2,6 +2,14 @@ import express, { Request, Response } from 'express';
 import { db } from '../db';
 import { check_admin_level } from './admin';
 
+let VIEW_UNVERIFIED_LEVEL = 2;
+if (process.env.VIEW_UNVERIFIED_LEVEL !== undefined) {
+    VIEW_UNVERIFIED_LEVEL = parseInt(process.env.VIEW_UNVERIFIED_LEVEL);
+    if (isNaN(VIEW_UNVERIFIED_LEVEL)) {
+        VIEW_UNVERIFIED_LEVEL = 2;
+    }
+}
+
 const router = express.Router();
 
 router.get('/tags', async (req: Request, res: Response) => {
@@ -54,13 +62,7 @@ router.post('/file-lists', express.json(), async (req: Request, res: Response) =
         const subject = req.body.subject;
         const semester = req.body.semester;
         const exam_type = req.body.exam_type;
-        let unverified_file_level = process.env.UNVERIFIED_FILE_LEVEL || 2;
-        if (typeof unverified_file_level === 'string') {
-            unverified_file_level = parseInt(unverified_file_level);
-            if (isNaN(unverified_file_level)) {
-                unverified_file_level = 2;
-            }
-        }
+        
         if (!subject || !semester || !exam_type) {
             res.status(400).json({ message: 'Subject, semester and exam type are required' });
             return;
@@ -70,7 +72,7 @@ router.post('/file-lists', express.json(), async (req: Request, res: Response) =
             res.status(401).json({ message: 'Invalid school ID' });
             return;
         }
-        if (admin_level < unverified_file_level) {
+        if (admin_level < VIEW_UNVERIFIED_LEVEL) {
             const file_list = await db
                 .selectFrom('Document')
                 .select(['id', 'upload_time', 'subject', 'semester', 'exam_type'])

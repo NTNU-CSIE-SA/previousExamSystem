@@ -9,12 +9,9 @@ const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
     throw new Error('JWT_SECRET is not defined in .env file');
 }
-let TOKEN_EXPIRY_DAYS = process.env.TOKEN_EXPIRY_DAYS || 30;
-if (!TOKEN_EXPIRY_DAYS) {
-    throw new Error('TOKEN_EXPIRY is not defined in .env file');
-}
-if (typeof TOKEN_EXPIRY_DAYS === 'string') {
-    TOKEN_EXPIRY_DAYS = parseInt(TOKEN_EXPIRY_DAYS);
+let TOKEN_EXPIRY_DAYS = 30;
+if (process.env.TOKEN_EXPIRY_DAYS !== undefined) {
+    TOKEN_EXPIRY_DAYS = parseInt(process.env.TOKEN_EXPIRY_DAYS);
     if (isNaN(TOKEN_EXPIRY_DAYS)) {
         TOKEN_EXPIRY_DAYS = 30;
     }
@@ -50,12 +47,6 @@ export async function school_id_from_token(req: Request, res: Response){
             return undefined;
         }
         let new_expired_time = new Date();
-        if (typeof TOKEN_EXPIRY_DAYS === 'string') {
-            TOKEN_EXPIRY_DAYS = parseInt(TOKEN_EXPIRY_DAYS);
-            if (isNaN(TOKEN_EXPIRY_DAYS)) {
-                TOKEN_EXPIRY_DAYS = 30;
-            }
-        }
         new_expired_time.setDate(new_expired_time.getDate() + TOKEN_EXPIRY_DAYS);
         const updated_expired_time_result = await db
             .updateTable('Login')
@@ -82,7 +73,7 @@ export async function check_is_banned(school_id: string){
             return false;
         }
         if (new Date(ban_until.ban_until) > new Date()) {
-            return true;
+            return ban_until.ban_until;
         }
         if (new Date(ban_until.ban_until) <= new Date()) {
             const unban_result = await db
@@ -120,12 +111,6 @@ router.post('/login', async ( req: express.Request, res: express.Response ) => {
         }
         //生成 JWT Token
         let expireTime = new Date();
-        if (typeof TOKEN_EXPIRY_DAYS === 'string') {
-            TOKEN_EXPIRY_DAYS = parseInt(TOKEN_EXPIRY_DAYS);
-            if (isNaN(TOKEN_EXPIRY_DAYS)) {
-                TOKEN_EXPIRY_DAYS = 30;
-            }
-        }
         expireTime.setDate(expireTime.getDate() + TOKEN_EXPIRY_DAYS);
         const token = jwt.sign({ school_id, expireTime}, JWT_SECRET, { expiresIn: `${TOKEN_EXPIRY_DAYS}d` });
         //插入 Login 表
