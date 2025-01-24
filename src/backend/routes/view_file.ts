@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
 import { db } from '../db';
+import { check_admin_level } from './admin'
 const router = express.Router();
 const VERIFIED_DIR = process.env.VERIFIED_DIR || path.join(__dirname, '../../verified');
 //確保 VERIFIED_DIR 存在
@@ -73,6 +74,11 @@ router.get('/detail/:file_id', async (req: Request, res: Response) => {
             .executeTakeFirst();
         if (!session) {
             res.status(401).json({ message: 'Unauthorized: Invalid or expired token' });
+            return;
+        }
+        const admin_level = await check_admin_level(session.school_id);
+        if (admin_level === undefined || admin_level < 0) {
+            res.status(403).json({message: 'User is banned'});
             return;
         }
         const file_id = parseInt(req.params.file_id, 10);

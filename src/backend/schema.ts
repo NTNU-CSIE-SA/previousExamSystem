@@ -1,5 +1,12 @@
-// TODO
-
+import {
+    ColumnType,
+    Generated,
+    Insertable,
+    JSONColumnType,
+    Selectable,
+    Updateable,
+  } from 'kysely'
+  
 export interface Profile {
     school_id: string;
     name: string;
@@ -29,3 +36,4 @@ export interface Database {
     Document: Document;
     Login: Login;
 }
+export type Pet = Selectable<Database>
