@@ -80,12 +80,12 @@ router.post('/login', async ( req: express.Request, res: express.Response ) => {
             .values({
                 token,
                 school_id,
-                expire_time: expireTime.toISOString(),
+                expired_time: expireTime.toISOString(),
             })
             .execute();
         res.json({
             token,
-            expire_time: expireTime.toISOString(),
+            expired_time: expireTime.toISOString(),
             message: 'Login successful',
         });
     } catch (err) {

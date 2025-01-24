@@ -19,7 +19,7 @@ give a session token (add additional hash info inside)
 ```json
 {
   "token": "abcdef123456",
-  "expire_time": "2025-12-31T23:59:59Z",
+  "expired_time": "2025-12-31T23:59:59Z",
   "message": "Login successful"
 }
 ```
