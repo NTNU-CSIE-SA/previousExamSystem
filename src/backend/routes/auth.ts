@@ -19,6 +19,13 @@ if (process.env.TOKEN_EXPIRY_DAYS !== undefined) {
         TOKEN_EXPIRY_DAYS = 30;
     }
 }
+let BCRYPT_SALT_ROUNDS = 10;
+if (process.env.BCRYPT_SALT_ROUNDS !== undefined) {
+    BCRYPT_SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS);
+    if (isNaN(BCRYPT_SALT_ROUNDS)) {
+        BCRYPT_SALT_ROUNDS = 10;
+    }
+}
 
 export async function school_id_from_token(req: Request, res: Response){
     try{
@@ -157,6 +164,41 @@ router.post('/logout', cookie_parser() ,async (req: Request, res: Response) => {
         res.clearCookie('token');
         res.json({ message: 'Logout successful' });
     } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+router.post('change-password', async (req: Request, res: Response) => {
+    try {
+        const school_id = await school_id_from_token(req, res);
+        if (!school_id) {
+            res.status(401).json({ message: 'Unauthorized' });
+            return;
+        }
+        const { old_password, new_password } = req.body;
+        if (!old_password || !new_password) {
+            res.status(400).json({ message: 'Old password and new password are required' });
+            return;
+        }
+        const user = await db
+            .selectFrom('Profile')
+            .selectAll()
+            .where('school_id', '=', school_id)
+            .executeTakeFirst();
+        if (!user || !(await bcrypt.compare(old_password, user.password))) {
+            res.status(401).json({ message: 'Invalid password' });
+            return;
+        }
+        const hashedPassword = await bcrypt.hash(new_password, BCRYPT_SALT_ROUNDS);
+        await db
+            .updateTable('Profile')
+            .set('password', hashedPassword)
+            .where('school_id', '=', school_id)
+            .execute();
+        res.json({ message: 'Password changed' });
+    }
+    catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
     }
