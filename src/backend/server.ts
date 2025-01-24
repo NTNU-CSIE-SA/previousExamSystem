@@ -4,6 +4,7 @@ import authRouter from "./routes/auth";
 import filterRouter from "./routes/filter";
 import adminRouter from "./routes/admin";
 
+import uploadRouter from "./routes/upload_file";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use("/api/auth", authRouter);
 app.use("/api/filter", filterRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/upload_file", uploadRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

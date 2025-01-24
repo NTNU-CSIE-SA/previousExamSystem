@@ -101,4 +101,7 @@ google excel
 3. change file info in SQL database(semester, class, file name) for file id
 4. return modify success
 
-{file id: , semester: asdasd, subject: , exam type ,varify}
+{file id: , semester: , subject: , exam type ,varify}
+
+#### start the server
+1. pnpm exec ts-node src/backend/server.ts
