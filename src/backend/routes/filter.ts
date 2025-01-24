@@ -48,9 +48,9 @@ router.post('/file-lists', express.json(), async (req: Request, res: Response) =
     const subject = req.body.subject;
     const semester = req.body.semester;
     const exam_type = req.body.exam_type;
-    let unvarified_file_level = process.env.UNVARIFIED_FILE_LEVEL || 2;
-    if (typeof unvarified_file_level === 'string') {
-        unvarified_file_level = parseInt(unvarified_file_level);
+    let unverified_file_level = process.env.UNVERIFIED_FILE_LEVEL || 2;
+    if (typeof unverified_file_level === 'string') {
+        unverified_file_level = parseInt(unverified_file_level);
     }
     if (!subject || !semester || !exam_type) {
         res.status(400).json({ message: 'Subject, semester and exam type are required' });
@@ -61,7 +61,7 @@ router.post('/file-lists', express.json(), async (req: Request, res: Response) =
         res.status(401).json({ message: 'Invalid school ID' });
         return;
     }
-    if (admin_level < unvarified_file_level) {
+    if (admin_level < unverified_file_level) {
         const file_list = await db
             .selectFrom('Document')
             .select(['id', 'upload_time', 'subject', 'semester', 'exam_type'])
@@ -73,15 +73,15 @@ router.post('/file-lists', express.json(), async (req: Request, res: Response) =
         res.json(file_list);
     }
     else {
-        const varified = req.body.varify;
+        const verified = req.body.verify;
         const file_list = await db
             .selectFrom('Document')
             .select(['id', 'upload_time', 'subject', 'semester', 'exam_type'])
             .$if(subject.length > 0, (qb) => qb.where('subject', '=', subject))
             .$if(semester.length > 0, (qb) => qb.where('semester', '=', semester))
             .$if(exam_type.length > 0, (qb) => qb.where('exam_type', '=', exam_type))
-            .$if(varified !== undefined, (qb) => qb.where('verified', '=', varified))
-            .$if(varified === undefined, (qb) => qb.where('verified', '=', 1))
+            .$if(verified !== undefined, (qb) => qb.where('verified', '=', verified))
+            .$if(verified === undefined, (qb) => qb.where('verified', '=', 1))
             .execute();
         res.json(file_list);
     }
