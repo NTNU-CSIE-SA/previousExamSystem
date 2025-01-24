@@ -23,7 +23,7 @@ if (process.env.MODIFY_FILES_LEVEL !== undefined) {
     }
 }
 
-let VERIFIED_DIR = '../../verfied';
+let VERIFIED_DIR = './verfied';
 if (process.env.VERIFIED_DIR !== undefined) {
     VERIFIED_DIR = process.env.VERIFIED_DIR;
 }

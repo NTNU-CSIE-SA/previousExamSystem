@@ -9,7 +9,7 @@ import DotenvFlow from 'dotenv-flow';
 DotenvFlow.config();
 
 const router = express.Router();
-const VERIFIED_DIR = process.env.VERIFIED_DIR || path.join(__dirname, '../../verified');
+const VERIFIED_DIR = process.env.VERIFIED_DIR || path.join(__dirname, './verified');
 //確保 VERIFIED_DIR 存在
 if (!fs.existsSync(VERIFIED_DIR)) {
     fs.mkdirSync(VERIFIED_DIR, { recursive: true });
