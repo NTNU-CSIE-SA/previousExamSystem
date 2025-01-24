@@ -6,12 +6,15 @@
 - `MAX_FILE_SIZE`: maximum file size allowed in MB (default: 10)
 - `JWT_SECRET`: secret key for JWT
 - `USER_LIST_LEVEL` : minimum user level required to view user list (default 2)
-- `VIEW_UNVERIFIED_LEVEL`: minimum user level required to view unverified files and filter with unverified tag (default 2)
+- `VERIFY_LEVEL`: minimum user level required to view unverified files and filter with unverified tag (default 2)
 - `BAN_LEVEL`: minimum user level required to ban users (default 3)
+- `MODIFY_FILES_LEVEL`: minimum user level required to modify files (default 4)
+
+---
 
 ## filter 
 ### get all tags
-Can set VIEW_UNVERIFIED_LEVEL in .env to change the minimum user level required to view unverified files. (default 2)
+Can set VERIFY_LEVEL in .env to change the minimum user level required to view unverified files. (default 2)
 #### path
 `/api/filter/tags`
 #### input method
@@ -25,6 +28,8 @@ GET
 }
 ```
 
+----
+
 ### list all file from selected tags
 #### path
 `/api/filter/file-lists`
@@ -32,7 +37,7 @@ GET
 POST
 
 with Authorization header
-- with admin level < `env.VIEW_UNVERIFIED_LEVEL`
+- with admin level < `env.VERIFY_LEVEL`
 ```json
 {
     "semester": [], // empty array mean all 
@@ -40,7 +45,7 @@ with Authorization header
     "type": [],     // empty array mean all
 }
 ```
-- with admin level >= `env.VIEW_UNVERIFIED_LEVEL` also can
+- with admin level >= `env.VERIFY_LEVEL` also can
 ```json
 {
     "semester": [], // empty array mean all 
@@ -70,6 +75,8 @@ with Authorization header
 
 ```
 
+---
+
 ## admin
 ### list all user
 #### path
@@ -91,6 +98,8 @@ GET
     }
 ]
 ```
+
+----
 
 ### ban user
 Can set BAN_LEVEL in .env to change the minimum user level required to ban users. (default 3)
@@ -133,6 +142,72 @@ with Authorization header
     "message": "User 40047000S is unbanned" // or other error http status code with error message
 }
 ```
+
+----
+
+### verify file
+Can set VERIFY_LEVEL in .env to change the minimum user level required to verify files. (default 2)
+#### path
+`/api/admin/verify`
+#### input
+POST
+```json
+{
+    "file_id": 1
+}
+```
+#### output
+```json
+{
+    "message": "File 1 is verified" // or other error http status code with error message
+}
+```
+
+----
+
+### delete file
+Can set MODIFY_FILES_LEVEL in .env to change the minimum user level required to delete files. (default 4)
+#### path
+`/api/admin/delete`
+#### input
+POST
+```json
+{
+    "file_id": 1
+}
+```
+#### output
+```json
+{
+    "message": "File 1 is deleted" // or other error http status code with error message
+}
+```
+
+----
+
+### modify file info
+Can set MODIFY_FILES_LEVEL in .env to change the minimum user level required to modify files. (default 4)
+#### path
+`/api/admin/modify`
+#### input
+POST
+```json
+{
+    "file_id": 1, 
+    "subject": "new subject", // can have it or not, string 0 < length < 100
+    "semester": "new semester", // can have it or not, string 0 < length < 100
+    "exam_type": "new type", // can have it or not, string 0 < length < 100
+    "verify": 0 // can have it or not, 0 or 1
+}
+```
+#### output
+```json
+{
+    "message": "File 1 is modified" // or other error http status code with error message
+}
+```
+
+---
 
 ## password
 send Plaintext
