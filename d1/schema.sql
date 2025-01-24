@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS Document (
     subject TEXT NOT NULL,
     semester TEXT NOT NULL,
     exam_type TEXT NOT NULL,
-    varified INT NOT NULL
+    verified INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Login (
