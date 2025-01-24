@@ -41,10 +41,9 @@ like SELECT DISTINCT "semester" FROM Document
 2. check cookie
 3. check user id in cookie and check if it is valid from SQL database, if not valid error status code
     - status 200: success
-    - 
 4. get file path from SQL database
 5. check file exist 
-<!-- 6. check file is varified -->
+6. check file is varified
 7. send file to frontend
 
 ### admin
