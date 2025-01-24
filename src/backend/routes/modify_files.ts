@@ -184,6 +184,20 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
         const semester = req.body.semester;
         const exam_type = req.body.exam_type;
         const verfied = req.body.verified;
+        if (verfied !== undefined && (verfied < 0 || verfied > 1)) {
+            res.status(400).json({ message: 'Invalid verified value' });
+            return;
+        }
+        if ((subject !== undefined && typeof subject !== 'string') || (typeof subject === 'string' && subject.length === 0)
+            || (semester !== undefined && typeof semester !== 'string') || (typeof semester === 'string' && semester.length === 0)
+            || (exam_type !== undefined && typeof exam_type !== 'string') || (typeof exam_type === 'string' && exam_type.length === 0)) {
+            res.status(400).json({ message: 'Invalid input type' });
+            return;
+        }
+        if (subject.length > 100 || semester.length > 100 || exam_type.length > 100 ) {
+            res.status(400).json({ message: 'Invalid input' });
+            return;
+        }
         if (file.verified === 1 && verfied === 0) {
             if (!fs.existsSync(`${VERIFIED_DIR}/${file.id}`)) {
                 res.status(404).json({ message: 'File not found' });
