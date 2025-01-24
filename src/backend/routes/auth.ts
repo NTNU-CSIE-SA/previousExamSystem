@@ -1,21 +1,32 @@
 import express, { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import dotenvFlow from 'dotenv-flow';
 import { db } from '../db';
-dotenvFlow.config();
+import cookie_parser from 'cookie-parser';
+
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
     throw new Error('JWT_SECRET is not defined in .env file');
 }
-const TOKEN_EXPIRY = process.env.TOKEN_EXPIRY;
-if (!TOKEN_EXPIRY) {
+let TOKEN_EXPIRY_DAYS = process.env.TOKEN_EXPIRY_DAYS || 30;
+if (!TOKEN_EXPIRY_DAYS) {
     throw new Error('TOKEN_EXPIRY is not defined in .env file');
 }
+if (typeof TOKEN_EXPIRY_DAYS === 'string') {
+    TOKEN_EXPIRY_DAYS = parseInt(TOKEN_EXPIRY_DAYS);
+    if (isNaN(TOKEN_EXPIRY_DAYS)) {
+        TOKEN_EXPIRY_DAYS = 30;
+    }
+}
 
-export async function school_id_from_token(token: string) {
+export async function school_id_from_token(req: Request, res: Response){
     try{
+        cookie_parser();
+        const token = req.cookies.token;
+        if (!token) {
+            return undefined;
+        }
         const school_id_from_token = await db
             .selectFrom('Login')
             .select(['school_id', 'expired_time'])
@@ -38,11 +49,20 @@ export async function school_id_from_token(token: string) {
         if (!school_id_from_profile) {
             return undefined;
         }
+        let new_expired_time = new Date();
+        if (typeof TOKEN_EXPIRY_DAYS === 'string') {
+            TOKEN_EXPIRY_DAYS = parseInt(TOKEN_EXPIRY_DAYS);
+            if (isNaN(TOKEN_EXPIRY_DAYS)) {
+                TOKEN_EXPIRY_DAYS = 30;
+            }
+        }
+        new_expired_time.setDate(new_expired_time.getDate() + TOKEN_EXPIRY_DAYS);
         const updated_expired_time_result = await db
             .updateTable('Login')
-            .set('expired_time', new Date().toISOString())
+            .set('expired_time', new_expired_time.toISOString())
             .where('school_id', '=', school_id)
             .execute();
+        res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict' , expires: new_expired_time });
         return school_id;
     }
     catch (err) {
@@ -70,10 +90,15 @@ router.post('/login', async ( req: express.Request, res: express.Response ) => {
             res.status(401).json({ message: 'Invalid school ID or password' });
         }
         //生成 JWT Token
-        const token = jwt.sign({ school_id }, JWT_SECRET, { expiresIn: TOKEN_EXPIRY });
-        //計算 Token 過期時間
-        const expireTime = new Date();
-        expireTime.setMonth(expireTime.getMonth() + 1);
+        let expireTime = new Date();
+        if (typeof TOKEN_EXPIRY_DAYS === 'string') {
+            TOKEN_EXPIRY_DAYS = parseInt(TOKEN_EXPIRY_DAYS);
+            if (isNaN(TOKEN_EXPIRY_DAYS)) {
+                TOKEN_EXPIRY_DAYS = 30;
+            }
+        }
+        expireTime.setDate(expireTime.getDate() + TOKEN_EXPIRY_DAYS);
+        const token = jwt.sign({ school_id, expireTime}, JWT_SECRET, { expiresIn: `${TOKEN_EXPIRY_DAYS}d` });
         //插入 Login 表
         await db
             .insertInto('Login')
@@ -83,19 +108,16 @@ router.post('/login', async ( req: express.Request, res: express.Response ) => {
                 expired_time: expireTime.toISOString(),
             })
             .execute();
-        res.json({
-            token,
-            expired_time: expireTime.toISOString(),
-            message: 'Login successful',
-        });
+        res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict' ,expires: expireTime });
+        res.json({ message: 'Login successful' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
 //登出路由
-router.post('/logout', async (req: Request, res: Response) => {
-    const token = req.headers.authorization?.split(' ')[1]; //從 https 的header提取 Token
+router.post('/logout', cookie_parser() ,async (req: Request, res: Response) => {
+    const token = req.cookies.token;
     if (!token) {
         res.status(400).json({ message: 'Token is required' });
         return;
@@ -115,6 +137,7 @@ router.post('/logout', async (req: Request, res: Response) => {
             .deleteFrom('Login')
             .where('token', '=', token)
             .execute();
+        res.clearCookie('token');
         res.json({ message: 'Logout successful' });
     } catch (err) {
         console.error(err);
