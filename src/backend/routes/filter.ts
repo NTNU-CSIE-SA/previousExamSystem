@@ -2,6 +2,9 @@ import express, { Request, Response } from 'express';
 import { db } from '../db';
 import { check_admin_level } from './admin';
 import { school_id_from_token } from './auth';
+import DotenvFlow from 'dotenv-flow';
+
+DotenvFlow.config();
 
 let VERIFY_LEVEL = 2;
 if (process.env.VERIFY_LEVEL !== undefined) {

@@ -3,6 +3,9 @@ import fs from 'fs';
 import { school_id_from_token } from './auth';
 import { check_admin_level } from './admin';
 import { db } from '../db';
+import DotenvFlow from 'dotenv-flow';
+
+DotenvFlow.config();
 
 let VERIFY_LEVEL = 2;
 if (process.env.VERIFY_LEVEL !== undefined) {

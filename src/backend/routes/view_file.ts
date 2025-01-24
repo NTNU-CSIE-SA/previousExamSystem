@@ -4,6 +4,9 @@ import path from 'path';
 import { db } from '../db';
 import { check_admin_level } from './admin'
 import { school_id_from_token, check_is_banned } from './auth';
+import DotenvFlow from 'dotenv-flow';
+
+DotenvFlow.config();
 
 const router = express.Router();
 const VERIFIED_DIR = process.env.VERIFIED_DIR || path.join(__dirname, '../../verified');

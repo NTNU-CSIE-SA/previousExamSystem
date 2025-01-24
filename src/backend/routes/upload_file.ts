@@ -5,6 +5,9 @@ import fs from 'fs';
 import path from 'path';
 import { school_id_from_token } from './auth';
 import { db } from '../db';
+import DotenvFlow from 'dotenv-flow';
+
+DotenvFlow.config();
 
 const router = express.Router();
 

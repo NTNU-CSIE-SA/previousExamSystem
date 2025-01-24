@@ -3,6 +3,9 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { db } from '../db';
 import cookie_parser from 'cookie-parser';
+import DotenvFlow from 'dotenv-flow';
+
+DotenvFlow.config();
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;

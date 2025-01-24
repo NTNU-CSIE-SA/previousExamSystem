@@ -1,6 +1,9 @@
 import express, { Request, Response } from 'express';
 import { db } from '../db';
 import { school_id_from_token } from './auth';
+import DotenvFlow from 'dotenv-flow';
+
+DotenvFlow.config();
 
 let USER_LIST_LEVEL = 2;
 if (process.env.USER_LIST_LEVEL !== undefined) {
