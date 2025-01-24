@@ -27,7 +27,7 @@ export interface Document {
 export interface Login {
     token: string;
     school_id: string;
-    expire_time: string;
+    expired_time: string;
 }
 
 

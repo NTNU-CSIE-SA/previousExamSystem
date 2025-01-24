@@ -33,18 +33,17 @@ allow file type:
 like SELECT DISTINCT "semester" FROM Document
 {semester: , subject: , exam type:}
 #### send file list to frontend(don't need permission)
-1. return json that have "semester", "class", "file name" and varify
-(subject1 OR subject2 OR...) AND (semester1 OR semester2 OR ...) AND (type1 OR type2 OR ...) AND isVarified == True
+1. return json that have "semester", "class", "file name" and verify
+(subject1 OR subject2 OR...) AND (semester1 OR semester2 OR ...) AND (type1 OR type2 OR ...) AND isVerified == True
 2. if list is empty == '*'
 #### view file detail()
 1. get file id
 2. check cookie
 3. check user id in cookie and check if it is valid from SQL database, if not valid error status code
     - status 200: success
-    - 
 4. get file path from SQL database
 5. check file exist 
-<!-- 6. check file is varified -->
+6. check file is verified
 7. send file to frontend
 
 ### admin
@@ -74,8 +73,8 @@ like SELECT DISTINCT "semester" FROM Document
 #### filter
 1. check cookie's user is admin
 2. filter by tag frontend send (same type use OR, and use AND to filter all)
-    (subject1 OR subject2 OR...) AND (semester1 OR semester2 OR ...) AND (type1 OR type2 OR ...) AND isVarified
-3. list all unvarify file from SQL database
+    (subject1 OR subject2 OR...) AND (semester1 OR semester2 OR ...) AND (type1 OR type2 OR ...) AND isVerified
+3. list all unverify file from SQL database
 4. return json that have "file id", "file name", "user id"
 
 #### verify file
@@ -90,7 +89,7 @@ google excel
 #### delete file
 1. check cookie's user is admin
 2. check file id is valid from SQL database
-3. check file is unvarified
+3. check file is unverified
 4. delete file from file system
 5. delete column from SQL database
 6. return delete success
@@ -101,4 +100,7 @@ google excel
 3. change file info in SQL database(semester, class, file name) for file id
 4. return modify success
 
-{file id: , semester: asdasd, subject: , exam type ,varify}
+{file id: , semester: , subject: , exam type ,verify}
+
+#### start the server
+1. pnpm exec ts-node src/backend/server.ts
