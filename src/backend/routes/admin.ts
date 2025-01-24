@@ -38,7 +38,7 @@ export async function check_admin_level(school_id: string){
     
 }
 
-router.get('user-lists', async (req: Request, res: Response) => {
+router.get('/user-lists', async (req: Request, res: Response) => {
     try{
         const token = req.headers.authorization;
         if (!token) {
@@ -170,5 +170,7 @@ router.post('/unban', express.json(), async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
+router
 
 export default router;
