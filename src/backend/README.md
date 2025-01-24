@@ -1,8 +1,8 @@
 ## ENV
-- `PORT`: port number (default: 5000)
-- `UPLOADS_DIR`: directory where uploaded files are stored (default: `.uploads`)
-- `VERIFIED_DIR`: directory where verified files are stored (default: `../../verified`)
-- `TOKEN_EXPIRY`: token expiry time in days (default: 30)
+- `BACKEND_PORT`: port number (default: 5000)
+- `UPLOADS_DIR`: directory where uploaded files are stored (default: `./uploads`)
+- `VERIFIED_DIR`: directory where verified files are stored (default: `./verified`)
+- `TOKEN_EXPIRY_DAYS`: token expiry time in days (default: 30)
 - `MAX_FILE_SIZE`: maximum file size allowed in MB (default: 10)
 - `JWT_SECRET`: secret key for JWT
 - `USER_LIST_LEVEL` : minimum user level required to view user list (default 2)
@@ -275,6 +275,8 @@ Can set UPLOADS_DIR in .env to change the directory where uploaded files are sto
 Can set MAX_FILE_SIZE in .env to change the maximum file size allowed.(MB) (default: 10MB)
 
 ### Request
+POST `/api/upload_file/upload`
+
 cookie with token
 
 **Form Data:**
@@ -323,7 +325,7 @@ cookie with token
 ## View file details
 Retrieve detailed information about a specific file and serve the file for download.
 
-Can set VERIFIED_DIR in .env to change the directory where verified files are stored. (default: `../../verified`)
+Can set VERIFIED_DIR in .env to change the directory where verified files are stored. (default: `./verified`)
 Can set VIEW_FILE_LEVEL in .env to change the minimum user level required to view files. (default 2)
 
 
