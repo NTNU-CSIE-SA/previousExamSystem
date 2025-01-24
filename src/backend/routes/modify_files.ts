@@ -85,7 +85,7 @@ router.post('/verify', async (req: Request, res: Response) => {
             .set({ verified: 1 , pdf_locate: `${file.id}`})
             .where('id', '=', file_id)
             .execute();
-        res.json({ message: 'File verified' });
+        res.json({ message: `File ${file_id} verified` });
     }
     catch (err) {
         console.error(err);
@@ -142,7 +142,7 @@ router.post('/delete', async (req: Request, res: Response) => {
             .deleteFrom('Document')
             .where('id', '=', file_id)
             .execute();
-        res.json({ message: 'File deleted' });
+        res.json({ message: `File ${file_id} deleted` });
     }
     catch (err) {
         console.error(err);
@@ -224,7 +224,7 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
             .$if(verfied !== undefined, (qb) => qb.set({ verified: verfied }))
             .where('id', '=', file_id)
             .execute();
-        res.json({ message: 'File info modified' });
+        res.json({ message: `File ${file_id} modified` });
     }
     catch (err) {
         console.error(err);
