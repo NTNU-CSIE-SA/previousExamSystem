@@ -11,11 +11,11 @@ const VERIFIED_DIR = process.env.VERIFIED_DIR || path.join(__dirname, '../../ver
 if (!fs.existsSync(VERIFIED_DIR)) {
     fs.mkdirSync(VERIFIED_DIR, { recursive: true });
 }
-let VIEW_UNVERIFIED_LEVEL = 2;
-if (process.env.VIEW_UNVERIFIED_LEVEL !== undefined) {
-    VIEW_UNVERIFIED_LEVEL = parseInt(process.env.VIEW_UNVERIFIED_LEVEL);
-    if (isNaN(VIEW_UNVERIFIED_LEVEL)) {
-        VIEW_UNVERIFIED_LEVEL = 2;
+let VERIFY_LEVEL = 2;
+if (process.env.VERIFY_LEVEL !== undefined) {
+    VERIFY_LEVEL = parseInt(process.env.VERIFY_LEVEL);
+    if (isNaN(VERIFY_LEVEL)) {
+        VERIFY_LEVEL = 2;
     }
 }
 
@@ -52,7 +52,7 @@ router.get('/detail/:file_id', async (req: Request, res: Response) => {
             res.status(401).json({ message: 'Invalid school ID' });
             return;
         }
-        if (file.verified === 0 && admin_level < VIEW_UNVERIFIED_LEVEL) {
+        if (file.verified === 0 && admin_level < VERIFY_LEVEL) {
             res.status(403).json({ message: 'File is not verified' });
             return;
         }

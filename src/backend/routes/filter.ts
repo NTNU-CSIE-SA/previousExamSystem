@@ -3,11 +3,11 @@ import { db } from '../db';
 import { check_admin_level } from './admin';
 import { school_id_from_token } from './auth';
 
-let VIEW_UNVERIFIED_LEVEL = 2;
-if (process.env.VIEW_UNVERIFIED_LEVEL !== undefined) {
-    VIEW_UNVERIFIED_LEVEL = parseInt(process.env.VIEW_UNVERIFIED_LEVEL);
-    if (isNaN(VIEW_UNVERIFIED_LEVEL)) {
-        VIEW_UNVERIFIED_LEVEL = 2;
+let VERIFY_LEVEL = 2;
+if (process.env.VERIFY_LEVEL !== undefined) {
+    VERIFY_LEVEL = parseInt(process.env.VERIFY_LEVEL);
+    if (isNaN(VERIFY_LEVEL)) {
+        VERIFY_LEVEL = 2;
     }
 }
 
@@ -63,7 +63,7 @@ router.post('/file-lists', express.json(), async (req: Request, res: Response) =
             res.status(401).json({ message: 'Invalid school ID' });
             return;
         }
-        if (admin_level < VIEW_UNVERIFIED_LEVEL) {
+        if (admin_level < VERIFY_LEVEL) {
             const file_list = await db
                 .selectFrom('Document')
                 .select(['id', 'upload_time', 'subject', 'semester', 'exam_type'])

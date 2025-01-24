@@ -4,11 +4,11 @@ import { school_id_from_token } from './auth';
 import { check_admin_level } from './admin';
 import { db } from '../db';
 
-let VIEW_UNVERIFIED_LEVEL = 2;
+let VERIFY_LEVEL = 2;
 if (process.env.VERIFY_LEVEL !== undefined) {
-    VIEW_UNVERIFIED_LEVEL = parseInt(process.env.VERIFY_LEVEL);
-    if (isNaN(VIEW_UNVERIFIED_LEVEL)) {
-        VIEW_UNVERIFIED_LEVEL = 2;
+    VERIFY_LEVEL = parseInt(process.env.VERIFY_LEVEL);
+    if (isNaN(VERIFY_LEVEL)) {
+        VERIFY_LEVEL = 2;
     }
 }
 
@@ -44,7 +44,7 @@ router.post('/verify', async (req: Request, res: Response) => {
             res.status(401).json({ message: 'Invalid school ID' });
             return;
         }
-        if (admin_level < VIEW_UNVERIFIED_LEVEL) {
+        if (admin_level < VERIFY_LEVEL) {
             res.status(403).json({ message: 'Permission denied' });
             return;
         }
