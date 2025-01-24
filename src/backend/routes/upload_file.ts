@@ -3,7 +3,7 @@ import multer from 'multer';
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import dotenvFlow from 'dotenv-flow';
+import { school_id_from_token } from './auth';
 import { db } from '../db';
 
 const router = express.Router();
@@ -48,25 +48,11 @@ const upload = multer({
 //上傳檔案路由
 router.post('/upload', upload.single('file'), async (req: Request, res: Response) => {
     try {
-        //確認 cookie 是否存在
-        const token = req.headers.cookie?.split('=')[1];
-        if (!token) {
-            res.status(401).json({ message: 'Unauthorized: Missing cookie' });
+        const school_id = await school_id_from_token(req, res);
+        if (!school_id) {
+            res.status(401).json({ message: 'Unauthorized' });
             return;
         }
-
-        //確認 token 是否有效
-        const session = await db
-            .selectFrom('Login')
-            .selectAll()
-            .where('token', '=', token)
-            .executeTakeFirst();
-
-        if (!session) {
-            res.status(401).json({ message: 'Unauthorized: Invalid token' });
-            return;
-        }
-
         //確認是否有上傳檔案
         if (!req.file) {
             res.status(400).json({ message: 'No file uploaded' });
@@ -86,12 +72,12 @@ router.post('/upload', upload.single('file'), async (req: Request, res: Response
             .values({
                 id: uniqueId,
                 upload_time: uploadTime,
-                uploader_id: session.school_id,
+                uploader_id: school_id,
                 pdf_locate: filename,
                 subject: req.body.subject || 'Unknown',
                 semester: req.body.semester || 'Unknown',
                 exam_type: req.body.exam_type || 'Unknown',
-                verified: 0,//預設未驗證
+                verified: 0
             })
             .execute();
 

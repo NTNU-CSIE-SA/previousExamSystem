@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { db } from '../db';
 import { check_admin_level } from './admin';
+import { school_id_from_token } from './auth';
 
 let VIEW_UNVERIFIED_LEVEL = 2;
 if (process.env.VIEW_UNVERIFIED_LEVEL !== undefined) {
@@ -44,17 +45,7 @@ router.get('/tags', async (req: Request, res: Response) => {
 
 router.post('/file-lists', express.json(), async (req: Request, res: Response) => {
     try{
-        const token = req.headers.authorization;
-        if (!token) {
-            res.status(400).json({ message: 'Token is required' });
-            return;
-        }
-        const school_id= await db
-            .selectFrom('Login')
-            .select('school_id')
-            .where('token', '=', token)
-            .executeTakeFirst();
-        // TODO: that may be replace to a function to update expiretime
+        const school_id = await school_id_from_token(req, res);
         if (!school_id) {
             res.status(401).json({ message: 'Invalid token' });
             return;
@@ -67,7 +58,7 @@ router.post('/file-lists', express.json(), async (req: Request, res: Response) =
             res.status(400).json({ message: 'Subject, semester and exam type are required' });
             return;
         }
-        const admin_level = await check_admin_level(school_id.school_id);
+        const admin_level = await check_admin_level(school_id);
         if (!admin_level) {
             res.status(401).json({ message: 'Invalid school ID' });
             return;
