@@ -74,8 +74,8 @@ router.post('/upload', upload.single('file'), async (req: Request, res: Response
         }
 
         //生成唯一 ID
-        const uniqueId = parseInt(crypto.randomBytes(4).toString('hex'), 16);
-
+        const now_time = new Date().getTime();
+        const uniqueId = now_time * 1000 + parseInt(crypto.createHash('sha256').update(now_time.toString()).digest('hex').slice(0, 6), 16) % 1000;
         //檔案相關資訊
         const { originalname, filename, size } = req.file;
         const uploadTime = new Date().toISOString();
