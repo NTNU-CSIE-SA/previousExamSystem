@@ -71,6 +71,35 @@ export async function school_id_from_token(req: Request, res: Response){
     }
 }
 
+export async function check_is_banned(school_id: string){
+    try{
+        const ban_until = await db
+            .selectFrom('Profile')
+            .select('ban_until')
+            .where('school_id', '=', school_id)
+            .executeTakeFirst();
+        if (!ban_until || ban_until.ban_until === '') {
+            return false;
+        }
+        if (new Date(ban_until.ban_until) > new Date()) {
+            return true;
+        }
+        if (new Date(ban_until.ban_until) <= new Date()) {
+            const unban_result = await db
+                .updateTable('Profile')
+                .set('ban_until', '')
+                .where('school_id', '=', school_id)
+                .execute();
+            return false;
+        }
+        
+    }
+    catch (err) {
+        console.error(err);
+        return false;
+    }
+}
+
 //登入路由
 router.post('/login', async ( req: express.Request, res: express.Response ) => {
     const { school_id, password } = req.body;
