@@ -9,54 +9,7 @@ const VERIFIED_DIR = process.env.VERIFIED_DIR || path.join(__dirname, '../../ver
 if (!fs.existsSync(VERIFIED_DIR)) {
     fs.mkdirSync(VERIFIED_DIR, { recursive: true });
 }
-//取得所有 tag (semester, subject, exam_type)
-router.get('/tags', async (req: Request, res: Response) => {
-    try {
-        const tags = await db
-            .selectFrom('Document')
-            .select(['semester', 'subject', 'exam_type'])
-            .distinct()
-            .execute();
-        res.status(200).json({ status: 'success', tags });
-    } catch (err) {
-        console.error('Error fetching tags:', err);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-});
-//取得檔案列表
-router.get('/list', async (req: Request, res: Response) => {
-    try {
-        const { subject, semester, exam_type } = req.query as {
-            subject?: string;
-            semester?: string;
-            exam_type?: string;
-        };
-        const fileList = await db
-            .selectFrom('Document')
-            .select([
-                'id as file_id',
-                'subject',
-                'semester',
-                'exam_type',
-                'pdf_locate as file_name',
-                'verified',
-            ])
-            .where('verified', '=', 1)
-            .$if(!!subject, (qb) => qb.where('subject', '=', subject!))
-            .$if(!!semester, (qb) => qb.where('semester', '=', semester!))
-            .$if(!!exam_type, (qb) => qb.where('exam_type', '=', exam_type!))
-            .execute();
-        if (fileList.length === 0) {
-            res.status(200).json({ message: 'No files found' });
-            return;
-        }
 
-        res.status(200).json(fileList);
-    } catch (err) {
-        console.error('Error fetching file list:', err);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-});
 //查看檔案詳細資訊並下載
 router.get('/detail/:file_id', async (req: Request, res: Response) => {
     try {
@@ -70,7 +23,7 @@ router.get('/detail/:file_id', async (req: Request, res: Response) => {
             .selectFrom('Login')
             .selectAll()
             .where('token', '=', token)
-            .where('expire_time', '>', new Date().toISOString()) //確保未過期
+            .where('expired_time', '>', new Date().toISOString()) //確保未過期
             .executeTakeFirst();
         if (!session) {
             res.status(401).json({ message: 'Unauthorized: Invalid or expired token' });
