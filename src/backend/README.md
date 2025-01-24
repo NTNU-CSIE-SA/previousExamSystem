@@ -197,6 +197,8 @@ GET `/api/view/list`
 ### View file details
 Retrieve detailed information about a specific file and serve the file for download.
 
+**Added Check:** Verify if the user viewing the file is banned.
+
 ### Request
 GET `/api/view/detail/:file_id`
 
@@ -222,6 +224,13 @@ Content-Disposition: `attachment; filename="<file_name>.pdf"`
 ```json
 {
   "message": "Unauthorized: Invalid or expired token"
+}
+```
+
+- **Error** (User is banned)
+```json
+{
+  "message": "User is currently banned"
 }
 ```
 
