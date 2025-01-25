@@ -75,7 +75,7 @@ router.get('/user-lists', async (req: Request, res: Response) => {
     }
 });
 
-router.post('/ban', express.json(), async (req: Request, res: Response) => {
+router.post('/ban', async (req: Request, res: Response) => {
     try{
         const token = req.headers.authorization;
         if (!token) {
@@ -130,7 +130,7 @@ router.post('/ban', express.json(), async (req: Request, res: Response) => {
     }
 });
 
-router.post('/unban', express.json(), async (req: Request, res: Response) => {
+router.post('/unban', async (req: Request, res: Response) => {
     try{
         const token = req.headers.authorization;
         if (!token) {

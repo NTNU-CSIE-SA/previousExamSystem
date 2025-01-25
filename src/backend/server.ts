@@ -14,6 +14,7 @@ init_server();
 const BACKEND_PORT = process.env.BACKEND_PORT || 5000;
 
 app.use(cookieParser());
+app.use(express.json());
 app.use("/api/auth", authRouter);
 app.use("/api/filter", filterRouter);
 app.use("/api/upload_file", uploadRouter);

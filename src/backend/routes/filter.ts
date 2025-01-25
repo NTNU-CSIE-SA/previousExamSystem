@@ -46,7 +46,7 @@ router.get('/tags', async (req: Request, res: Response) => {
     }
 });
 
-router.post('/file-lists', express.json(), async (req: Request, res: Response) => {
+router.post('/file-lists', async (req: Request, res: Response) => {
     try{
         const school_id = await school_id_from_token(req, res);
         if (!school_id) {
@@ -75,6 +75,7 @@ router.post('/file-lists', express.json(), async (req: Request, res: Response) =
                 .$if(exam_type.length > 0, (qb) => qb.where('exam_type', '=', exam_type))
                 .where('verified', '=', 1)
                 .execute();
+            console.log(file_list);
             res.json(file_list);
         }
         else {
@@ -88,6 +89,7 @@ router.post('/file-lists', express.json(), async (req: Request, res: Response) =
                 .$if(verified !== undefined, (qb) => qb.where('verified', '=', verified))
                 .$if(verified === undefined, (qb) => qb.where('verified', '=', 1))
                 .execute();
+            console.log(file_list);
             res.json(file_list);
         }
     }
