@@ -29,7 +29,6 @@ if (process.env.BCRYPT_SALT_ROUNDS !== undefined) {
 
 export async function school_id_from_token(req: Request, res: Response){
     try{
-        cookie_parser();
         const token = req.cookies.token;
         if (!token) {
             return undefined;
@@ -103,7 +102,6 @@ export async function check_is_banned(school_id: string){
 
 //登入路由
 router.post('/login', async ( req: express.Request, res: express.Response ) => {
-    console.log("get login request");
     try {
         const { school_id, password } = req.body;
         if (!school_id || !password) {
@@ -143,7 +141,7 @@ router.post('/login', async ( req: express.Request, res: express.Response ) => {
     }
 });
 //登出路由
-router.post('/logout', cookie_parser() ,async (req: Request, res: Response) => {
+router.post('/logout' ,async (req: Request, res: Response) => {
     const token = req.cookies.token;
     if (!token) {
         res.status(400).json({ message: 'Token is required' });

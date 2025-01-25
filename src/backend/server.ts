@@ -6,13 +6,14 @@ import viewFileRouter from "./routes/view_file";
 import filterRouter from "./routes/filter";
 import adminRouter from "./routes/admin";
 import modifyRouter from "./routes/modify_files";
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
 init_server();
 const BACKEND_PORT = process.env.BACKEND_PORT || 5000;
 
-app.use(express.json());
+app.use(cookieParser());
 app.use("/api/auth", authRouter);
 app.use("/api/filter", filterRouter);
 app.use("/api/upload_file", uploadRouter);
