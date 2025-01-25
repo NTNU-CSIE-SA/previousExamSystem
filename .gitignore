@@ -19,8 +19,11 @@ pnpm-lock.yaml
 .env.test.local
 .env.production.local
 .env
-*.sqlite
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# backend
+*.sqlite
+uploads/
+verified/
