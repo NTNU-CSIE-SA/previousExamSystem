@@ -8,9 +8,10 @@ import adminRouter from "./routes/admin";
 import modifyRouter from "./routes/modify_files";
 
 const app = express();
-const BACKEND_PORT = process.env.PORT || 5000;
 
 init_server();
+const BACKEND_PORT = process.env.BACKEND_PORT || 5000;
+
 app.use(express.json());
 app.use("/api/auth", authRouter);
 app.use("/api/filter", filterRouter);
