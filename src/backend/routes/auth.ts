@@ -103,12 +103,13 @@ export async function check_is_banned(school_id: string){
 
 //登入路由
 router.post('/login', async ( req: express.Request, res: express.Response ) => {
-    const { school_id, password } = req.body;
-    if (!school_id || !password) {
-        res.status(400).json({ message: 'School ID and password are required' });
-    }
-
+    console.log("get login request");
     try {
+        const { school_id, password } = req.body;
+        if (!school_id || !password) {
+            res.status(400).json({ message: 'School ID and password are required' });
+            return;
+        }
         //查詢用戶是否存在
         const user = await db
             .selectFrom('Profile')
@@ -118,6 +119,7 @@ router.post('/login', async ( req: express.Request, res: express.Response ) => {
 
         if (!user || !(await bcrypt.compare(password, user.password))) {
             res.status(401).json({ message: 'Invalid school ID or password' });
+            return;
         }
         //生成 JWT Token
         let expireTime = new Date();
@@ -134,6 +136,7 @@ router.post('/login', async ( req: express.Request, res: express.Response ) => {
             .execute();
         res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict' ,expires: expireTime });
         res.json({ message: 'Login successful' });
+        return;
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
@@ -155,6 +158,7 @@ router.post('/logout', cookie_parser() ,async (req: Request, res: Response) => {
             .executeTakeFirst();
         if (!tokenExists) {
             res.status(400).json({ message: 'Invalid token or session not found' });
+            return;
         }
         //刪除 Token
         await db
@@ -163,6 +167,7 @@ router.post('/logout', cookie_parser() ,async (req: Request, res: Response) => {
             .execute();
         res.clearCookie('token');
         res.json({ message: 'Logout successful' });
+        return;
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
@@ -197,6 +202,7 @@ router.post('change-password', async (req: Request, res: Response) => {
             .where('school_id', '=', school_id)
             .execute();
         res.json({ message: 'Password changed' });
+        return;
     }
     catch (err) {
         console.error(err);
