@@ -57,8 +57,19 @@ router.post('/upload', upload.single('file'), async (req: Request, res: Response
             return;
         }
         //確認是否有上傳檔案
+        console.log(req.file);
         if (!req.file) {
             res.status(400).json({ message: 'No file uploaded' });
+            return;
+        }
+        if (!req.body.subject || !req.body.semester || !req.body.exam_type) {
+            fs.unlinkSync(`${UPLOADS_DIR}/${req.file.filename}`);
+            res.status(400).json({ message: 'Subject, semester, and exam_type are required' });
+            return;
+        }
+        if(!((req.body.subject.length > 0 && typeof req.body.subject === 'string') && (req.body.semester.length > 0 && typeof req.body.semester === 'string') && (req.body.exam_type.length > 0 && typeof req.body.exam_type === 'string'))){
+            fs.unlinkSync(`${UPLOADS_DIR}/${req.file.filename}`);
+            res.status(400).json({ message: 'Invalid input type' });
             return;
         }
 
