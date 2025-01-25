@@ -25,7 +25,7 @@ GET
 {
     "semester": [],
     "subject": [],
-    "type": []
+    "exam_type": []
 }
 ```
 
@@ -43,7 +43,7 @@ with Authorization header
 {
     "semester": [], // empty array mean all 
     "subject": [],  // empty array mean all
-    "type": [],     // empty array mean all
+    "exam_type": []     // empty array mean all
 }
 ```
 - with admin level >= `env.VERIFY_LEVEL` also can
@@ -51,7 +51,7 @@ with Authorization header
 {
     "semester": [], // empty array mean all 
     "subject": [],  // empty array mean all
-    "type": [],     // empty array mean all
+    "exam_type": [],     // empty array mean all
     "varified": 0 // 0 or 1
 }
 ```
@@ -149,7 +149,7 @@ with Authorization header
 ### verify file
 Can set VERIFY_LEVEL in .env to change the minimum user level required to verify files. (default 2)
 #### path
-`/api/admin/verify`
+`/api/modify-file/verify`
 #### input
 POST
 ```json
@@ -169,7 +169,7 @@ POST
 ### delete file
 Can set MODIFY_FILES_LEVEL in .env to change the minimum user level required to delete files. (default 4)
 #### path
-`/api/admin/delete`
+`/api/modify-file/delete`
 #### input
 POST
 ```json
@@ -189,7 +189,7 @@ POST
 ### modify file info
 Can set MODIFY_FILES_LEVEL in .env to change the minimum user level required to modify files. (default 4)
 #### path
-`/api/admin/modify`
+`/api/modify-file/modify`
 #### input
 POST
 ```json
