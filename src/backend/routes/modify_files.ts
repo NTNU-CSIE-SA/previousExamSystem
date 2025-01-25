@@ -76,7 +76,7 @@ router.post('/verify', async (req: Request, res: Response) => {
         if (!fs.existsSync(`${VERIFIED_DIR}`)) {
             fs.mkdirSync(`${VERIFIED_DIR}`, { recursive: true });
         }
-        fs.rename(`${UPLOADS_DIR}/${file.pdf_locate}`, `${VERIFIED_DIR}/${file.id}`, (err) => { 
+        fs.rename(`${UPLOADS_DIR}/${file.pdf_locate}`, `${VERIFIED_DIR}/${file.id}.pdf`, (err) => { 
             if (err) {
                 console.error(err);
                 res.status(500).json({ message: 'Internal server error' });
@@ -85,7 +85,7 @@ router.post('/verify', async (req: Request, res: Response) => {
         });
         await db
             .updateTable('Document')
-            .set({ verified: 1 , pdf_locate: `${file.id}`})
+            .set({ verified: 1 , pdf_locate: `${file.id}.pdf`})
             .where('id', '=', file_id)
             .execute();
         res.json({ message: `File ${file_id} verified` });
@@ -209,7 +209,7 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
             if (!fs.existsSync(`${UPLOADS_DIR}`)) {
                 fs.mkdirSync(`${UPLOADS_DIR}`, { recursive: true });
             }
-            fs.rename(`${VERIFIED_DIR}/${file.id}`, `${UPLOADS_DIR}/${file.pdf_locate}`, (err) => {
+            fs.rename(`${VERIFIED_DIR}/${file.pdf_locate}`, `${UPLOADS_DIR}/${file.pdf_locate}`, (err) => {
                 if (err) {
                     console.error(err);
                     res.status(500).json({ message: 'Internal server error' });
@@ -225,7 +225,7 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
             if (!fs.existsSync(`${VERIFIED_DIR}`)) {
                 fs.mkdirSync(`${VERIFIED_DIR}`, { recursive: true });
             }
-            fs.rename(`${UPLOADS_DIR}/${file.pdf_locate}`, `${VERIFIED_DIR}/${file.id}`, (err) => {
+            fs.rename(`${UPLOADS_DIR}/${file.pdf_locate}`, `${VERIFIED_DIR}/${file.id}.pdf`, (err) => {
                 if (err) {
                     console.error(err);
                     res.status(500).json({ message: 'Internal server error' });
