@@ -9,15 +9,15 @@ import {
   
 export interface Profile {
     school_id: string;
-    name: string;
+    name: string | null;
     password: string;
-    ban_until: string;
+    ban_until: string | null;
     admin_level: number;
 }
 export interface Document {
     id: number;
     upload_time: string;
-    uploader_id: string;
+    uploader_id: string | null;
     pdf_locate: string;
     subject: string;
     semester: string;

@@ -78,7 +78,7 @@ export async function check_is_banned(school_id: string){
             .select('ban_until')
             .where('school_id', '=', school_id)
             .executeTakeFirst();
-        if (!ban_until || ban_until.ban_until === '') {
+        if (!ban_until || ban_until.ban_until === null) {
             return false;
         }
         if (new Date(ban_until.ban_until) > new Date()) {
@@ -87,7 +87,7 @@ export async function check_is_banned(school_id: string){
         if (new Date(ban_until.ban_until) <= new Date()) {
             const unban_result = await db
                 .updateTable('Profile')
-                .set('ban_until', '')
+                .set('ban_until', null)
                 .where('school_id', '=', school_id)
                 .execute();
             return false;

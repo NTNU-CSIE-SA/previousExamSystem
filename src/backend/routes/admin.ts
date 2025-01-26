@@ -144,7 +144,7 @@ router.post('/unban', async (req: Request, res: Response) => {
         // check if the user exists
         const unban_result = await db
             .updateTable('Profile')
-            .set( {ban_until: ''} )
+            .set( {ban_until: null} )
             .where('school_id', '=', ban_school_id)
             .executeTakeFirst();
         if (unban_result.numUpdatedRows === BigInt(0)) {
