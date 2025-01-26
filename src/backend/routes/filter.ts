@@ -79,17 +79,16 @@ router.post('/file-lists', async (req: Request, res: Response) => {
             res.json(file_list);
         }
         else {
-            const verified = req.body.verify;
+            let verified = req.body.verified;
             const file_list = await db
                 .selectFrom('Document')
-                .select(['id', 'upload_time', 'subject', 'semester', 'exam_type'])
+                .select(['id', 'upload_time', 'subject', 'semester', 'exam_type', 'verified'])
                 .$if(subject.length > 0, (qb) => qb.where('subject', '=', subject))
                 .$if(semester.length > 0, (qb) => qb.where('semester', '=', semester))
                 .$if(exam_type.length > 0, (qb) => qb.where('exam_type', '=', exam_type))
-                .$if(verified !== undefined, (qb) => qb.where('verified', '=', verified))
+                .$if(verified !== undefined && verified >= 0, (qb) => qb.where('verified', '=', verified))
                 .$if(verified === undefined, (qb) => qb.where('verified', '=', 1))
                 .execute();
-            console.log(file_list);
             res.json(file_list);
         }
     }
