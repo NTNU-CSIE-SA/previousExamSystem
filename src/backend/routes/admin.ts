@@ -43,11 +43,6 @@ export async function check_admin_level(school_id: string){
 
 router.get('/user-lists', async (req: Request, res: Response) => {
     try{
-        const token = req.headers.authorization;
-        if (!token) {
-            res.status(400).json({ message: 'Token is required' });
-            return;
-        }
         const school_id= await school_id_from_token(req, res);
         if (!school_id) {
             res.status(401).json({ message: 'Invalid token' });
@@ -77,11 +72,6 @@ router.get('/user-lists', async (req: Request, res: Response) => {
 
 router.post('/ban', async (req: Request, res: Response) => {
     try{
-        const token = req.headers.authorization;
-        if (!token) {
-            res.status(400).json({ message: 'Token is required' });
-            return;
-        }
         const school_id = await school_id_from_token(req, res);
         if(!school_id){
             res.status(401).json({ message: 'Invalid token' });
@@ -132,11 +122,6 @@ router.post('/ban', async (req: Request, res: Response) => {
 
 router.post('/unban', async (req: Request, res: Response) => {
     try{
-        const token = req.headers.authorization;
-        if (!token) {
-            res.status(400).json({ message: 'Token is required' });
-            return;
-        }
         const school_id = await school_id_from_token(req, res);
         if(!school_id){
             res.status(401).json({ message: 'Invalid token' });
