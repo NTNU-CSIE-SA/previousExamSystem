@@ -52,28 +52,49 @@ with Authorization header
     "semester": [], // empty array mean all 
     "subject": [],  // empty array mean all
     "exam_type": [],     // empty array mean all
-    "varified": 0 // 0 or 1
+    "verified": 0 // 0 or 1 or -1 (all)
 }
 ```
 #### output
+if admin level < `env.VERIFY_LEVEL`
 ```json
 [
     {
         "id": 1,
-        "upload_time": "2025-01-01 00:00:00",
+        "upload_time": "2025-01-25T08:16:51.482Z", // ISO 8601 format
         "subject": "subject",
         "semester": "semester",
         "exam_type": "type"
     },
     {
         "id": 2,
-        "upload_time": "2025-01-01 00:00:00",
+        "upload_time": "2025-01-25T08:16:51.482Z", // ISO 8601 format
         "subject": "subject",
         "semester": "semester",
         "exam_type": "type"
     }
 ]
-
+```
+if admin level >= `env.VERIFY_LEVLE`
+```json
+[
+    {
+        "id": 1,
+        "upload_time": "2025-01-25T08:16:51.482Z", // ISO 8601 format
+        "subject": "subject",
+        "semester": "semester",
+        "exam_type": "type",
+        "verified": 0 // 0 or 1
+    },
+    {
+        "id": 2,
+        "upload_time": "2025-01-25T08:16:51.482Z", // ISO 8601 format
+        "subject": "subject",
+        "semester": "semester",
+        "exam_type": "type",
+        "verified": 0 // 0 or 1
+    }
+]
 ```
 
 ---
@@ -81,7 +102,7 @@ with Authorization header
 ## admin
 ### list all user
 #### path
-`/api/admin/user-list`
+`/api/admin/user-lists`
 #### input
 GET
 #### output
@@ -90,12 +111,12 @@ GET
     {
         "school_id": "40047000S",
         "name": "name",
-        "ban_until": "2025-01-01 00:00:00"
+        "ban_until": "2025-01-25T08:16:51.482Z" // ISO 8601 format
     },
     {
         "school_id": "40047001S",
         "name": "name",
-        "ban_until": "2025-01-01 00:00:00"
+        "ban_until": "2025-01-25T08:16:51.482Z" // ISO 8601 format
     }
 ]
 ```
@@ -114,7 +135,7 @@ with Authorization header
 ```json
 {
     "school_id": "40047000S",
-    "ban_until": "2025-01-01 00:00:00"
+    "ban_until": "2025-01-25T08:16:51.482Z" // ISO 8601 format
 }
 ```
 #### output
@@ -189,7 +210,7 @@ POST
 ### modify file info
 Can set MODIFY_FILES_LEVEL in .env to change the minimum user level required to modify files. (default 4)
 #### path
-`/api/modify-file/modify`
+`/api/modify-file/modify-file-info`
 #### input
 POST
 ```json
