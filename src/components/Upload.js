@@ -103,6 +103,7 @@ export default function Upload(){
       return !isNaN(currentSemester) && !isNaN(currentCourse) && !isNaN(currentExam);
     }
 
+    //this function is for uploading file to backend
     async function uploadFile() {
       updateUploadStatus(1);
       
