@@ -3,14 +3,17 @@
     color: rgb(223, 223, 223);
     display: flex;
     justify-content: space-between;
-    align-items: stretch;
+    align-items: center;
     gap: 2rem;
     padding: 0 1rem;
+    height: 5%;
+    
 }
 
 .site-title {
   font-size: 2rem;
   margin: 1rem;
+
 }
 
 .nav ul {

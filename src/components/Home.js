@@ -51,6 +51,31 @@ export default function Home(){
     function searchResult(){
         //ToDo : you should connect this function to backend and get a result list of 
         //all the valid options.
+        //you should return an array of objects, each object has a name.
+        //all selected options contain in selectedSemester, selectedCourse, selectedYear
+
+
+        return ['110-1 演算法' , '110-2 演算法','110-1 演算法' , '110-2 演算法'
+        ,'110-1 演算法' , '110-2 演算法','110-1 演算法' , '110-2 演算法'
+        ,'110-1 演算法' , '110-2 演算法','110-1 演算法' , '110-2 演算法'
+        ,'110-1 演算法' , '110-2 演算法','110-1 演算法' , '110-2 演算法']
+    }
+
+    const [resultLabels , setResultLabels] = useState(<></>)
+
+
+    function generateResult(){
+
+        const result = searchResult()
+
+        const resultList = result.map((item) => {
+            return(
+                <div className='result-item'>{item}</div>
+            )
+        })
+
+        setResultLabels(resultList)
+
     }
 
 
@@ -117,10 +142,13 @@ export default function Home(){
                         fontSize: '1rem',
                     }
                 }
-                onClick={searchResult}
+                onClick={generateResult}
                 >
                 搜尋
                 </button>
+            </div>
+            <div className='result-container'>
+                {resultLabels}
             </div>
         </div>
     )
