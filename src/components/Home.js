@@ -119,7 +119,7 @@ export default function Home(){
                 }
                 onClick={searchResult}
                 >
-                上傳
+                搜尋
                 </button>
             </div>
         </div>
