@@ -102,7 +102,7 @@ if admin level >= `env.VERIFY_LEVLE`
 ## admin
 ### list all user
 #### path
-`/api/admin/user-lists`
+`/api/admin/user-list`
 #### input
 GET
 #### output
