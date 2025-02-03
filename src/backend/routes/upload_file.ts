@@ -2,7 +2,6 @@ import express, { Request, Response } from 'express';
 import multer from 'multer';
 import crypto from 'crypto';
 import fs from 'fs';
-import path from 'path';
 import { school_id_from_token } from './auth';
 import { db } from '../db';
 import DotenvFlow from 'dotenv-flow';
@@ -49,7 +48,22 @@ const upload = multer({
 });
 
 //上傳檔案路由
-router.post('/upload', upload.single('file'), async (req: Request, res: Response) => {
+router.post('/upload', upload.single('file'), (err: any, req: Request, res: Response, next: any) => {
+    if (err instanceof multer.MulterError) {
+        res.status(400).json({ message: `Only accept PDF files, max size: ${UPLOADS_SIZE}MB` });
+    } else if (err.code === 'LIMIT_FILE_SIZE') {
+        res.status(400).json({ message: `File size too large, max size: ${UPLOADS_SIZE}MB` });
+    } else if (err.code === 'Only PDF files are allowed') {
+        res.status(400).json({ message: 'Only accept PDF files' });
+    }
+    else if (err.message === 'Only PDF files are allowed') {
+        res.status(400).json({ message: 'Only accept PDF files' });
+    }
+    else if (err) {
+        res.status(500).json({ message: 'Internal server error' });
+    }
+},
+ async (req: Request, res: Response) => {
     try {
         const school_id = await school_id_from_token(req, res);
         if (!school_id) {
@@ -63,16 +77,25 @@ router.post('/upload', upload.single('file'), async (req: Request, res: Response
             return;
         }
         if (!req.body.subject || !req.body.semester || !req.body.exam_type) {
-            fs.unlinkSync(`${UPLOADS_DIR}/${req.file.filename}`);
+            fs.promises.unlink(`${UPLOADS_DIR}/${req.file.filename}`);
             res.status(400).json({ message: 'Subject, semester, and exam_type are required' });
             return;
         }
         if(!((req.body.subject.length > 0 && typeof req.body.subject === 'string') && (req.body.semester.length > 0 && typeof req.body.semester === 'string') && (req.body.exam_type.length > 0 && typeof req.body.exam_type === 'string'))){
-            fs.unlinkSync(`${UPLOADS_DIR}/${req.file.filename}`);
+            fs.promises.unlink(`${UPLOADS_DIR}/${req.file.filename}`);
             res.status(400).json({ message: 'Invalid input type' });
             return;
         }
-
+        // check magic number (%PDF)
+        const magic = await fs.promises.open(`${UPLOADS_DIR}/${req.file.filename}`, 'r');
+        const buffer = Buffer.alloc(4);
+        await magic.read(buffer, 0, 4, 0);
+        if (buffer.toString('hex') !== '25504446') {
+            fs.promises.unlink(`${UPLOADS_DIR}/${req.file.filename}`); 
+            res.status(400).json({ message: 'Invalid file format' });
+            return;
+        }
+        await magic.close();
         //生成唯一 ID
         const now_time = new Date().getTime();
         const uniqueId = now_time * 1000 + parseInt(crypto.createHash('sha256').update(now_time.toString()).digest('hex').slice(0, 6), 16) % 1000;
@@ -106,12 +129,7 @@ router.post('/upload', upload.single('file'), async (req: Request, res: Response
             },
         });
     } catch (error: any) {
-        console.error(error);
-        if (error instanceof multer.MulterError) {
-            res.status(400).json({ message: `Multer error: ${error.message}` });
-        } else {
-            res.status(500).json({ message: 'Internal server error' });
-        }
+        res.status(500).json({ message: 'Internal server error'});
     }
 });
 export default router;

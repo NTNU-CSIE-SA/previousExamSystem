@@ -23,7 +23,7 @@ if (process.env.VERIFY_LEVEL !== undefined) {
 }
 
 //查看檔案詳細資訊並下載
-router.get('/detail/:file_id', async (req: Request, res: Response) => {
+router.get('/:file_id', async (req: Request, res: Response) => {
     try {
         const school_id = await school_id_from_token(req, res);
         if (!school_id) {
@@ -61,12 +61,12 @@ router.get('/detail/:file_id', async (req: Request, res: Response) => {
         }
         //檢查檔案是否存在於 VERIFIED_DIR
         const filePath = path.join(VERIFIED_DIR, path.normalize(file.file_path));
-        if (!filePath.startsWith(VERIFIED_DIR) || !fs.existsSync(filePath)) {
+        if (!fs.existsSync(filePath)) {
             res.status(404).json({ message: 'File not found in verified directory' });
             return;
         }
         //傳送檔案
-        res.status(200).sendFile(filePath);
+        res.status(200).sendFile(filePath, { root: './' });
     } catch (err) {
         console.error('Error fetching file details:', err);
         res.status(500).json({ message: 'Internal server error' });
