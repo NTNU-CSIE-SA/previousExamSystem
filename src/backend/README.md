@@ -294,6 +294,25 @@ POST `/api/auth/logout`
 }
 ```
 
+## change password
+send Hashed password to server
+### Request
+POST `/api/auth/change_password`
+```json
+{
+  "old_password": "mypassword",
+  "new_password": "newpassword"
+}
+```
+
+### Response
+- **Success**
+```json
+{
+  "message": "Password changed"
+}
+```
+
 ---
 
 ## upload file
