@@ -23,7 +23,7 @@ if (process.env.MODIFY_FILES_LEVEL !== undefined) {
     }
 }
 
-let VERIFIED_DIR = './verfied';
+let VERIFIED_DIR = './verified';
 if (process.env.VERIFIED_DIR !== undefined) {
     VERIFIED_DIR = process.env.VERIFIED_DIR;
 }
@@ -186,8 +186,8 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
         const subject = req.body.subject;
         const semester = req.body.semester;
         const exam_type = req.body.exam_type;
-        const verfied = req.body.verified;
-        if (verfied !== undefined && (verfied < 0 || verfied > 1)) {
+        const verified = req.body.verified;
+        if (verified !== undefined && (verified < 0 || verified > 1)) {
             res.status(400).json({ message: 'Invalid verified value' });
             return;
         }
@@ -205,7 +205,7 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
             res.status(400).json({ message: 'Invalid input' });
             return;
         }
-        if (file.verified === 1 && verfied === 0) {
+        if (file.verified === 1 && verified === 0) {
             if (!fs.existsSync(`${VERIFIED_DIR}/${file.id}`)) {
                 res.status(404).json({ message: 'File not found' });
                 return;
@@ -221,7 +221,7 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
                 }
             });
         }
-        else if (file.verified === 0 && verfied === 1) {
+        else if (file.verified === 0 && verified === 1) {
             if (!fs.existsSync(`${UPLOADS_DIR}/${file.pdf_locate}`)) {
                 res.status(404).json({ message: 'File not found' });
                 return;
@@ -242,7 +242,7 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
             .$if(subject !== undefined, (qb) => qb.set({ subject: subject }))
             .$if(semester !== undefined, (qb) => qb.set({ semester: semester }))
             .$if(exam_type !== undefined, (qb) => qb.set({ exam_type: exam_type }))
-            .$if(verfied !== undefined, (qb) => qb.set({ verified: verfied }))
+            .$if(verified !== undefined, (qb) => qb.set({ verified: verified }))
             .where('id', '=', file_id)
             .execute();
         res.json({ message: `File ${file_id} modified` });
