@@ -237,6 +237,10 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
                 }
             });
         }
+        if (subject === undefined && semester === undefined && exam_type === undefined && verified === undefined) {
+            res.status(400).json({ message: 'No modification' });
+            return;
+        }
         await db
             .updateTable('Document')
             .$if(subject !== undefined, (qb) => qb.set({ subject: subject }))
