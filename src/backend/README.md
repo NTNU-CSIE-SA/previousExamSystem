@@ -102,7 +102,7 @@ if admin level >= `env.VERIFY_LEVLE`
 ## admin
 ### list all user
 #### path
-`/api/admin/user-list`
+`/api/admin/user-lists`
 #### input
 GET
 #### output
@@ -219,7 +219,7 @@ POST
     "subject": "new subject", // can have it or not, string 0 < length < 100
     "semester": "new semester", // can have it or not, string 0 < length < 100
     "exam_type": "new type", // can have it or not, string 0 < length < 100
-    "verify": 0 // can have it or not, 0 or 1
+    "verified": 0 // can have it or not, 0 or 1
 }
 ```
 #### output
@@ -357,14 +357,9 @@ Can set VIEW_FILE_LEVEL in .env to change the minimum user level required to vie
 
 
 ### Request
-GET `/api/view/detail/:file_id`
+GET `/api/view_file/:file_id`
 
-**Headers:**
-```json
-{
-  "Cookie": "token=<user_session_token>"
-}
-```
+example: `/api/view_file/12345678`
 
 ### Response
 - **Success** (File sent directly)
@@ -418,6 +413,6 @@ Content-Disposition: `attachment; filename="<file_name>.pdf"`
 ## Start the server
 1. Run the following command:
    ```bash
-   pnpm exec ts-node src/backend/server.ts
+   pnpm ts-node src/backend/server.ts
    ```
 
