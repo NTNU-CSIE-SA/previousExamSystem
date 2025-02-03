@@ -61,7 +61,7 @@ router.get('/detail/:file_id', async (req: Request, res: Response) => {
         }
         //檢查檔案是否存在於 VERIFIED_DIR
         const filePath = path.join(VERIFIED_DIR, path.normalize(file.file_path));
-        if (!filePath.startsWith(VERIFIED_DIR) || !fs.existsSync(filePath)) {
+        if (!fs.existsSync(filePath)) {
             res.status(404).json({ message: 'File not found in verified directory' });
             return;
         }
