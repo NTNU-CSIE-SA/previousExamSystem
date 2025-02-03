@@ -38,4 +38,27 @@ router.post('/change-name', async (req: Request, res: Response) => {
     }
 });
 
+router.get('/my-info', async (req: Request, res: Response) => {
+    try {
+        const school_id = await school_id_from_token(req, res);
+        if (!school_id) {
+            res.status(401).json({ message: 'Unauthorized' });
+            return;
+        }
+        const user = await db
+            .selectFrom('Profile')
+            .select(['school_id', 'name', 'ban_until'])
+            .where('school_id', '=', school_id)
+            .executeTakeFirst();
+        if (!user) {
+            res.status(404).json({ message: 'User not found' });
+            return;
+        }
+        res.json(user);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 export default router;    
