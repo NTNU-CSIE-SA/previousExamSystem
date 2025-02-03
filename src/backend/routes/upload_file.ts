@@ -2,7 +2,6 @@ import express, { Request, Response } from 'express';
 import multer from 'multer';
 import crypto from 'crypto';
 import fs from 'fs';
-import path from 'path';
 import { school_id_from_token } from './auth';
 import { db } from '../db';
 import DotenvFlow from 'dotenv-flow';
@@ -49,7 +48,22 @@ const upload = multer({
 });
 
 //上傳檔案路由
-router.post('/upload', upload.single('file'), async (req: Request, res: Response) => {
+router.post('/upload', upload.single('file'), (err: any, req: Request, res: Response, next: any) => {
+    if (err instanceof multer.MulterError) {
+        res.status(400).json({ message: `Only accept PDF files, max size: ${UPLOADS_SIZE}MB` });
+    } else if (err.code === 'LIMIT_FILE_SIZE') {
+        res.status(400).json({ message: `File size too large, max size: ${UPLOADS_SIZE}MB` });
+    } else if (err.code === 'Only PDF files are allowed') {
+        res.status(400).json({ message: 'Only accept PDF files' });
+    }
+    else if (err.message === 'Only PDF files are allowed') {
+        res.status(400).json({ message: 'Only accept PDF files' });
+    }
+    else if (err) {
+        res.status(500).json({ message: 'Internal server error' });
+    }
+},
+ async (req: Request, res: Response) => {
     try {
         const school_id = await school_id_from_token(req, res);
         if (!school_id) {
@@ -106,12 +120,7 @@ router.post('/upload', upload.single('file'), async (req: Request, res: Response
             },
         });
     } catch (error: any) {
-        console.error(error);
-        if (error instanceof multer.MulterError) {
-            res.status(400).json({ message: `Multer error: ${error.message}` });
-        } else {
-            res.status(500).json({ message: 'Internal server error' });
-        }
+        res.status(500).json({ message: 'Internal server error'});
     }
 });
 export default router;
