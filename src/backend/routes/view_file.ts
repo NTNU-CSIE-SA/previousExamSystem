@@ -66,7 +66,7 @@ router.get('/:file_id', async (req: Request, res: Response) => {
             return;
         }
         //傳送檔案
-        res.status(200).sendFile(filePath);
+        res.status(200).sendFile(filePath, { root: './' });
     } catch (err) {
         console.error('Error fetching file details:', err);
         res.status(500).json({ message: 'Internal server error' });
