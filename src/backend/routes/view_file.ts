@@ -23,7 +23,7 @@ if (process.env.VERIFY_LEVEL !== undefined) {
 }
 
 //查看檔案詳細資訊並下載
-router.get('/detail/:file_id', async (req: Request, res: Response) => {
+router.get('/:file_id', async (req: Request, res: Response) => {
     try {
         const school_id = await school_id_from_token(req, res);
         if (!school_id) {
