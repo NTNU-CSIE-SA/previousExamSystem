@@ -77,12 +77,12 @@ router.post('/upload', upload.single('file'), (err: any, req: Request, res: Resp
             return;
         }
         if (!req.body.subject || !req.body.semester || !req.body.exam_type) {
-            fs.unlinkSync(`${UPLOADS_DIR}/${req.file.filename}`);
+            fs.promises.unlink(`${UPLOADS_DIR}/${req.file.filename}`);
             res.status(400).json({ message: 'Subject, semester, and exam_type are required' });
             return;
         }
         if(!((req.body.subject.length > 0 && typeof req.body.subject === 'string') && (req.body.semester.length > 0 && typeof req.body.semester === 'string') && (req.body.exam_type.length > 0 && typeof req.body.exam_type === 'string'))){
-            fs.unlinkSync(`${UPLOADS_DIR}/${req.file.filename}`);
+            fs.promises.unlink(`${UPLOADS_DIR}/${req.file.filename}`);
             res.status(400).json({ message: 'Invalid input type' });
             return;
         }
