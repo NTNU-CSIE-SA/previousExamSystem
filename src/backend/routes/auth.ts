@@ -2,7 +2,6 @@ import express, { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { db } from '../db';
-import cookie_parser from 'cookie-parser';
 import DotenvFlow from 'dotenv-flow';
 
 DotenvFlow.config();
@@ -103,6 +102,11 @@ export async function check_is_banned(school_id: string){
 //登入路由
 router.post('/login', async ( req: express.Request, res: express.Response ) => {
     try {
+        const exist_token = req.cookies.token;
+        if(exist_token){
+            res.status(400).json({ message: 'Already logged in' });
+            return;
+        }
         const { school_id, password } = req.body;
         if (!school_id || !password) {
             res.status(400).json({ message: 'School ID and password are required' });
