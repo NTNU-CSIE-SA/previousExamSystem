@@ -176,7 +176,7 @@ router.post('/logout' ,async (req: Request, res: Response) => {
     }
 });
 
-router.post('change-password', async (req: Request, res: Response) => {
+router.post('/change-password', async (req: Request, res: Response) => {
     try {
         const school_id = await school_id_from_token(req, res);
         if (!school_id) {
