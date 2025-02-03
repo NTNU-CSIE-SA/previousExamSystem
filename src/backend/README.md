@@ -18,9 +18,9 @@
 Can set VERIFY_LEVEL in .env to change the minimum user level required to view unverified files. (default 2)
 #### path
 `/api/filter/tags`
-#### input method
+#### Request method
 GET
-#### output
+#### Response
 ```json
 {
     "semester": [],
@@ -34,7 +34,7 @@ GET
 ### list all file from selected tags
 #### path
 `/api/filter/file-lists`
-#### input method
+#### Request method
 POST
 
 with Authorization header
@@ -55,7 +55,7 @@ with Authorization header
     "verified": 0 // 0 or 1 or -1 (all)
 }
 ```
-#### output
+#### Response
 if admin level < `env.VERIFY_LEVEL`
 ```json
 [
@@ -103,9 +103,9 @@ if admin level >= `env.VERIFY_LEVLE`
 ### list all user
 #### path
 `/api/admin/user-lists`
-#### input
+#### Request
 GET
-#### output
+#### Response
 ```json
 [
     {
@@ -128,7 +128,7 @@ Can set BAN_LEVEL in .env to change the minimum user level required to ban users
 
 #### path
 `/api/admin/ban`
-#### input
+#### Request
 POST
 
 with Authorization header
@@ -138,18 +138,20 @@ with Authorization header
     "ban_until": "2025-01-25T08:16:51.482Z" // ISO 8601 format
 }
 ```
-#### output
+#### Response
 ```json
 {
     "message": "User 40047000S is banned until 2025-01-01 00:00:00" // or other error http status code with error message
 }
 ```
 
+----
+
 ### unban user
 Can set BAN_LEVEL in .env to change the minimum user level required to unban users. (default 3)
 #### path
 `/api/admin/unban`
-#### input
+#### Request
 POST
 
 with Authorization header
@@ -158,7 +160,7 @@ with Authorization header
     "school_id": "40047000S"
 }
 ```
-#### output
+#### Response
 ```json
 {
     "message": "User 40047000S is unbanned" // or other error http status code with error message
@@ -171,14 +173,14 @@ with Authorization header
 Can set VERIFY_LEVEL in .env to change the minimum user level required to verify files. (default 2)
 #### path
 `/api/modify-file/verify`
-#### input
+#### Request
 POST
 ```json
 {
     "file_id": 1
 }
 ```
-#### output
+#### Response
 ```json
 {
     "message": "File 1 is verified" // or other error http status code with error message
@@ -191,14 +193,14 @@ POST
 Can set MODIFY_FILES_LEVEL in .env to change the minimum user level required to delete files. (default 4)
 #### path
 `/api/modify-file/delete`
-#### input
+#### Request
 POST
 ```json
 {
     "file_id": 1
 }
 ```
-#### output
+#### Response
 ```json
 {
     "message": "File 1 is deleted" // or other error http status code with error message
@@ -211,7 +213,7 @@ POST
 Can set MODIFY_FILES_LEVEL in .env to change the minimum user level required to modify files. (default 4)
 #### path
 `/api/modify-file/modify-file-info`
-#### input
+#### Request
 POST
 ```json
 {
@@ -222,7 +224,7 @@ POST
     "verified": 0 // can have it or not, 0 or 1
 }
 ```
-#### output
+#### Response
 ```json
 {
     "message": "File 1 is modified" // or other error http status code with error message
@@ -231,22 +233,11 @@ POST
 
 ---
 
-## change password
-send Hashed password to server
-### Request
-POST `/api/auth/change_password`
-```json
-{
-  "old_password": "mypassword",
-  "new_password": "newpassword"
-}
-```
-
-
-## login
+## user authorization
+### login
 give a session token (add additional hash info inside)
 
-### Request
+#### Request
 POST `/api/auth/login`
 ```json
 {
@@ -255,7 +246,7 @@ POST `/api/auth/login`
 }
 ```
 
-### Response
+#### Response
 - **Success**
 ```json
 {
@@ -271,15 +262,15 @@ and set cookie with `token`
 }
 ```
 
----
+----
 
-## logout
+### logout
 delete cookie and expire it
 
-### Request
+#### Request
 POST `/api/auth/logout`
 
-### Response
+#### Response
 - **Success**
 ```json
 {
@@ -294,9 +285,11 @@ POST `/api/auth/logout`
 }
 ```
 
-## change password
+----
+
+### change password
 send Hashed password to server
-### Request
+#### Request
 POST `/api/auth/change_password`
 ```json
 {
@@ -305,7 +298,7 @@ POST `/api/auth/change_password`
 }
 ```
 
-### Response
+#### Response
 - **Success**
 ```json
 {
@@ -315,8 +308,10 @@ POST `/api/auth/change_password`
 
 ---
 
-## change name
-### Request
+## user info
+
+### change name
+#### Request
 POST `/api/user-info/change-name`
 ```json
 {
@@ -324,7 +319,7 @@ POST `/api/user-info/change-name`
 }
 ```
 
-### Response
+#### Response
 - **Success**
 ```json
 {
@@ -332,12 +327,14 @@ POST `/api/user-info/change-name`
 }
 ```
 
-## get user info
+----
 
-### Request
+### get user info
+
+#### Request
 GET `/api/user-info/my-info`
 
-### Response
+#### Response
 - **Success**
 ```json
 {
