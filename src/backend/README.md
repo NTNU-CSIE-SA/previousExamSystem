@@ -315,6 +315,40 @@ POST `/api/auth/change_password`
 
 ---
 
+## change name
+### Request
+POST `/api/user-info/change-name`
+```json
+{
+  "new_name": "new name"
+}
+```
+
+### Response
+- **Success**
+```json
+{
+  "message": "Name changed"
+}
+```
+
+## get user info
+
+### Request
+GET `/api/user-info/my-info`
+
+### Response
+- **Success**
+```json
+{
+  "school_id": "123456",
+  "name": "name",
+  "ban_until": "2025-01-25T08:16:51.482Z" // ISO 8601 format
+}
+```
+
+---
+
 ## upload file
 allow file type: PDF only
 Can set UPLOADS_DIR in .env to change the directory where uploaded files are stored. (default: `.uploads`)
