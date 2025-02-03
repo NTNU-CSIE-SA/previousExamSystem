@@ -86,7 +86,16 @@ router.post('/upload', upload.single('file'), (err: any, req: Request, res: Resp
             res.status(400).json({ message: 'Invalid input type' });
             return;
         }
-
+        // check magic number (%PDF)
+        const magic = await fs.promises.open(`${UPLOADS_DIR}/${req.file.filename}`, 'r');
+        const buffer = Buffer.alloc(4);
+        await magic.read(buffer, 0, 4, 0);
+        if (buffer.toString('hex') !== '25504446') {
+            fs.promises.unlink(`${UPLOADS_DIR}/${req.file.filename}`); 
+            res.status(400).json({ message: 'Invalid file format' });
+            return;
+        }
+        await magic.close();
         //生成唯一 ID
         const now_time = new Date().getTime();
         const uniqueId = now_time * 1000 + parseInt(crypto.createHash('sha256').update(now_time.toString()).digest('hex').slice(0, 6), 16) % 1000;
