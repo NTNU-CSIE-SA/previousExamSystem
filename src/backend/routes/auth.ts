@@ -38,11 +38,17 @@ export async function school_id_from_token(req: Request, res: Response){
             .where('token', '=', token)
             .executeTakeFirst();
         if (!school_id_from_token) {
+            res.clearCookie('token');
             return undefined;
         }
         const school_id = school_id_from_token.school_id;
         const expired_time = school_id_from_token.expired_time;
         if (new Date(expired_time) < new Date()) {
+            await db
+                .deleteFrom('Login')
+                .where('token', '=', token)
+                .execute();
+            res.clearCookie('token');
             return undefined;
         }
         // double check school_id is valid
@@ -52,6 +58,11 @@ export async function school_id_from_token(req: Request, res: Response){
             .where('school_id', '=', school_id)
             .executeTakeFirst();
         if (!school_id_from_profile) {
+            await db
+                .deleteFrom('Login')
+                .where('token', '=', token)
+                .execute();
+            res.clearCookie('token');
             return undefined;
         }
         let new_expired_time = new Date();
@@ -159,6 +170,7 @@ router.post('/logout' ,async (req: Request, res: Response) => {
             .where('token', '=', token)
             .executeTakeFirst();
         if (!tokenExists) {
+            res.clearCookie('token');
             res.status(400).json({ message: 'Invalid token or session not found' });
             return;
         }
