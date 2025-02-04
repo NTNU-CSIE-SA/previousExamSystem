@@ -100,6 +100,21 @@ if admin level >= `env.VERIFY_LEVLE`
 ---
 
 ## admin
+
+### check admin level
+#### path
+`/api/admin/check`
+#### Request
+GET
+#### Response
+```json
+{
+    "admin_level": 2 // number
+}
+```
+
+----
+
 ### list all user
 #### path
 `/api/admin/user-lists`
@@ -456,7 +471,6 @@ Content-Disposition: `attachment; filename="<file_name>.pdf"`
   "message": "File not found in verified directory"
 }
 ```
-
 
 ---
 
