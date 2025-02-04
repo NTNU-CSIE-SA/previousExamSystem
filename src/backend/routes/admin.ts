@@ -159,6 +159,24 @@ router.post('/unban', async (req: Request, res: Response) => {
     }
 });
 
-router
+router.get('/check', async (req: Request, res: Response) => {
+    try{
+        const school_id = await school_id_from_token(req, res);
+        if(!school_id){
+            res.status(401).json({ message: 'Invalid token' });
+            return;
+        }
+        const admin_level = await check_admin_level(school_id);
+        if (admin_level === undefined) {
+            res.status(401).json({ message: 'Invalid school ID' });
+            return;
+        }
+        res.json({ admin_level: admin_level });
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
 export default router;
