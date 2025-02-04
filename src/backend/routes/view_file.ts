@@ -10,9 +10,12 @@ DotenvFlow.config();
 
 const router = express.Router();
 const VERIFIED_DIR = process.env.VERIFIED_DIR || path.join(__dirname, './verified');
-//確保 VERIFIED_DIR 存在
 if (!fs.existsSync(VERIFIED_DIR)) {
     fs.mkdirSync(VERIFIED_DIR, { recursive: true });
+}
+const UPLOAD_PATH = process.env.UPLOADS_PATH || path.join(__dirname, './uploads');
+if (!fs.existsSync(UPLOAD_PATH)) {
+    fs.mkdirSync(UPLOAD_PATH, { recursive: true });
 }
 let VERIFY_LEVEL = 2;
 if (process.env.VERIFY_LEVEL !== undefined) {
@@ -40,7 +43,6 @@ router.get('/:file_id', async (req: Request, res: Response) => {
             res.status(400).json({ message: 'Invalid file ID' });
             return;
         }
-        //確認檔案是否存在於資料庫
         const file = await db
             .selectFrom('Document')
             .select(['pdf_locate as file_path', 'verified'])
@@ -59,14 +61,23 @@ router.get('/:file_id', async (req: Request, res: Response) => {
             res.status(403).json({ message: 'File is not verified' });
             return;
         }
-        //檢查檔案是否存在於 VERIFIED_DIR
-        const filePath = path.join(VERIFIED_DIR, path.normalize(file.file_path));
+        if (file.verified === 0) {
+            const filePath = path.join(UPLOAD_PATH, path.normalize(file.file_path));
+            if (!fs.existsSync(filePath)) {
+                res.status(404).json({ message: 'File not found in upload directory' });
+                return;
+            }
+            res.status(200).sendFile(filePath, { root: './' });
+            return;
+        }
+        else {
+            const filePath = path.join(VERIFIED_DIR, path.normalize(file.file_path));
         if (!fs.existsSync(filePath)) {
             res.status(404).json({ message: 'File not found in verified directory' });
             return;
+            }
+            res.status(200).sendFile(filePath, { root: './' });
         }
-        //傳送檔案
-        res.status(200).sendFile(filePath, { root: './' });
     } catch (err) {
         console.error('Error fetching file details:', err);
         res.status(500).json({ message: 'Internal server error' });
