@@ -27,9 +27,15 @@
   },
   "scripts": {
     "server": "nodemon -r dotenv/config ./server/index.js",
-    "dev": "set NODE_ENV=development&&run-p server start",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "dev": "npm-run-all --parallel front-dev back-dev",
+    "front-dev": "react-scripts start",
+    "back-dev": "nodemon --watch src/backend --ext ts --exec 'ts-node src/backend/server.ts'",
+    "start": "npm-run-all --parallel front-start back-start",
+    "front-start": "react-scripts start",
+    "back-start": "node ./build/backend/server.js",
+    "build": "npm-run-all --parallel font-build back-build",
+    "font-build": "react-scripts build",
+    "back-build": "tsc",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "proxy": "http://localhost:8080"
