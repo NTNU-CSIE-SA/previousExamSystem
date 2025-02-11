@@ -72,6 +72,14 @@ if (process.env.WATERMARK_WIDTH !== undefined) {
     }
 }
 
+let ORIGIN_FILE_PATH = './origin';
+if (process.env.ORIGIN_FILE_PATH !== undefined) {
+    ORIGIN_FILE_PATH = process.env.ORIGIN_FILE_PATH;
+}
+if (!fs.existsSync(ORIGIN_FILE_PATH)) {
+    fs.mkdirSync(ORIGIN_FILE_PATH, { recursive: true });
+}
+
 
 const router = express.Router();
 
@@ -114,6 +122,8 @@ router.post('/watermark', async (req: Request, res: Response) => {
             return;
         }
         const file_path = `${UPLOADS_PATH}/${pdf_path.pdf_locate}`;
+        const origin_file_path = `${ORIGIN_FILE_PATH}/${pdf_path.id}.pdf`;
+        await fs.promises.copyFile(file_path, origin_file_path);
         const pdf_file = await fs.promises.readFile(file_path);
         const pdfDoc = await PDFDocument.load(pdf_file);
         const watermark_text = req.body.watermark_text;
