@@ -89,10 +89,17 @@ router.post('/upload', upload.single('file'), (err: any, req: Request, res: Resp
         // check magic number (%PDF)
         const magic = await fs.promises.open(`${UPLOADS_DIR}/${req.file.filename}`, 'r');
         const buffer = Buffer.alloc(4);
-        await magic.read(buffer, 0, 4, 0);
+        const read_return = await magic.read(buffer, 0, 4, 0);
+        if (read_return.bytesRead !== 4) {
+            fs.promises.unlink(`${UPLOADS_DIR}/${req.file.filename}`);
+            res.status(400).json({ message: 'Error reading file' });
+            await magic.close();
+            return;
+        }
         if (buffer.toString('hex') !== '25504446') {
             fs.promises.unlink(`${UPLOADS_DIR}/${req.file.filename}`); 
             res.status(400).json({ message: 'Invalid file format' });
+            await magic.close();
             return;
         }
         await magic.close();
