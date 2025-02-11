@@ -4,6 +4,10 @@
 - `VERIFIED_DIR`: directory where verified files are stored (default: `./verified`)
 - `TOKEN_EXPIRY_DAYS`: token expiry time in days (default: 30)
 - `MAX_FILE_SIZE`: maximum file size allowed in MB (default: 10)
+- `WATERMARK_PATH`: path to watermark image (if not set, can't watermark image)
+- `WATERMARK_OPACITY`: opacity of watermark (default: 0.3)
+- `WATERMARK_WIDTH`: width of watermark(0 ~ 1) (default: 0.5)
+- `ORIGIN_FILE_PATH`: path to original file (default: `./original`)
 - `JWT_SECRET`: secret key for JWT
 - `BCRYPT_SALT_ROUNDS`: number of salt rounds for bcrypt (default: 10)
 - `USER_LIST_LEVEL` : minimum user level required to view user list (default 2)
@@ -243,6 +247,45 @@ POST
 ```json
 {
     "message": "File 1 is modified" // or other error http status code with error message
+}
+```
+
+----
+
+### watermark file
+If WATERMARK_PATH is not set, can't watermark image
+Can set MODIFY_FILES_LEVEL in .env to change the minimum user level required to watermark files. (default 4)
+Can set WATERMARK_OPACITY in .env to change the opacity of watermark. (default: 0.3)
+Can set WATERMARK_WIDTH in .env to change the width of watermark.(0 ~ 1 of all page) (default: 0.5)
+Can set ORIGIN_FILE_PATH in .env to change the directory where original files are stored. (default: `./original`)
+#### path
+`/api/watermark`
+#### Request
+POST
+if watermark with default image
+```json
+{
+    "file_id": 1
+}
+```
+if watermark with custom text
+```json
+{
+    "file_id": 1,
+    "watermark_text": "watermark text"
+}
+```
+#### Response
+if watermark with default image
+```json
+{
+    "message": "watermark image added to file: 1"
+}
+```
+if watermark with custom text
+```json
+{
+    "message": "watermark (watermark text) added to file: 1"
 }
 ```
 
