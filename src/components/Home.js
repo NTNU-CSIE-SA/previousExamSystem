@@ -65,7 +65,7 @@ export default function Home() {
         //all selected options contain in selectedSemester, selectedCourse, selectedYear
 
         return fetch(basicURL + 'api/filter/file-lists', {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
