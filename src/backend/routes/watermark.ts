@@ -141,7 +141,7 @@ router.post('/watermark', async (req: Request, res: Response) => {
             }
             const pdf_bytes = await pdfDoc.save();
             fs.promises.writeFile(file_path, pdf_bytes);
-            res.status(200).json({ message: `watermark added to file: ${file_id}` });
+            res.status(200).json({ message: `watermark image added to file: ${file_id}` });
             return;
         }
         else if (typeof watermark_text === 'undefined') {
@@ -186,7 +186,7 @@ router.post('/watermark', async (req: Request, res: Response) => {
             }
             const pdf_bytes = await pdfDoc.save();
             fs.promises.writeFile(file_path, pdf_bytes);
-            res.status(200).json({ message: `watermark added to file: ${file_id}` });
+            res.status(200).json({ message: `watermark (${watermark_text}) added to file: ${file_id}` });
             return;
         }
         else {
