@@ -39,7 +39,7 @@ GET
 #### path
 `/api/filter/file-lists`
 #### Request method
-POST
+GET
 
 with Authorization header
 - with admin level < `env.VERIFY_LEVEL`
