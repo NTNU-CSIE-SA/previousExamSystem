@@ -26,8 +26,8 @@ if (process.env.BCRYPT_SALT_ROUNDS !== undefined) {
     }
 }
 
-export async function school_id_from_token(req: Request, res: Response){
-    try{
+export async function school_id_from_token(req: Request, res: Response) {
+    try {
         const token = req.cookies.token;
         if (!token) {
             return undefined;
@@ -72,7 +72,7 @@ export async function school_id_from_token(req: Request, res: Response){
             .set('expired_time', new_expired_time.toISOString())
             .where('school_id', '=', school_id)
             .execute();
-        res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict' , expires: new_expired_time });
+        res.cookie('token', token, { httpOnly: false, secure: true, sameSite: 'strict', expires: new_expired_time });
         return school_id;
     }
     catch (err) {
@@ -81,8 +81,8 @@ export async function school_id_from_token(req: Request, res: Response){
     }
 }
 
-export async function check_is_banned(school_id: string){
-    try{
+export async function check_is_banned(school_id: string) {
+    try {
         const ban_until = await db
             .selectFrom('Profile')
             .select('ban_until')
@@ -102,7 +102,7 @@ export async function check_is_banned(school_id: string){
                 .execute();
             return false;
         }
-        
+
     }
     catch (err) {
         console.error(err);
@@ -111,10 +111,10 @@ export async function check_is_banned(school_id: string){
 }
 
 //登入路由
-router.post('/login', async ( req: express.Request, res: express.Response ) => {
+router.post('/login', async (req: express.Request, res: express.Response) => {
     try {
         const exist_token = req.cookies.token;
-        if(exist_token){
+        if (exist_token) {
             res.status(400).json({ message: 'Already logged in' });
             return;
         }
@@ -137,7 +137,7 @@ router.post('/login', async ( req: express.Request, res: express.Response ) => {
         //生成 JWT Token
         let expireTime = new Date();
         expireTime.setDate(expireTime.getDate() + TOKEN_EXPIRY_DAYS);
-        const token = jwt.sign({ school_id, expireTime}, JWT_SECRET, { expiresIn: `${TOKEN_EXPIRY_DAYS}d` });
+        const token = jwt.sign({ school_id, expireTime }, JWT_SECRET, { expiresIn: `${TOKEN_EXPIRY_DAYS}d` });
         //插入 Login 表
         await db
             .insertInto('Login')
@@ -147,7 +147,7 @@ router.post('/login', async ( req: express.Request, res: express.Response ) => {
                 expired_time: expireTime.toISOString(),
             })
             .execute();
-        res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict' ,expires: expireTime });
+        res.cookie('token', token, { httpOnly: false, secure: true, sameSite: 'strict', expires: expireTime });
         res.json({ message: 'Login successful' });
         return;
     } catch (err) {
@@ -156,7 +156,7 @@ router.post('/login', async ( req: express.Request, res: express.Response ) => {
     }
 });
 //登出路由
-router.post('/logout' ,async (req: Request, res: Response) => {
+router.post('/logout', async (req: Request, res: Response) => {
     const token = req.cookies.token;
     if (!token) {
         res.status(400).json({ message: 'Token is required' });
