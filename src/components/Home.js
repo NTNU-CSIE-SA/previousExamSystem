@@ -135,7 +135,8 @@ export default function Home(){
                 <button
                 style={
                     {
-                        marginTop: '.5rem',
+                        display: 'flex',
+                        justifyContent: 'center',
                         width: '6rem',
                         height: '3rem',
                         borderRadius: '5px',
