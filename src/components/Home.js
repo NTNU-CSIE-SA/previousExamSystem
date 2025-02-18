@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { data } from 'react-router-dom';
 export const basicURL = 'http://localhost:5000/'
 export default function Home() {
-    //ToDo connect to backend and get all data
+    //TODO connect to backend and get all data
     const [data_from_backend, setDataFromBackend] = useState({
         semester: [],
         course: [],
@@ -59,7 +59,7 @@ export default function Home() {
 
 
     async function searchResult() {
-        //ToDo : you should connect this function to backend and get a result list of 
+        //TODO : you should connect this function to backend and get a result list of 
         //all the valid options.
         //you should return an array of objects, each object has a name.
         //all selected options contain in selectedSemester, selectedCourse, selectedYear

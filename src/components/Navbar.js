@@ -5,7 +5,7 @@ import { basicURL } from "./Home"
 export default function Navbar({ isAdmin }) {
 
     function logoutFunction() {
-        //ToDo : tell backend the token should be expired and clear cookie locally
+        //TODO : tell backend the token should be expired and clear cookie locally
         //maybe you'll need to pass the token to NavBar({}), not sure your design.
         fetch(basicURL + 'api/auth/logout', {
             method: 'POST',
