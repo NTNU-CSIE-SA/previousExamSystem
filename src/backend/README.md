@@ -23,7 +23,7 @@ Can set VERIFY_LEVEL in .env to change the minimum user level required to view u
 #### path
 `/api/filter/tags`
 #### Request method
-GET
+POST
 #### Response
 ```json
 {
