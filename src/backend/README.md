@@ -121,7 +121,7 @@ GET
 
 ### list all user
 #### path
-`/api/admin/user-lists`
+`/api/admin/user-list`
 #### Request
 GET
 #### Response
