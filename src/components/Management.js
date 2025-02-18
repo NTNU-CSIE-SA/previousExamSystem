@@ -25,7 +25,39 @@ const DBManagement = (props) =>{
     )
 }
 
-
+function ban_time_translator(ban_time_id){
+    // return ISO time string
+    let now_time = new Date()
+    switch(ban_time_id){
+        case 1:
+            now_time.setDate(now_time.getDate() + 1)
+            return now_time.toISOString()
+        case 2:
+            now_time.setDate(now_time.getDate() + 3)
+            return now_time.toISOString()
+        case 3:
+            now_time.setDate(now_time.getDate() + 7)
+            return now_time.toISOString()
+        case 4:
+            now_time.setDate(now_time.getDate() + 14)
+            return now_time.toISOString()
+        case 5:
+            now_time.setDate(now_time.getDate() + 28)
+            return now_time.toISOString()
+        case 6:
+            now_time.setMonth(now_time.getMonth() + 3)
+            return now_time.toISOString()
+        case 7:
+            now_time.setFullYear(now_time.getFullYear() + 1)
+            return now_time.toISOString()
+        case 8:
+            now_time.setFullYear(now_time.getFullYear() + 10)
+            return now_time.toISOString()
+        default:
+            now_time.setDate(now_time.getDate() + 1) // default 1 day
+            return now_time.toISOString()
+    }
+}
 
 const UserManagement = (props) =>{
     const [bannedList, setBannedList] = useState([]);
