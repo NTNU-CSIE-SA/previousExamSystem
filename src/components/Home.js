@@ -1,46 +1,56 @@
 import Select from 'react-select'
 import "../style/home.css"
-import React, { useState } from 'react';
-export default function Home(){
+import React, { useState, useEffect } from 'react';
+import { data } from 'react-router-dom';
 
-    //ToDo connect to backend and get all data
-    const data_from_backend = getData()
+export const basicURL = 'http://localhost:5000/'
+export default function Home() {
+    const [data_from_backend, setDataFromBackend] = useState({
+        semester: [],
+        course: [],
+        year: []
+    });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const fetchedData = await getData();
+            setDataFromBackend(fetchedData);
+        };
+
+        fetchData();
+    }, []);
 
 
-    function getData(){
-        
-        return {
+    async function getData() {
+        return fetch(basicURL + 'api/filter/tags', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true,
+            credentials: 'include'
+        }).then(res => res.json())
+            .then(data => {
 
-            //this is the format you should follow 
-            //(parse to this format after you get the data from backend)
-    
-            semester:[
-                {label : "上學期",value : "上學期"},
-                {label : "下學期",value : "下學期"},
-                {label : "暑假", value : "暑假"}
-            ],
-    
-            course:[
-                {label : "資料結構",value : "資料結構"},
-                {label : "程式設計",value : "程式設計"},
-                {label : "資料庫", value : "資料庫"},
-                {label : "網頁程式設計", value : "網頁程式設計"},
-                {label : "計算機網路", value : "計算機網路"},
-                {label : "數位電路", value : "數位電路"},
-                {label : "資料結構實驗", value : "資料結構實驗"},
-                {label : "程式設計實驗", value : "程式設計實驗"},
-                {label : "資料庫實驗", value : "資料庫實驗"}
-            ],
-    
-            year:[
-                {label : "107",value : "107"},
-                {label : "108",value : "108"},
-                {label : "109", value : "109"},
-                {label : "110", value : "110"},
-                {label : "111", value : "111"}
-            ]
-            
-        }
+                data.semester = data.semester.map(item => ({ label: item, value: item }));
+                data.subject = data.subject.map(item => ({ label: item, value: item }));
+                data.exam_type = data.exam_type.map(item => ({ label: item, value: item }));
+                return {
+                    semester: data.semester,
+                    course: data.subject,
+                    year: data.exam_type
+                }
+
+            })
+            .catch(err => {
+                console.error(err);
+                return {
+                    semester: [],
+                    course: [],
+                    year: []
+                };
+            });
+
     }
 
     const [selectedSemester, setSelectedSemester] = useState()
@@ -48,31 +58,46 @@ export default function Home(){
     const [selectedYear, setSelectedYear] = useState()
 
 
-    function searchResult(){
-        //ToDo : you should connect this function to backend and get a result list of 
+    async function searchResult() {
         //all the valid options.
         //you should return an array of objects, each object has a name.
         //all selected options contain in selectedSemester, selectedCourse, selectedYear
 
-
-        return ['110-1 演算法' , '110-2 演算法','110-1 演算法' , '110-2 演算法'
-        ,'110-1 演算法' , '110-2 演算法','110-1 演算法' , '110-2 演算法'
-        ,'110-1 演算法' , '110-2 演算法','110-1 演算法' , '110-2 演算法'
-        ,'110-1 演算法' , '110-2 演算法','110-1 演算法' , '110-2 演算法']
+        return fetch(basicURL + 'api/filter/file-lists', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "semester": [], // empty array mean all 
+                "subject": [],  // empty array mean all
+                "exam_type": []     // empty array mean all
+            }),
+            withCredentials: true,
+            credentials: 'include'
+        }).then(response => {
+            return response.json()
+        })
+            .catch(err => {
+                console.error(err);
+                return [];
+            });
     }
 
-    const [resultLabels , setResultLabels] = useState(<></>)
+    const [resultLabels, setResultLabels] = useState(<></>)
 
 
-    function generateResult(){
+    async function generateResult() {
 
-        const result = searchResult()
-
-        const resultList = result.map((item) => {
-            return(
+        let result = await searchResult()
+        // TODO: fontend should handle the response and show result to user
+        const resultList = result.map((item, i) => {
+            item = result[i].semester + ' ' + result[i].exam_type + ' ' + result[i].subject;
+            return (
                 <div className='result-item'>{item}</div>
             )
-        })
+        });
+
 
         setResultLabels(resultList)
 
@@ -86,31 +111,31 @@ export default function Home(){
             height: '2.85rem',
             boxShadow: "none",
             border: state.isFocused && "none"
-          }),
-          valueContainer: (provided, state) => ({
+        }),
+        valueContainer: (provided, state) => ({
             ...provided,
             fontSize: '1.2rem'
 
-          }),
-          menu: (provided, state) => ({
+        }),
+        menu: (provided, state) => ({
             ...provided,
             border: "none",
             boxShadow: "none"
-          }),
-          option: (provided, state) => ({
-             ...provided,
-             backgroundColor: state.isFocused && "lightgray",
-             
-          })
-        
+        }),
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isFocused && "lightgray",
+
+        })
+
     }
 
-    return(
+    return (
         <div className='home-container'>
             <div className='home-select-container'>
                 <Select className='select-object'
                     options={data_from_backend.semester}
-                    onChange={(value)=>setSelectedSemester(value)}
+                    onChange={(value) => setSelectedSemester(value)}
                     value={selectedSemester}
                     placeholder="請選擇學期"
                     isMulti={true}
@@ -118,7 +143,7 @@ export default function Home(){
                 />
                 <Select className='select-object'
                     options={data_from_backend.course}
-                    onChange={(value)=>setSelectedCourse(value)}
+                    onChange={(value) => setSelectedCourse(value)}
                     value={selectedCourse}
                     placeholder="請選擇科目"
                     isMulti={true}
@@ -126,26 +151,26 @@ export default function Home(){
                 />
                 <Select className='select-object'
                     options={data_from_backend.year}
-                    onChange={(value)=>setSelectedYear(value)}
+                    onChange={(value) => setSelectedYear(value)}
                     value={selectedYear}
                     placeholder="請選擇年份"
                     isMulti={true}
                     styles={selectStyle}
                 />
                 <button
-                style={
-                    {
-                        display: 'flex',
-                        justifyContent: 'center',
-                        width: '6rem',
-                        height: '3rem',
-                        borderRadius: '5px',
-                        fontSize: '1rem',
+                    style={
+                        {
+                            display: 'flex',
+                            justifyContent: 'center',
+                            width: '6rem',
+                            height: '3rem',
+                            borderRadius: '5px',
+                            fontSize: '1rem',
+                        }
                     }
-                }
-                onClick={generateResult}
+                    onClick={generateResult}
                 >
-                搜尋
+                    搜尋
                 </button>
             </div>
             <div className='result-container'>

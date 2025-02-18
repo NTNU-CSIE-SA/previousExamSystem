@@ -9,12 +9,16 @@ import adminRouter from "./routes/admin";
 import modifyRouter from "./routes/modify_files";
 import watermarkRouter from "./routes/watermark";
 import cookieParser from 'cookie-parser';
-
+import cors from 'cors';
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  credentials: true,
+};
 const app = express();
 
 init_server();
 const BACKEND_PORT = process.env.BACKEND_PORT || 5000;
-
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api/auth", authRouter);

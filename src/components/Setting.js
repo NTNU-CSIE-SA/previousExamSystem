@@ -1,13 +1,41 @@
 import React , {useRef} from 'react'
 import '../style/setting.css'
+import { basicURL } from './Home'
+
+async function passwordReset(oldPassword , newPassword){
+    return fetch(basicURL + 'api/auth/change-password', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            old_password : oldPassword.current.value,
+            new_password : newPassword.current.value
+        }),
+        withCredntials: true,
+        credentials: 'include'
+    })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json()
+            } else if (response.status === 400) {
+                console.error('Error:', response.json().message);
+            } else {
+                console.error(response)
+                throw new Error('Reset Password failed');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
 export default function Setting(){
 
-    //ToDo : fetch this function with backend to modify the password
-    function resetPassword(oldPassword , newPassword){
-        //this function is to trigger the reset password function
-        //while user click the reset password function, the function will be triggered
+    const resetPassword = async (oldPassword , newPassword) => {
+        const response = await passwordReset(oldPassword , newPassword);
+        // TODO: frontend should handle the response and show the message to user
     }
-
     return(
         <div className="setting-container">
             <ResetPassword resetFn={resetPassword}/>

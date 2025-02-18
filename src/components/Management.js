@@ -1,6 +1,7 @@
 import Select from 'react-select'
 import "../style/management.css"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { basicURL } from './Home';
 
 export default function Management(){
 
@@ -13,23 +14,6 @@ export default function Management(){
 
 }
 
-function fetchUserList(){
-    //ToDo: fetch userList to setup bannedList and normalList
-    //bannedList = users that is banned right now
-    //normalList = users that is not banned right now
-    //fetch user list
-
-    const normalList = [{label : "user1", value : "user1"},
-                {label : "user2", value : "user2"},
-                {label : "user3", value : "user3"}]
-
-    const bannedList = [{label : "user4", value : "user4"},
-                {label : "user5", value : "user5"},
-                {label : "user6", value : "user6"}]
-    
-    return [bannedList , normalList]
-
-}
 
 
 const DBManagement = (props) =>{
@@ -41,27 +25,127 @@ const DBManagement = (props) =>{
     )
 }
 
-
+function ban_time_translator(ban_time_id){
+    // return ISO time string
+    let now_time = new Date()
+    switch(ban_time_id){
+        case 1:
+            now_time.setDate(now_time.getDate() + 1)
+            return now_time.toISOString()
+        case 2:
+            now_time.setDate(now_time.getDate() + 3)
+            return now_time.toISOString()
+        case 3:
+            now_time.setDate(now_time.getDate() + 7)
+            return now_time.toISOString()
+        case 4:
+            now_time.setDate(now_time.getDate() + 14)
+            return now_time.toISOString()
+        case 5:
+            now_time.setDate(now_time.getDate() + 28)
+            return now_time.toISOString()
+        case 6:
+            now_time.setMonth(now_time.getMonth() + 3)
+            return now_time.toISOString()
+        case 7:
+            now_time.setFullYear(now_time.getFullYear() + 1)
+            return now_time.toISOString()
+        case 8:
+            now_time.setFullYear(now_time.getFullYear() + 10)
+            return now_time.toISOString()
+        default:
+            now_time.setDate(now_time.getDate() + 1) // default 1 day
+            return now_time.toISOString()
+    }
+}
 
 const UserManagement = (props) =>{
+    const [bannedList, setBannedList] = useState([]);
+    const [normalList, setNormalList] = useState([]);
+    useEffect(() => {
+        async function getUserList() {
+            const [banned, normal] = await fetchUserList();
+            setBannedList(banned);
+            setNormalList(normal);
+        }
+        getUserList();
+    }, []);
+    async function fetchUserList(){
+        //TODO: fetch userList to setup bannedList and normalList
+        //bannedList = users that is banned right now
+        //normalList = users that is not banned right now
+        //fetch user list
+        const allList = await fetch(basicURL + 'api/admin/user-list', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                withCredentials: true,
+                credentials: 'include'
+            }).then(res => res.json())
+            .then(data => {
+                return data
+            })
+            .catch(err => {
+                console.error(err);
+                return [[],[]]
+            });
+        const normalList = allList.filter(user => user.ban_until === null).map(user => ({label: user.school_id , value: user.school_id}))
+        const bannedList = allList.filter(user => user.ban_until !== null).map(user => ({label: `${user.school_id} (${new Date(user.ban_until).toISOString().split("T")[0]})`, value: user.school_id}))
+        return [bannedList , normalList]
+    }
 
-    function confirmBanned(){
-        //ToDo: confirm banned user
+    async function confirmBanned(){
+        //TODO: confirm banned user
         //update bannedList and normalList to backend
         //the list that is going to be banned = selectedNormalUser
-
+        const ban_time = await fetch(basicURL + 'api/admin/ban', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true,
+            credentials: 'include',
+            body: JSON.stringify({
+                school_id: selectedNormalUser.map(user => user.value),
+                ban_until: ban_time_translator(bannedTime)
+            })
+        }).then(res => {
+            if(res.status === 200){
+                alert("封禁成功")
+                window.location.reload()
+            }else{
+                console.error(res)
+                alert("封禁失敗")
+            }
+        })
     }
 
     function confirmUnbanned(){
-        //ToDo: confirm unbanned user
+        //TODO: confirm unbanned user
         //update bannedList and normalList to backend
         //the list that is going to be unbanned = selectedBannedUser
+
+        const unban = fetch(basicURL + 'api/admin/unban', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true,
+            credentials: 'include',
+            body: JSON.stringify({
+                school_id: selectedBannedUser.map(user => user.value)
+            })
+        }).then(res => {
+            if(res.status === 200){
+                alert("解封成功")
+                window.location.reload()
+            }else{
+                console.error(res)
+                alert("解封失敗")
+            }
+        })
     }
-
-    const userListData = fetchUserList()
-
-    const [bannedList , setBannedList] = useState(userListData[0])
-    const [normalList , setNormalList] = useState(userListData[1])
 
     const bannedTimeList = [
         {label : "1 day",value : "1"},
