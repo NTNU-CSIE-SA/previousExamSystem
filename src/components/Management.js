@@ -13,23 +13,6 @@ export default function Management(){
 
 }
 
-function fetchUserList(){
-    //ToDo: fetch userList to setup bannedList and normalList
-    //bannedList = users that is banned right now
-    //normalList = users that is not banned right now
-    //fetch user list
-
-    const normalList = [{label : "user1", value : "user1"},
-                {label : "user2", value : "user2"},
-                {label : "user3", value : "user3"}]
-
-    const bannedList = [{label : "user4", value : "user4"},
-                {label : "user5", value : "user5"},
-                {label : "user6", value : "user6"}]
-    
-    return [bannedList , normalList]
-
-}
 
 
 const DBManagement = (props) =>{
@@ -44,6 +27,40 @@ const DBManagement = (props) =>{
 
 
 const UserManagement = (props) =>{
+    const [bannedList, setBannedList] = useState([]);
+    const [normalList, setNormalList] = useState([]);
+    useEffect(() => {
+        async function getUserList() {
+            const [banned, normal] = await fetchUserList();
+            setBannedList(banned);
+            setNormalList(normal);
+        }
+        getUserList();
+    }, []);
+    async function fetchUserList(){
+        //TODO: fetch userList to setup bannedList and normalList
+        //bannedList = users that is banned right now
+        //normalList = users that is not banned right now
+        //fetch user list
+        const allList = await fetch(basicURL + 'api/admin/user-list', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                withCredentials: true,
+                credentials: 'include'
+            }).then(res => res.json())
+            .then(data => {
+                return data
+            })
+            .catch(err => {
+                console.error(err);
+                return [[],[]]
+            });
+        const normalList = allList.filter(user => user.ban_until === null).map(user => ({label: user.school_id , value: user.school_id}))
+        const bannedList = allList.filter(user => user.ban_until !== null).map(user => ({label: `${user.school_id} (${new Date(user.ban_until).toISOString().split("T")[0]})`, value: user.school_id}))
+        return [bannedList , normalList]
+    }
 
     function confirmBanned(){
         //ToDo: confirm banned user
