@@ -27,7 +27,7 @@ function App() {
 
   function checkIsAdmin(token) {
     //ToDo: check the token and return true if the user is admin
-    return false
+    return true
   }
 
   return (
