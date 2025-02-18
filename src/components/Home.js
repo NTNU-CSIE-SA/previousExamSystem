@@ -2,9 +2,9 @@ import Select from 'react-select'
 import "../style/home.css"
 import React, { useState, useEffect } from 'react';
 import { data } from 'react-router-dom';
+
 export const basicURL = 'http://localhost:5000/'
 export default function Home() {
-    //TODO connect to backend and get all data
     const [data_from_backend, setDataFromBackend] = useState({
         semester: [],
         course: [],
@@ -59,13 +59,12 @@ export default function Home() {
 
 
     async function searchResult() {
-        //TODO : you should connect this function to backend and get a result list of 
         //all the valid options.
         //you should return an array of objects, each object has a name.
         //all selected options contain in selectedSemester, selectedCourse, selectedYear
 
         return fetch(basicURL + 'api/filter/file-lists', {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -77,7 +76,6 @@ export default function Home() {
             withCredentials: true,
             credentials: 'include'
         }).then(response => {
-            console.log(response)
             return response.json()
         })
             .catch(err => {
@@ -92,7 +90,7 @@ export default function Home() {
     async function generateResult() {
 
         let result = await searchResult()
-        console.log(result)
+        // TODO: fontend should handle the response and show result to user
         const resultList = result.map((item, i) => {
             item = result[i].semester + ' ' + result[i].exam_type + ' ' + result[i].subject;
             return (
