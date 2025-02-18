@@ -46,7 +46,7 @@ router.get('/tags', async (req: Request, res: Response) => {
     }
 });
 
-router.get('/file-lists', async (req: Request, res: Response) => {
+router.post('/file-lists', async (req: Request, res: Response) => {
     try{
         const school_id = await school_id_from_token(req, res);
         if (!school_id) {
