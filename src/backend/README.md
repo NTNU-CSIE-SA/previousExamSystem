@@ -23,7 +23,7 @@ Can set VERIFY_LEVEL in .env to change the minimum user level required to view u
 #### path
 `/api/filter/tags`
 #### Request method
-GET
+POST
 #### Response
 ```json
 {
@@ -410,7 +410,7 @@ Can set UPLOADS_DIR in .env to change the directory where uploaded files are sto
 Can set MAX_FILE_SIZE in .env to change the maximum file size allowed.(MB) (default: 10MB)
 
 ### Request
-POST `/api/upload_file/upload`
+POST `/api/upload-file/upload`
 
 cookie with token
 
@@ -465,9 +465,9 @@ Can set VIEW_FILE_LEVEL in .env to change the minimum user level required to vie
 
 
 ### Request
-GET `/api/view_file/:file_id`
+GET `/api/view-file/:file_id`
 
-example: `/api/view_file/12345678`
+example: `/api/view-file/12345678`
 
 ### Response
 - **Success** (File sent directly)
