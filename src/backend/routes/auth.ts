@@ -65,8 +65,12 @@ export async function school_id_from_token(req: Request, res: Response) {
             res.clearCookie('token');
             return undefined;
         }
+        const expired_date = new Date(expired_time);
         let new_expired_time = new Date();
         new_expired_time.setDate(new_expired_time.getDate() + TOKEN_EXPIRY_DAYS);
+        if (expired_date.getDate === new_expired_time.getDate && expired_date.getMonth === new_expired_time.getMonth && expired_date.getFullYear === new_expired_time.getFullYear) {
+            return school_id;
+        }
         const updated_expired_time_result = await db
             .updateTable('Login')
             .set('expired_time', new_expired_time.toISOString())
