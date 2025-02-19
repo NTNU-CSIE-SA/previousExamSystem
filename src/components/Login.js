@@ -56,13 +56,13 @@ export default function Login() {
                 </div>
                 <div class="checkbox-label">
                     <section>
-                        <input class="checkbox" type="checkbox" id="check-terms-of-use" />
+                        <input class="checkbox" type="checkbox" id="check-terms-of-use" required/>
                         <label for="check">Accept <a href='./terms-of-use'>Terms Of Use</a></label>
                     </section>
                 </div>
                 <div class="checkbox-label">
                     <section>
-                        <input class="checkbox" type="checkbox" id="check-privacy-policy" />
+                        <input class="checkbox" type="checkbox" id="check-privacy-policy" required/>
                         <label for="check">Accept <a href='./privacy-policy'>Privacy Policy</a></label>
                     </section>
                 </div>
