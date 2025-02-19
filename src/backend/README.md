@@ -112,7 +112,8 @@ GET
 #### Response
 ```json
 {
-    "admin_level": 2 // number
+    "ban": true, // or false
+    "modify_file": true // or false
 }
 ```
 
