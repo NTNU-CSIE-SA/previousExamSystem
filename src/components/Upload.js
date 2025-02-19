@@ -43,7 +43,19 @@ export default function Upload(){
             const fetchedData = await getData();
             fetchCourse(fetchedData.course);
             fetchExam(fetchedData.exam_type);
-            fetchSemester(fetchedData.semester);
+            const allow_current_year = 10;
+            const current_year = new Date().getFullYear();
+            const semester = [];
+            for(let i = 1; i < allow_current_year; i++){
+                if (i === 1 && new Date().getMonth() > 8){
+                    semester.push(`${current_year - 1911}-1`);
+                }
+                semester.push(`${current_year - i - 1911}-2`);
+                semester.push(`${current_year - i - 1911}-1`);
+            }
+            semester.push('其他');
+            fetchSemester(semester);
+
         };
         fetchData();
     }, []);
