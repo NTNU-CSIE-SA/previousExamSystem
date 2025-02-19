@@ -26,3 +26,27 @@ export const loadSchema = () => {
       console.error('Error executing SQL', error);
     }
 };
+
+export const clearExpiredTokens = async () => {
+  try{
+    const expired = new Date();
+    const all_tokens = await db
+        .selectFrom('Login')
+        .select(['token', 'expired_time'])
+        .execute();
+    let clear_count = 0;
+    for (const token of all_tokens) {
+        if (new Date(token.expired_time) < expired) {
+            await db
+                .deleteFrom('Login')
+                .where('token', '=', token.token)
+                .execute();
+            clear_count++;
+        }
+    }
+    console.log(`Cleared ${clear_count} expired tokens.`);
+  }
+  catch (err) {
+    console.error(err);
+  }
+}
