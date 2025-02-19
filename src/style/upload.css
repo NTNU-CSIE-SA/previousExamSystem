@@ -8,6 +8,11 @@
     gap: 1rem;
 }
 
+.local-upload-btn{
+    margin: 0;
+    padding: 0;
+}
+
 .upload__container input{
     display: flex;
     align-items: center;
@@ -24,8 +29,8 @@
 .upload-btn {
     padding: .8rem 1.6rem;
     border-radius: 0.5rem;
-    margin-top: 2rem;
     font-size: 1rem;
+    
     cursor: pointer;
 }
 

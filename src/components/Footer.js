@@ -6,6 +6,7 @@ export default function Footer() {
     <footer className="footer">
         
       <ul>
+        <CustomLink to="/">Policy</CustomLink>
         <CustomLink to="https://ntnucsie.info/">NTNU SA Official Website</CustomLink>
       </ul>
     </footer>

@@ -49,7 +49,7 @@
 }
 section{
     display: flex;
-    align-items: center;
+    justify-content: start;
     font-size: 14px;
     color: #ded2d2;
 }
@@ -63,10 +63,14 @@ a:hover{
     text-decoration: underline;
 }
 section a{
-    color: #555;
+    color: #787575;
 }
-.input-submit{
+.input-submit , button{
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 .submit-btn{
     width: 100%;
@@ -78,14 +82,9 @@ section a{
     transition: .3s;
 }
 .input-submit label{
-    position: absolute;
-    top: 45%;
-    left: 50%;
+
     color: #fff;
-    -webkit-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    cursor: pointer;
+
 }
 .submit-btn:hover{
     background: #7a5757;
@@ -99,4 +98,8 @@ section a{
 .sign-up-link a{
     color: #000;
     font-weight: 600;
+}
+
+.checkbox{
+    width: 10%;
 }
