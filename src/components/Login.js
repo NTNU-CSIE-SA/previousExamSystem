@@ -1,7 +1,7 @@
 import "../style/login.css"
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { basicURL } from "./Home"
+import { basicURL } from '../App'
 
 //TODO : connect with backend and backend should return a token
 async function loginUser(credentials) {

@@ -1,7 +1,6 @@
 import { Link, useMatch, useResolvedPath } from "react-router-dom"
 import "../style/nav.css"
-// const basicURL = 'http://localhost:5000/'
-import { basicURL } from "./Home"
+import { basicURL } from '../App'
 export default function Navbar({ isAdmin }) {
 
     function logoutFunction() {
