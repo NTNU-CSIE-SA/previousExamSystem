@@ -26,3 +26,52 @@ export const loadSchema = () => {
       console.error('Error executing SQL', error);
     }
 };
+
+export const clearExpiredTokens = async () => {
+  try{
+    const expired = new Date();
+    const all_tokens = await db
+        .selectFrom('Login')
+        .select(['token', 'expired_time'])
+        .execute();
+    let clear_count = 0;
+    for (const token of all_tokens) {
+        if (new Date(token.expired_time) < expired) {
+            await db
+                .deleteFrom('Login')
+                .where('token', '=', token.token)
+                .execute();
+            clear_count++;
+        }
+    }
+    console.log(`Cleared ${clear_count} expired tokens.`);
+  }
+  catch (err) {
+    console.error(err);
+  }
+}
+
+export const checkBan = async () => {
+  try{
+    const ban = await db
+        .selectFrom('Profile')
+        .select(['school_id', 'ban_until'])
+        .where('ban_until', 'is not', null)
+        .execute();
+    const now = new Date();
+    for (const ban_user of ban) {
+      if (ban_user.ban_until !== null) {
+        if (new Date(ban_user.ban_until) > now) {
+          await db
+              .updateTable('Profile')
+              .set({ban_until: null})
+              .where('school_id', '=', ban_user.school_id)
+              .execute();
+        }
+      }
+    }
+  }
+  catch (err) {
+    console.error(err);
+  }
+}
