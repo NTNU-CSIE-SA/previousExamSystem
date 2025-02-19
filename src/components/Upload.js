@@ -2,22 +2,20 @@ import { useEffect, useState, useRef, forwardRef } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import "../style/dropdown.css"
 import "../style/upload.css"
+import { basicURL } from "./Home";
 
 export default function Upload(){
 
     //courseName should be connected to SQL from backend and be dynamic
     //use fetchCourse(list) to modify courseName
-    const [courseName, fetchCourse] = useState(["演算法", "資料結構", "計算機結構", "計算機網路", "計算機圖學", "程式設計(一)"]);
+    const [courseName, fetchCourse] = useState([]);
     
     //examList should also be connected to SQL from backend and be dynamic
     //use fetchExam(list) to modify examList
-    const [examList, fetchExam] = useState(["第一次考試", "第二次考試", "第三次考試", "期中考", "期末考"]);
-
+    const [examList, fetchExam] = useState([]);
     //semesterList should also be connected to SQL from backend and be dynamic
     //use fetchSemester(list) to modify semesterList
-    const [semesterList, fetchSemester] = useState(["97-1", "97-2", "98-1", "98-2", "99-1", "99-2", "100-1", "100-2",
-    "107-1", "107-2", "108-1", "108-2", "109-1", "109-2", "110-1", "110-2"]);
-
+    const [semesterList, fetchSemester] = useState([]);
     //currentSemester = the id of the semester selected
     //modifySemester = function to set currentSemester
     const [currentSemester, modifySemester] = useState(NaN);
@@ -37,7 +35,43 @@ export default function Upload(){
     //2 = success to upload
     //3 = fail to upload
     const [uploadStatus, updateUploadStatus] = useState("NaN");
-
+    useEffect(() => {
+        const fetchData = async () => {
+            const fetchedData = await getData();
+            fetchCourse(fetchedData.course);
+            fetchExam(fetchedData.exam_type);
+            fetchSemester(fetchedData.semester);
+        };
+        fetchData();
+    }, []);
+    async function getData() {
+        return fetch(basicURL + 'api/filter/tags', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true,
+            credentials: 'include'
+        }).then(res => res.json())
+            .then(data => {
+                data.semester = data.semester;
+                data.subject = data.subject;
+                data.exam_type = data.exam_type;
+                return {
+                    semester: data.semester,
+                    course: data.subject,
+                    exam_type: data.exam_type
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                return {
+                    semester: [],
+                    course: [],
+                    exam_type: []
+                };
+            });
+    }
     return(
         <>
         <div className="upload__container">
