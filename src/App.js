@@ -10,6 +10,9 @@ import TermsOfUse from './components/TermsOfUse';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import { Routes, Route , useLocation } from "react-router-dom";
 
+
+export const basicURL = 'http://localhost:5000/';
+
 function App() {
   //set useState(true) to test pages without login
 
@@ -36,6 +39,7 @@ function App() {
 
   function checkIsAdmin(token) {
     //TODO: check the token and return true if the user is admin
+    
     return true
   }
 

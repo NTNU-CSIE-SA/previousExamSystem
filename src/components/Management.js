@@ -1,7 +1,7 @@
 import Select from 'react-select'
 import "../style/management.css"
 import React, { useState, useEffect } from 'react';
-import { basicURL } from './Home';
+import { basicURL } from '../App';
 
 export default function Management(){
 
