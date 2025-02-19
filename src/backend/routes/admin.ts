@@ -171,7 +171,12 @@ router.get('/check', async (req: Request, res: Response) => {
             res.status(401).json({ message: 'Invalid school ID' });
             return;
         }
-        res.json({ admin_level: admin_level });
+        const over_ban_level = admin_level >= BAN_LEVEL;
+        const over_modify_file_level = admin_level >= MODIFY_FILE_LEVEL;
+        res.json({ 
+            ban: over_ban_level,
+            modify_file: over_modify_file_level
+        });
     }
     catch (err) {
         console.error(err);
