@@ -20,8 +20,8 @@ async function passwordReset(oldPassword , newPassword){
                 alert("修改密碼成功！");
                 return response.status
             } else if (response.status === 400) {
-                alert('Error:', response.json().message);
-                console.error('Error:', response.json().message);
+                alert('需填入舊密碼與新密碼！');
+                console.error('Error', response);
             } else {
                 console.error(response)
                 alert('密碼修改失敗(舊密碼失敗或其他原因)');

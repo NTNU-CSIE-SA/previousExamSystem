@@ -19,6 +19,13 @@ if (process.env.BAN_LEVEL !== undefined) {
         BAN_LEVEL = 3;
     }
 }
+let MODIFY_FILE_LEVEL = 4;
+if (process.env.MODIFY_FILE_LEVEL !== undefined) {
+    MODIFY_FILE_LEVEL = parseInt(process.env.MODIFY_FILE_LEVEL);
+    if (isNaN(MODIFY_FILE_LEVEL)) {
+        MODIFY_FILE_LEVEL = 4;
+    }
+}
 
 const router = express.Router();
 

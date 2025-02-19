@@ -43,7 +43,19 @@ export default function Upload(){
             const fetchedData = await getData();
             fetchCourse(fetchedData.course);
             fetchExam(fetchedData.exam_type);
-            fetchSemester(fetchedData.semester);
+            const allow_current_year = 10;
+            const current_year = new Date().getFullYear();
+            const semester = [];
+            for(let i = 1; i < allow_current_year; i++){
+                if (i === 1 && new Date().getMonth() > 8){
+                    semester.push(`${current_year - 1911}-1`);
+                }
+                semester.push(`${current_year - i - 1911}-2`);
+                semester.push(`${current_year - i - 1911}-1`);
+            }
+            semester.push('其他');
+            fetchSemester(semester);
+
         };
         fetchData();
     }, []);
@@ -152,9 +164,24 @@ export default function Upload(){
       updateUploadStatus(1);
       
       //should connect to backend and upload file here
-
-      //after upload, should updateUploadStatus according to success or failed
-
+      const formUpload = new FormData();
+      formUpload.append("file", inputFile.current.files[0], inputFile.current.files[0].name);
+      formUpload.append("semester", semesterList[currentSemester]);
+      formUpload.append("subject", currentCourse === -1 ? courseInput : courseName[currentCourse]);
+      formUpload.append("exam_type", currentExam === -1 ? examInput : examList[currentExam]);
+      await fetch(basicURL + 'api/upload-file/upload', {
+        method: 'POST',
+        headers: {},
+        withCredentials: true,
+        credentials: 'include',
+        body: formUpload
+      }).then(res => {
+        if(res.status === 200){
+          updateUploadStatus(2);
+        }else{
+          updateUploadStatus(3);
+        }
+      });
     }
 
 }

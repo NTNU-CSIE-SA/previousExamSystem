@@ -1,5 +1,6 @@
-import { db, loadSchema } from './db';
+import { db, loadSchema, clearExpiredTokens, checkBan } from './db';
 import DotenvFlow from 'dotenv-flow';
+import corn from 'node-cron';
 
 export const init_server = async () => {
     try {
@@ -9,6 +10,19 @@ export const init_server = async () => {
 
         //加載資料庫架構
         await loadSchema();
+        corn.schedule('0 8 * * *', async () => {
+            try {
+                console.log(`${new Date().toISOString()}: Clearing expired tokens...`);
+                await clearExpiredTokens();
+                console.log(`${new Date().toISOString()}: Finished clearing expired tokens.`);
+                console.log(`${new Date().toISOString()}: Checking ban status...`);
+                await checkBan();
+                console.log(`${new Date().toISOString()}: Finished checking ban status.`);
+            } catch (error) {
+                console.error('Error clearing expired tokens:', error);
+            }
+        });
+
         console.log('Database schema loaded successfully.');
     } catch (error) {
         console.error('Error initializing server:', error);
