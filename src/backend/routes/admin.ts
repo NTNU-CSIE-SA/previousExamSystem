@@ -5,25 +5,18 @@ import DotenvFlow from 'dotenv-flow';
 
 DotenvFlow.config();
 
-let USER_LIST_LEVEL = 2;
-if (process.env.USER_LIST_LEVEL !== undefined) {
-    USER_LIST_LEVEL = parseInt(process.env.USER_LIST_LEVEL);
-    if (isNaN(USER_LIST_LEVEL)) {
-        USER_LIST_LEVEL = 2;
-    }
-}
-let BAN_LEVEL = 3;
+let BAN_LEVEL = 2;
 if (process.env.BAN_LEVEL !== undefined) {
     BAN_LEVEL = parseInt(process.env.BAN_LEVEL);
     if (isNaN(BAN_LEVEL)) {
-        BAN_LEVEL = 3;
+        BAN_LEVEL = 2;
     }
 }
-let MODIFY_FILE_LEVEL = 4;
+let MODIFY_FILE_LEVEL = 3;
 if (process.env.MODIFY_FILE_LEVEL !== undefined) {
     MODIFY_FILE_LEVEL = parseInt(process.env.MODIFY_FILE_LEVEL);
     if (isNaN(MODIFY_FILE_LEVEL)) {
-        MODIFY_FILE_LEVEL = 4;
+        MODIFY_FILE_LEVEL = 3;
     }
 }
 
@@ -61,7 +54,7 @@ router.get('/user-list', async (req: Request, res: Response) => {
             return;
         }
         
-        if (admin_level < USER_LIST_LEVEL) {
+        if (admin_level < BAN_LEVEL) {
             res.status(403).json({ message: 'Permission denied' });
             return;
         }

@@ -17,11 +17,11 @@ const UPLOAD_PATH = process.env.UPLOADS_PATH || path.join(__dirname, './uploads'
 if (!fs.existsSync(UPLOAD_PATH)) {
     fs.mkdirSync(UPLOAD_PATH, { recursive: true });
 }
-let MODIFY_FILES_LEVEL = 4;
-if (process.env.MODIFY_FILES_LEVEL !== undefined) {
-    MODIFY_FILES_LEVEL = parseInt(process.env.MODIFY_FILES_LEVEL);
-    if (isNaN(MODIFY_FILES_LEVEL)) {
-        MODIFY_FILES_LEVEL = 4;
+let MODIFY_FILE_LEVEL = 3;
+if (process.env.MODIFY_FILE_LEVEL !== undefined) {
+    MODIFY_FILE_LEVEL = parseInt(process.env.MODIFY_FILE_LEVEL);
+    if (isNaN(MODIFY_FILE_LEVEL)) {
+        MODIFY_FILE_LEVEL = 3;
     }
 }
 
@@ -57,7 +57,7 @@ router.get('/:file_id', async (req: Request, res: Response) => {
             res.status(401).json({ message: 'Invalid school ID' });
             return;
         }
-        if (file.verified === 0 && admin_level < MODIFY_FILES_LEVEL) {
+        if (file.verified === 0 && admin_level < MODIFY_FILE_LEVEL) {
             res.status(403).json({ message: 'File is not verified' });
             return;
         }

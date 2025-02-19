@@ -10,15 +10,14 @@
 - `ORIGIN_FILE_PATH`: path to original file (default: `./original`)
 - `JWT_SECRET`: secret key for JWT
 - `BCRYPT_SALT_ROUNDS`: number of salt rounds for bcrypt (default: 10)
-- `USER_LIST_LEVEL` : minimum user level required to view user list (default 2)
-- `BAN_LEVEL`: minimum user level required to ban users (default 3)
-- `MODIFY_FILES_LEVEL`: minimum user level required to modify files (default 4)
+- `BAN_LEVEL`: minimum user level required to ban users (default 2)
+- `MODIFY_FILE_LEVEL`: minimum user level required to modify files (default 3)
 
 ---
 
 ## filter 
 ### get all tags
-Can set MODIFY_FILES_LEVEL in .env to change the minimum user level required to view unverified files. (default 4)
+Can set MODIFY_FILE_LEVEL in .env to change the minimum user level required to view unverified files. (default 3)
 #### path
 `/api/filter/tags`
 #### Request method
@@ -41,7 +40,7 @@ POST
 GET
 
 with Authorization header
-- with admin level < `env.MODIFY_FILES_LEVEL`
+- with admin level < `env.MODIFY_FILE_LEVEL`
 ```json
 {
     "semester": [], // empty array mean all 
@@ -49,7 +48,7 @@ with Authorization header
     "exam_type": []     // empty array mean all
 }
 ```
-- with admin level >= `env.MODIFY_FILES_LEVEL` also can
+- with admin level >= `env.MODIFY_FILE_LEVEL` also can
 ```json
 {
     "semester": [], // empty array mean all 
@@ -59,7 +58,7 @@ with Authorization header
 }
 ```
 #### Response
-if admin level < `env.MODIFY_FILES_LEVEL`
+if admin level < `env.MODIFY_FILE_LEVEL`
 ```json
 [
     {
@@ -105,6 +104,7 @@ if admin level >= `env.VERIFY_LEVLE`
 ## admin
 
 ### check admin level
+Can set BAN_LEVEL in .env to change the minimum user level required to check admin level. (default 2)
 #### path
 `/api/admin/check`
 #### Request
@@ -142,7 +142,7 @@ GET
 ----
 
 ### ban user
-Can set BAN_LEVEL in .env to change the minimum user level required to ban users. (default 3)
+Can set BAN_LEVEL in .env to change the minimum user level required to ban users. (default 2)
 
 #### path
 `/api/admin/ban`
@@ -166,7 +166,7 @@ with Authorization header
 ----
 
 ### unban user
-Can set BAN_LEVEL in .env to change the minimum user level required to unban users. (default 3)
+Can set BAN_LEVEL in .env to change the minimum user level required to unban users. (default 2)
 #### path
 `/api/admin/unban`
 #### Request
@@ -188,7 +188,7 @@ with Authorization header
 ----
 
 ### verify file
-Can set MODIFY_FILES_LEVEL in .env to change the minimum user level required to verify files. (default 4)
+Can set MODIFY_FILE_LEVEL in .env to change the minimum user level required to verify files. (default 3)
 #### path
 `/api/modify-file/verify`
 #### Request
@@ -208,7 +208,7 @@ POST
 ----
 
 ### delete file
-Can set MODIFY_FILES_LEVEL in .env to change the minimum user level required to delete files. (default 4)
+Can set MODIFY_FILE_LEVEL in .env to change the minimum user level required to delete files. (default 3)
 #### path
 `/api/modify-file/delete`
 #### Request
@@ -228,7 +228,7 @@ POST
 ----
 
 ### modify file info
-Can set MODIFY_FILES_LEVEL in .env to change the minimum user level required to modify files. (default 4)
+Can set MODIFY_FILE_LEVEL in .env to change the minimum user level required to modify files. (default 3)
 #### path
 `/api/modify-file/modify-file-info`
 #### Request
@@ -253,7 +253,7 @@ POST
 
 ### watermark file
 If WATERMARK_PATH is not set, can't watermark image
-Can set MODIFY_FILES_LEVEL in .env to change the minimum user level required to watermark files. (default 4)
+Can set MODIFY_FILE_LEVEL in .env to change the minimum user level required to watermark files. (default 3)
 Can set WATERMARK_OPACITY in .env to change the opacity of watermark. (default: 0.3)
 Can set WATERMARK_WIDTH in .env to change the width of watermark.(0 ~ 1 of all page) (default: 0.5)
 Can set ORIGIN_FILE_PATH in .env to change the directory where original files are stored. (default: `./original`)

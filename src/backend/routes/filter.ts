@@ -6,11 +6,11 @@ import DotenvFlow from 'dotenv-flow';
 
 DotenvFlow.config();
 
-let MODIFY_FILES_LEVEL = 4;
-if (process.env.MODIFY_FILES_LEVEL !== undefined) {
-    MODIFY_FILES_LEVEL = parseInt(process.env.MODIFY_FILES_LEVEL);
-    if (isNaN(MODIFY_FILES_LEVEL)) {
-        MODIFY_FILES_LEVEL = 4;
+let MODIFY_FILE_LEVEL = 3;
+if (process.env.MODIFY_FILE_LEVEL !== undefined) {
+    MODIFY_FILE_LEVEL = parseInt(process.env.MODIFY_FILE_LEVEL);
+    if (isNaN(MODIFY_FILE_LEVEL)) {
+        MODIFY_FILE_LEVEL = 3;
     }
 }
 
@@ -66,7 +66,7 @@ router.post('/file-lists', async (req: Request, res: Response) => {
             res.status(401).json({ message: 'Invalid school ID' });
             return;
         }
-        if (admin_level < MODIFY_FILES_LEVEL) {
+        if (admin_level < MODIFY_FILE_LEVEL) {
             const file_list = await db
                 .selectFrom('Document')
                 .select(['id', 'upload_time', 'subject', 'semester', 'exam_type'])
