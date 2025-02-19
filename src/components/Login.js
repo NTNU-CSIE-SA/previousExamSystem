@@ -54,15 +54,11 @@ export default function Login() {
                 <div class="input-box">
                     <input type="password" class="input-field" placeholder="Password" autocomplete="off" required onChange={e => setPassword(e.target.value)} />
                 </div>
-                <div class="forgot">
-                    <section>
-                        <input type="checkbox" id="check" />
-                        <label for="check">Remember me</label>
-                    </section>
-                </div>
                 <div class="input-submit">
-                    <button type="submit" class="submit-btn" id="submit"></button>
-                    <label for="submit">Sign In</label>
+                    <button type="submit" class="submit-btn" id="submit">
+                        <label for="submit">Sign In</label>
+                    </button>
+                    
                 </div>
             </form>
         </>
