@@ -17,11 +17,13 @@ async function loginUser(credentials) {
         .then(response => {
             if (response.status === 200) {
                 window.location.href = "/";
-
+                alert("登入成功！")
                 return response.json()
             } else if (response.status === 400) {
+                alert('登入失敗！')
                 console.error('Error:', response);
             } else {
+                alert("登入失敗！")
                 throw new Error('Login failed');
             }
         })
