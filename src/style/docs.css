@@ -1,0 +1,15 @@
+.TermsOfUse-Box{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.TermsOfUse-Box h1{
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+

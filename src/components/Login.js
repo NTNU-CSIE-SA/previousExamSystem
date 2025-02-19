@@ -54,11 +54,22 @@ export default function Login() {
                 <div class="input-box">
                     <input type="password" class="input-field" placeholder="Password" autocomplete="off" required onChange={e => setPassword(e.target.value)} />
                 </div>
+                <div class="checkbox-label">
+                    <section>
+                        <input class="checkbox" type="checkbox" id="check-terms-of-use" />
+                        <label for="check">Accept <a href='./terms-of-use'>Terms Of Use</a></label>
+                    </section>
+                </div>
+                <div class="checkbox-label">
+                    <section>
+                        <input class="checkbox" type="checkbox" id="check-privacy-policy" />
+                        <label for="check">Accept <a href='./privacy-policy'>Privacy Policy</a></label>
+                    </section>
+                </div>
                 <div class="input-submit">
                     <button type="submit" class="submit-btn" id="submit">
                         <label for="submit">Sign In</label>
-                    </button>
-                    
+                    </button>    
                 </div>
             </form>
         </>
