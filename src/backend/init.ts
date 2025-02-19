@@ -1,4 +1,4 @@
-import { db, loadSchema, clearExpiredTokens } from './db';
+import { db, loadSchema, clearExpiredTokens, checkBan } from './db';
 import DotenvFlow from 'dotenv-flow';
 import corn from 'node-cron';
 
@@ -15,6 +15,9 @@ export const init_server = async () => {
                 console.log(`${new Date().toISOString()}: Clearing expired tokens...`);
                 await clearExpiredTokens();
                 console.log(`${new Date().toISOString()}: Finished clearing expired tokens.`);
+                console.log(`${new Date().toISOString()}: Checking ban status...`);
+                await checkBan();
+                console.log(`${new Date().toISOString()}: Finished checking ban status.`);
             } catch (error) {
                 console.error('Error clearing expired tokens:', error);
             }
