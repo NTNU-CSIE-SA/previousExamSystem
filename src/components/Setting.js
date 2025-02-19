@@ -17,12 +17,15 @@ async function passwordReset(oldPassword , newPassword){
     })
         .then(response => {
             if (response.status === 200) {
-                return response.json()
+                alert("修改密碼成功！");
+                return response.status
             } else if (response.status === 400) {
+                alert('Error:', response.json().message);
                 console.error('Error:', response.json().message);
             } else {
                 console.error(response)
-                throw new Error('Reset Password failed');
+                alert('密碼修改失敗(舊密碼失敗或其他原因)');
+                throw new Error('密碼修改失敗(舊密碼失敗或其他原因)');
             }
         })
         .catch(error => {

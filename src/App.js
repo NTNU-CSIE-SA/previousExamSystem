@@ -28,6 +28,7 @@ function App() {
   const [token, setToken] = useState(haveToken);
 
   const [isAdmin, setIsAdmin] = useState(checkIsAdmin(token));
+  
 
   if (!token&&!paths_withoutLogin.includes(current_path)) {
     return <Login setToken={setToken} />
