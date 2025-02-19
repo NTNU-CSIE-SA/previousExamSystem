@@ -75,6 +75,7 @@ export default function Home() {
             withCredentials: true,
             credentials: 'include'
         }).then(response => {
+            console.log(response)
             return response.json()
         })
             .catch(err => {
@@ -89,6 +90,7 @@ export default function Home() {
     async function generateResult() {
 
         let result = await searchResult()
+        console.log(result)
         // TODO: fontend should handle the response and show result to user
         const resultList = result.map((item, i) => {
             item = result[i].semester + ' ' + result[i].exam_type + ' ' + result[i].subject;

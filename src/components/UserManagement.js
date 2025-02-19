@@ -1,28 +1,16 @@
 import Select from 'react-select'
-import "../style/management.css"
+import "../style/user_management.css"
 import React, { useState, useEffect } from 'react';
 import { basicURL } from '../App';
 
-export default function Management(){
+export default function UserManagement(){
 
     return(
         <div className="management-container">
-            <UserManagement></UserManagement>
-            <DBManagement></DBManagement>
+            <UserManagementObj></UserManagementObj>
         </div>
     )
 
-}
-
-
-
-const DBManagement = (props) =>{
-
-    return(
-        <div className="db-management">
-            <h1>考古題檔案管理</h1>
-        </div>
-    )
 }
 
 function ban_time_translator(ban_time_id){
@@ -59,7 +47,7 @@ function ban_time_translator(ban_time_id){
     }
 }
 
-const UserManagement = (props) =>{
+const UserManagementObj = (props) =>{
     const [bannedList, setBannedList] = useState([]);
     const [normalList, setNormalList] = useState([]);
     useEffect(() => {
@@ -257,7 +245,6 @@ const UserManagement = (props) =>{
                     </button>
                 </containerchild>
             </container>
-            <hr size="1" align="center" noshade width="90%" color="white"></hr>
         </div>
     )
 

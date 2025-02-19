@@ -1,17 +1,16 @@
 .management-container{
-    width: 100%;
-    height: 90%;
     display: flex;
-    overflow-y: auto;
-    overflow-x: hidden;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    margin-top: 5rem;
+    width: 100%;
 }
 
 .user-management-container{
     margin-top: 2rem;
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -47,11 +46,3 @@ h2{
     color: white;
 }
 
-.db-management{
-    height: 40%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
