@@ -21,7 +21,7 @@ export default function Navbar({ isAdmin }) {
                 if (response.status === 200) {
                     window.location.href = "/login";
                 } else if (response.status === 400) {
-                    console.error('Error:', response.json().message);
+                    console.error('Error:', response);
                 } else {
                     throw new Error('Login failed');
                 }

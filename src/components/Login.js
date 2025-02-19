@@ -20,8 +20,8 @@ async function loginUser(credentials) {
                 alert("登入成功！")
                 return response.json()
             } else if (response.status === 400) {
-                console.error('Error:', response.json().message);
-                alert('Error:', response.json().message)
+                alert('登入失敗！')
+                console.error('Error:', response);
             } else {
                 alert("登入失敗！")
                 throw new Error('Login failed');
@@ -42,7 +42,6 @@ export default function Login() {
         });
         //TODO : save and load token, the function loginUser should be the function 
         // that connect with backend and backend should return a token.
-        
     }
     return (
         <>

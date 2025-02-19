@@ -11,7 +11,6 @@
 - `JWT_SECRET`: secret key for JWT
 - `BCRYPT_SALT_ROUNDS`: number of salt rounds for bcrypt (default: 10)
 - `USER_LIST_LEVEL` : minimum user level required to view user list (default 2)
-- `VERIFY_LEVEL`: minimum user level required to view unverified files and filter with unverified tag (default 2)
 - `BAN_LEVEL`: minimum user level required to ban users (default 3)
 - `MODIFY_FILES_LEVEL`: minimum user level required to modify files (default 4)
 
@@ -19,7 +18,7 @@
 
 ## filter 
 ### get all tags
-Can set VERIFY_LEVEL in .env to change the minimum user level required to view unverified files. (default 2)
+Can set MODIFY_FILES_LEVEL in .env to change the minimum user level required to view unverified files. (default 4)
 #### path
 `/api/filter/tags`
 #### Request method
@@ -42,7 +41,7 @@ POST
 GET
 
 with Authorization header
-- with admin level < `env.VERIFY_LEVEL`
+- with admin level < `env.MODIFY_FILES_LEVEL`
 ```json
 {
     "semester": [], // empty array mean all 
@@ -50,7 +49,7 @@ with Authorization header
     "exam_type": []     // empty array mean all
 }
 ```
-- with admin level >= `env.VERIFY_LEVEL` also can
+- with admin level >= `env.MODIFY_FILES_LEVEL` also can
 ```json
 {
     "semester": [], // empty array mean all 
@@ -60,7 +59,7 @@ with Authorization header
 }
 ```
 #### Response
-if admin level < `env.VERIFY_LEVEL`
+if admin level < `env.MODIFY_FILES_LEVEL`
 ```json
 [
     {
@@ -189,7 +188,7 @@ with Authorization header
 ----
 
 ### verify file
-Can set VERIFY_LEVEL in .env to change the minimum user level required to verify files. (default 2)
+Can set MODIFY_FILES_LEVEL in .env to change the minimum user level required to verify files. (default 4)
 #### path
 `/api/modify-file/verify`
 #### Request
