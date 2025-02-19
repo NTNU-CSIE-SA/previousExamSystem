@@ -30,6 +30,9 @@ export default function Upload(){
     const [currentExam, modifyExam] = useState(NaN);
     const [examInput , setExamInput] = useState("請輸入考試名稱");
 
+    //this is the variable which store inputFile
+    const inputFile = useRef(null);
+
     //NaN = haven't clicked upload btn
     //1 = uploading
     //2 = success to upload
@@ -108,6 +111,9 @@ export default function Upload(){
                 )
             }
 
+            <input type='file' id='file' ref={inputFile} style={{display: 'none'}}/>
+            <button className="local-upload-btn" onClick={LocalUploadFile}>上傳檔案</button>
+
             <button
             className={`upload-btn ${isValidToUpload() ? 'enabled' : 'disabled'}`}
             disabled={!isValidToUpload()}
@@ -135,6 +141,10 @@ export default function Upload(){
 
     function isValidToUpload() {
       return !isNaN(currentSemester) && !isNaN(currentCourse) && !isNaN(currentExam);
+    }
+
+    function LocalUploadFile(){
+      inputFile.current.click();
     }
 
     //this function is for uploading file to backend
