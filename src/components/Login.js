@@ -20,7 +20,7 @@ async function loginUser(credentials) {
 
                 return response.json()
             } else if (response.status === 400) {
-                console.error('Error:', response.json().message);
+                console.error('Error:', response);
             } else {
                 throw new Error('Login failed');
             }
@@ -40,7 +40,6 @@ export default function Login() {
         });
         //TODO : save and load token, the function loginUser should be the function 
         // that connect with backend and backend should return a token.
-        console.log(response.message)
     }
     return (
         <>

@@ -19,7 +19,7 @@ async function passwordReset(oldPassword , newPassword){
             if (response.status === 200) {
                 return response.json()
             } else if (response.status === 400) {
-                console.error('Error:', response.json().message);
+                console.error('Error', response);
             } else {
                 console.error(response)
                 throw new Error('Reset Password failed');
