@@ -29,8 +29,10 @@
   "scripts": {
     "server": "nodemon -r dotenv/config ./server/index.js",
     "dev": "npm-run-all --parallel front-dev back-dev",
+    "dev:windows" : "npm-run-all --parallel front-dev back-dev-windows",
     "front-dev": "react-scripts start",
     "back-dev": "nodemon --watch src/backend --ext ts --exec 'ts-node src/backend/server.ts'",
+    "back-dev-windows": "cross-env NODE_ENV=development nodemon --watch src/backend --ext ts --exec 'ts-node src/backend/server.ts'",
     "start": "npm-run-all --parallel front-start back-start",
     "front-start": "react-scripts start",
     "back-start": "node ./build/backend/server.js",
