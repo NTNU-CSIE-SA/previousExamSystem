@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, forwardRef } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import "../style/dropdown.css"
 import "../style/upload.css"
-import { basicURL } from "./Home";
+import { basicURL } from '../App';
 
 export default function Upload(){
 

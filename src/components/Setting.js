@@ -1,6 +1,6 @@
 import React , {useRef} from 'react'
 import '../style/setting.css'
-import { basicURL } from './Home'
+import { basicURL } from '../App'
 
 async function passwordReset(oldPassword , newPassword){
     return fetch(basicURL + 'api/auth/change-password', {
