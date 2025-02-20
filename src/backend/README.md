@@ -37,7 +37,7 @@ POST
 #### path
 `/api/filter/file-lists`
 #### Request method
-GET
+POST
 
 with Authorization header
 - with admin level < `env.MODIFY_FILE_LEVEL`
