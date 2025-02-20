@@ -91,21 +91,32 @@ export default function Home() {
 
     const [resultLabels, setResultLabels] = useState(<></>)
 
-
     async function generateResult() {
 
         let result = await searchResult()
 
-        const getFile = (e) =>{
-            if(e.target.value == 1){
-                e.target.value = 0;
-                e.target.innerHTML = e.target.className.split("_")[1];
+        const getFile = async (e) =>{
+
+            async function getFile() {
+                return fetch(basicURL + 'api/view-file/' + e.target.id, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    withCredentials: true,
+                    credentials: 'include'
+                }).then(response => {
+                    return response.blob()
+                })
+                    .catch(err => {
+                        console.error(err);
+                        return [];
+                    });
             }
-            else{
-                e.target.value = 1;
-                //ToDo show the pdf result
-                e.target.innerHTML = "hello";
-            }
+
+            const fileSelected = await getFile();
+            const fileUrl = URL.createObjectURL(fileSelected);
+            window.open(fileUrl).focus();
         }
         
         // TODO: fontend should handle the response and show result to user
