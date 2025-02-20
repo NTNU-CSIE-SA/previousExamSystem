@@ -9,6 +9,7 @@ import UserManagement from './components/UserManagement';
 import DBManagement from './components/DBManagement'
 import TermsOfUse from './components/TermsOfUse';
 import PrivacyPolicy from './components/PrivacyPolicy';
+import './style/app.css'
 import { Routes, Route , useLocation } from "react-router-dom";
 
 
@@ -60,8 +61,8 @@ function App() {
   }
 
   return (
-    <>
-      <Navbar isAdmin={isAdmin} />
+    <div className='app-container'>
+      {paths_withoutLogin.includes(current_path) ? <></> : <Navbar isAdmin={isAdmin} />}
       <Routes>
         {
           isAdmin.ban ?
@@ -78,9 +79,9 @@ function App() {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/setting" element={<Setting />} />
-      </Routes>
+      </Routes> 
       <Footer />
-    </>
+    </div>
   );
 }
 

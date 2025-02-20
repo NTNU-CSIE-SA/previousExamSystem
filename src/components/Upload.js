@@ -88,7 +88,6 @@ export default function Upload(){
             });
     }
     return(
-        <>
         <div className="upload__container">
 
             <Dropdown
@@ -148,7 +147,6 @@ export default function Upload(){
             }
 
         </div>
-        </>
     )
 
     function isValidToUpload() {
