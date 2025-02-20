@@ -179,8 +179,8 @@ const UserManagementObj = (props) =>{
     return(
         <div className='user-management-container'>
             <h1>使用者管理</h1>
-            <container>
-                <containerchild>
+            <div className='container'>
+                <div className='containerchild'>
                     <h2>封禁使用者</h2>
                     <Select className='select-object'
                         options={normalList}
@@ -215,8 +215,8 @@ const UserManagementObj = (props) =>{
                         >
                         送出
                     </button>
-                </containerchild>
-                <containerchild>
+                </div>
+                <div className='containerchild'>
                     <h2 style={{color: 'white',}}>解封使用者</h2>
                     <Select className='select-object'
                         options={bannedList}
@@ -243,8 +243,8 @@ const UserManagementObj = (props) =>{
                         >
                         送出
                     </button>
-                </containerchild>
-            </container>
+                </div>
+            </div>
         </div>
     )
 
