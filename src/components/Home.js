@@ -62,20 +62,25 @@ export default function Home() {
         //you should return an array of objects, each object has a name.
         //all selected options contain in selectedSemester, selectedCourse, selectedYear
 
+        const toFetchFilter = {
+            semester: isNaN(selectedSemester) ? [] : selectedSemester.map(item => item.value),
+            subject: isNaN(selectedCourse) ? [] : selectedCourse.map(item => item.value),
+            exam_type: isNaN(selectedYear) ? [] : selectedYear.map(item => item.value),
+            verified: -1
+        }
+
+        console.log(toFetchFilter)
+
         return fetch(basicURL + 'api/filter/file-lists', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                "semester": [], // empty array mean all 
-                "subject": [],  // empty array mean all
-                "exam_type": []     // empty array mean all
-            }),
+            body: JSON.stringify(toFetchFilter),
             withCredentials: true,
             credentials: 'include'
         }).then(response => {
-            console.log(response)
+            
             return response.json()
         })
             .catch(err => {
@@ -90,17 +95,31 @@ export default function Home() {
     async function generateResult() {
 
         let result = await searchResult()
-        console.log(result)
+
+        const getFile = (e) =>{
+            if(e.target.value == 1){
+                e.target.value = 0;
+                e.target.innerHTML = e.target.className.split("_")[1];
+            }
+            else{
+                e.target.value = 1;
+                //ToDo show the pdf result
+                e.target.innerHTML = "hello";
+            }
+        }
+        
         // TODO: fontend should handle the response and show result to user
         const resultList = result.map((item, i) => {
             item = result[i].semester + ' ' + result[i].exam_type + ' ' + result[i].subject;
             return (
-                <div className='result-item'>{item}</div>
+                <div className={"result-item r_"+item} id={result[i].id} onClick={getFile} value={0}>{item}</div>
             )
         });
 
 
         setResultLabels(resultList)
+
+       
 
     }
 
