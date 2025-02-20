@@ -90,6 +90,9 @@ const UserManagement = (props) =>{
                 console.error(err);
                 return [[],[]]
             });
+        if(allList[0].length === 0 && allList[1].length === 0){
+            return [[],[]]
+        }
         const normalList = allList.filter(user => user.ban_until === null).map(user => ({label: user.school_id , value: user.school_id}))
         const bannedList = allList.filter(user => user.ban_until !== null).map(user => ({label: `${user.school_id} (${new Date(user.ban_until).toISOString().split("T")[0]})`, value: user.school_id}))
         return [bannedList , normalList]
