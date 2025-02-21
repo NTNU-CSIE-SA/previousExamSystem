@@ -63,9 +63,9 @@ export default function Home() {
         //all selected options contain in selectedSemester, selectedCourse, selectedYear
 
         const toFetchFilter = {
-            semester: isNaN(selectedSemester) ? [] : selectedSemester.map(item => item.value),
-            subject: isNaN(selectedCourse) ? [] : selectedCourse.map(item => item.value),
-            exam_type: isNaN(selectedYear) ? [] : selectedYear.map(item => item.value),
+            semester: selectedSemester === undefined ? [] : selectedSemester.map(item => item.value),
+            subject: selectedCourse === undefined ? [] : selectedCourse.map(item => item.value),
+            exam_type: selectedYear === undefined ? [] : selectedYear.map(item => item.value),
             verified: 1
         }
 
@@ -117,23 +117,14 @@ export default function Home() {
             window.open(fileUrl).focus();
         }
 
-        let result = await searchResult()
-
-        
-        
-        // TODO: fontend should handle the response and show result to user
+        let result = await searchResult();  
         const resultList = result.map((item, i) => {
             item = result[i].semester + ' ' + result[i].exam_type + ' ' + result[i].subject;
             return (
                 <div className={"result-item r_"+item} id={result[i].id} onClick={getFile} value={0}>{item}</div>
             )
         });
-
-
         setResultLabels(resultList)
-
-       
-
     }
 
 
