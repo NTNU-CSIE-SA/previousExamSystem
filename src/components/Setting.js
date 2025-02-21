@@ -1,6 +1,6 @@
 import React , {useRef} from 'react'
 import '../style/setting.css'
-import { basicURL } from './Home'
+import { basicURL } from '../App'
 
 async function passwordReset(oldPassword , newPassword){
     return fetch(basicURL + 'api/auth/change-password', {
@@ -17,12 +17,15 @@ async function passwordReset(oldPassword , newPassword){
     })
         .then(response => {
             if (response.status === 200) {
-                return response.json()
+                alert("修改密碼成功！");
+                return response.status
             } else if (response.status === 400) {
+                alert('需填入舊密碼與新密碼！');
                 console.error('Error', response);
             } else {
                 console.error(response)
-                throw new Error('Reset Password failed');
+                alert('密碼修改失敗(舊密碼失敗或其他原因)');
+                throw new Error('密碼修改失敗(舊密碼失敗或其他原因)');
             }
         })
         .catch(error => {

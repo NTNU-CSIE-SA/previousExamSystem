@@ -1,7 +1,7 @@
 import "../style/login.css"
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { basicURL } from "./Home"
+import { basicURL } from '../App'
 
 //TODO : connect with backend and backend should return a token
 async function loginUser(credentials) {
@@ -17,11 +17,13 @@ async function loginUser(credentials) {
         .then(response => {
             if (response.status === 200) {
                 window.location.href = "/";
-
+                alert("登入成功！")
                 return response.json()
             } else if (response.status === 400) {
+                alert('登入失敗！')
                 console.error('Error:', response);
             } else {
+                alert("登入失敗！")
                 throw new Error('Login failed');
             }
         })

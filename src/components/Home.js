@@ -2,8 +2,7 @@ import Select from 'react-select'
 import "../style/home.css"
 import React, { useState, useEffect } from 'react';
 import { data } from 'react-router-dom';
-
-export const basicURL = 'http://localhost:5000/'
+import { basicURL } from '../App';
 export default function Home() {
     const [data_from_backend, setDataFromBackend] = useState({
         semester: [],

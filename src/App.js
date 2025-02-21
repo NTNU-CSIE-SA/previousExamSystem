@@ -10,6 +10,9 @@ import TermsOfUse from './components/TermsOfUse';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import { Routes, Route , useLocation } from "react-router-dom";
 
+
+export const basicURL = 'http://localhost:5000/';
+
 function App() {
   //set useState(true) to test pages without login
 
@@ -27,23 +30,40 @@ function App() {
   let haveToken = cookieObj.token;
   const [token, setToken] = useState(haveToken);
 
-  const [isAdmin, setIsAdmin] = useState(checkIsAdmin(token));
+  const [isAdmin, setIsAdmin] = useState({ ban: false, modify: false });
+  
 
   if (!token&&!paths_withoutLogin.includes(current_path)) {
     return <Login setToken={setToken} />
   }
 
-  function checkIsAdmin(token) {
-    //TODO: check the token and return true if the user is admin
-    return true
+  // TODO: frontend use this api
+  async function checkIsAdmin() {
+      const admim_permission = await fetch(basicURL + 'api/admin/check', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true,
+        credentials: 'include'
+      }).then(res => res.json())
+        .then(data => {
+          return { ban: data.ban, modify: data.modify_file };
+        })
+        .catch(err => {
+          console.error(err);
+          return { ban: false, modify: false };
+        });
+      setIsAdmin(admim_permission);
+      return;
   }
 
   return (
     <>
-      <Navbar isAdmin={isAdmin} />
+      <Navbar isAdmin={isAdmin.ban || isAdmin.modify} />
       <Routes>
         {
-          isAdmin ?
+          isAdmin.ban ?
             <Route path="/management" element={<Management />} /> :
             <> </>
         }
