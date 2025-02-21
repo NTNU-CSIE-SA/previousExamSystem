@@ -37,7 +37,7 @@ POST
 #### path
 `/api/filter/file-lists`
 #### Request method
-GET
+POST
 
 with Authorization header
 - with admin level < `env.MODIFY_FILE_LEVEL`
@@ -112,7 +112,8 @@ GET
 #### Response
 ```json
 {
-    "admin_level": 2 // number
+    "ban": true, // or false
+    "modify_file": true // or false
 }
 ```
 

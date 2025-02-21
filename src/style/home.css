@@ -29,16 +29,18 @@
 
 }
 
+
+
 .result-item{
     width: 80%;
-    height: 5rem;
     font-size: 2rem;
     background-color: rgb(239, 230, 230);
     border-radius: .5rem;
     margin: 1rem;
     padding: 1.5rem;
     display: flex;
-    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .result-item:hover{

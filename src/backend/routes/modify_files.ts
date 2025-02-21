@@ -199,7 +199,7 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
             return;
         }
         if (file.verified === 1 && verified === 0) {
-            if (!fs.existsSync(`${VERIFIED_DIR}/${file.id}`)) {
+            if (!fs.existsSync(`${VERIFIED_DIR}/${file.pdf_locate}`)) {
                 res.status(404).json({ message: 'File not found' });
                 return;
             }
@@ -229,6 +229,11 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
                     return;
                 }
             });
+            await db
+                .updateTable('Document')
+                .set({ pdf_locate: `${file.id}.pdf` })
+                .where('id', '=', file_id)
+                .execute();
         }
         if (subject === undefined && semester === undefined && exam_type === undefined && verified === undefined) {
             res.status(400).json({ message: 'No modification' });
