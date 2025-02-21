@@ -37,7 +37,10 @@ export default function Navbar({ isAdmin }) {
             </Link>
             <ul>
                 {
-                    isAdmin ? <CustomLink to="/management">Management</CustomLink> : <></>
+                    isAdmin.ban ? <CustomLink to="/user-management">User Management</CustomLink> : <></>
+                }
+                {
+                    isAdmin.modify ? <CustomLink to="/db-management">DB Management</CustomLink> : <></>
                 }
                 <CustomLink to="/">Home</CustomLink>
                 <CustomLink to="/upload">Upload</CustomLink>

@@ -5,9 +5,11 @@ import Footer from './components/Footer'
 import Upload from './components/Upload'
 import Setting from './components/Setting';
 import Home from './components/Home'
-import Management from './components/Management';
+import UserManagement from './components/UserManagement';
+import DBManagement from './components/DBManagement'
 import TermsOfUse from './components/TermsOfUse';
 import PrivacyPolicy from './components/PrivacyPolicy';
+import './style/app.css'
 import { Routes, Route , useLocation } from "react-router-dom";
 
 
@@ -30,7 +32,7 @@ function App() {
   let haveToken = cookieObj.token;
   const [token, setToken] = useState(haveToken);
 
-  const [isAdmin, setIsAdmin] = useState({ ban: false, modify: false });
+  const [isAdmin, setIsAdmin] = useState(checkIsAdmin());
   
 
   if (!token&&!paths_withoutLogin.includes(current_path)) {
@@ -59,12 +61,17 @@ function App() {
   }
 
   return (
-    <>
-      <Navbar isAdmin={isAdmin.ban || isAdmin.modify} />
+    <div className='app-container'>
+      {paths_withoutLogin.includes(current_path) ? <></> : <Navbar isAdmin={isAdmin} />}
       <Routes>
         {
           isAdmin.ban ?
-            <Route path="/management" element={<Management />} /> :
+            <Route path="/user-management" element={<UserManagement />} /> :
+            <> </>
+        }
+        {
+          isAdmin.modify ?
+            <Route path="/db-management" element={<DBManagement />} /> :
             <> </>
         }
         <Route path="/" element={<Home />} />
@@ -72,9 +79,9 @@ function App() {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/setting" element={<Setting />} />
-      </Routes>
+      </Routes> 
       <Footer />
-    </>
+    </div>
   );
 }
 
