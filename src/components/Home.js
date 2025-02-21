@@ -66,10 +66,8 @@ export default function Home() {
             semester: isNaN(selectedSemester) ? [] : selectedSemester.map(item => item.value),
             subject: isNaN(selectedCourse) ? [] : selectedCourse.map(item => item.value),
             exam_type: isNaN(selectedYear) ? [] : selectedYear.map(item => item.value),
-            verified: -1
+            verified: 1
         }
-
-        console.log(toFetchFilter)
 
         return fetch(basicURL + 'api/filter/file-lists', {
             method: 'POST',
@@ -93,7 +91,7 @@ export default function Home() {
 
     async function generateResult() {
 
-        let result = await searchResult()
+        
 
         const getFile = async (e) =>{
 
@@ -118,6 +116,10 @@ export default function Home() {
             const fileUrl = URL.createObjectURL(fileSelected);
             window.open(fileUrl).focus();
         }
+
+        let result = await searchResult()
+
+        
         
         // TODO: fontend should handle the response and show result to user
         const resultList = result.map((item, i) => {
