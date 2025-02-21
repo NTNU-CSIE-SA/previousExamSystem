@@ -133,18 +133,7 @@ export default function Upload(){
               上傳
             </button>
 
-            {isNaN(uploadStatus) ? 
-              <></> :
-              (
-                uploadStatus === 1 ?
-                <div className="upload_status_label" style={{backgroundColor: '#ddb070'}}>上傳中...</div> :
-                (
-                  uploadStatus === 2 ?
-                  <div className="upload_status_label" style={{backgroundColor: '#3b7b2d'}}>上傳成功</div> :
-                  <div className="upload_status_label" style={{backgroundColor: '#7b2d2d'}}>上傳失敗</div>
-                )
-              )
-            }
+            
 
         </div>
     )
@@ -175,9 +164,10 @@ export default function Upload(){
         body: formUpload
       }).then(res => {
         if(res.status === 200){
-          updateUploadStatus(2);
+          alert("上傳成功！")
+          window.location.reload()
         }else{
-          updateUploadStatus(3);
+          alert("上傳失敗，請重新嘗試或聯絡系學會管理員！")
         }
       });
     }

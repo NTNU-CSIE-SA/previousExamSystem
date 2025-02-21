@@ -81,6 +81,7 @@ export default function DBManagement(props){
 
         const result = await getFileList()
         setFileData(result)
+        console.log(result)
         const data = await ParseResult(result)
         return data
 
@@ -129,7 +130,101 @@ export default function DBManagement(props){
                 break
             }
         }
-    }                                                                                                                                                                                                                                                 
+    }                   
+    
+    async function sendAPI(){
+
+        async function sendFetch(){
+            return fetch(basicURL + 'api/modify-file/modify-file-info', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "file_id": currentFile.value, 
+                    "subject": currentFileSubject, // can have it or not, string 0 < length < 100
+                    "semester": currentFileSemester, // can have it or not, string 0 < length < 100
+                    "exam_type": currentFileExamType, // can have it or not, string 0 < length < 100
+                    "verified": (currentFileVerified == "已驗證" ? 1 : 0) // can have it or not, 0 or 1
+                }),
+                withCredentials: true,
+                credentials: 'include'
+            }).then(response => {
+                
+                return response.json()
+                
+            })
+                .catch(err => {
+                    console.error(err);
+                    return 'delete file failed';
+                });
+        }
+
+        async function sendWaterMark(){
+            return fetch(basicURL + 'api/watermark', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: (
+                    waterMarkCategory == "新增文字浮水印" ? 
+                    JSON.stringify({
+                        "file_id": currentFile.value, 
+                        "watermark_text" : waterMarkText  
+                    }) : 
+                    JSON.stringify({
+                        "file_id": currentFile.value,  
+                    })
+                ),
+                withCredentials: true,
+                credentials: 'include'
+            }).then(response => {
+                
+                return response.json()
+                
+            })
+                .catch(err => {
+                    console.error(err);
+                    return 'delete file failed';
+                });
+        }
+
+        const sendResult = await sendFetch()
+        const watermarkResult = waterMarkCategory == "不新增" ? "None" : await sendWaterMark()
+        alert("檔案更動："+sendResult.message+"\n浮水印更動："+(watermarkResult == "None" ? watermarkResult : watermarkResult.message))
+        
+        window.location.reload()
+
+    }
+    
+    async function delFile(){
+
+        async function delAPI(){
+            return fetch(basicURL + 'api/modify-file/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "file_id" : currentFile.value
+                }),
+                withCredentials: true,
+                credentials: 'include'
+            }).then(response => {
+                
+                return response.json().message
+                
+            })
+                .catch(err => {
+                    console.error(err);
+                    return 'delete file failed';
+                });
+        }
+        const delResult = await delAPI()
+        alert(delResult.message)
+        window.location.reload()
+        
+    }
 
     return(
         <div className="db-management">
@@ -208,12 +303,12 @@ export default function DBManagement(props){
                 {
                     currentFile == null ?
                     <></> :
-                    <button className='send'>送出</button>
+                    <button className='send' onClick={sendAPI}>送出</button>
                 }
                 {
                     currentFile == null ?
                     <></> :
-                    <button className='delete'>刪除檔案</button>
+                    <button className='delete' onClick={delFile}>刪除檔案</button>
                 }
             </div>
             <div className='pdf-container'>
