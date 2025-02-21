@@ -31,10 +31,8 @@ export default function DBManagement(props){
             }),
             withCredentials: true,
             credentials: 'include'
-        }).then(response => {
-            
-            return response.json()
-            
+        }).then(response => {  
+            return response.json() 
         })
             .catch(err => {
                 console.error(err);
@@ -189,8 +187,8 @@ export default function DBManagement(props){
                 });
         }
 
-        const sendResult = await sendFetch()
         const watermarkResult = waterMarkCategory == "不新增" ? "None" : await sendWaterMark()
+        const sendResult = await sendFetch()
         alert("檔案更動："+sendResult.message+"\n浮水印更動："+(watermarkResult == "None" ? watermarkResult : watermarkResult.message))
         
         window.location.reload()
