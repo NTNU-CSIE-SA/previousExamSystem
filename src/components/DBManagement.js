@@ -61,11 +61,8 @@ export default function DBManagement(props){
         option: (provided, state) => ({
             ...provided,
             backgroundColor: state.isFocused && "lightgray",
-
         })
-
     }
-
     async function setFileList_fetch(){
 
         async function ParseResult(result){
@@ -76,15 +73,12 @@ export default function DBManagement(props){
             }
             return data
         }
-
         const result = await getFileList()
         setFileData(result)
         console.log(result)
         const data = await ParseResult(result)
         return data
-
     }
-
     useEffect(() => {
         (async function () {
             const data = await setFileList_fetch();
@@ -113,7 +107,6 @@ export default function DBManagement(props){
                     return [];
                 });
         }
-
         setCurrentFile(e)
         //console.log(e.value)
         for(let i=0;i<fileData.length;i++){
@@ -177,9 +170,12 @@ export default function DBManagement(props){
                 withCredentials: true,
                 credentials: 'include'
             }).then(response => {
-                
-                return response.json()
-                
+                if (response.status === 200){
+                    return response.json()
+                }
+                else{
+                    return 'watermark failed'
+                }
             })
                 .catch(err => {
                     console.error(err);
@@ -189,16 +185,14 @@ export default function DBManagement(props){
 
         const watermarkResult = waterMarkCategory == "不新增" ? "None" : await sendWaterMark()
         const sendResult = await sendFetch()
-        alert("檔案更動："+sendResult.message+"\n浮水印更動："+(watermarkResult == "None" ? watermarkResult : watermarkResult.message))
-        
+        alert("檔案更動："+sendResult.message+"\n浮水印更動："+(watermarkResult))
         window.location.reload()
-
     }
     
     async function delFile(){
 
         async function delAPI(){
-            return fetch(basicURL + 'api/modify-file/delete', {
+            return await fetch(basicURL + 'api/modify-file/delete', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -209,9 +203,13 @@ export default function DBManagement(props){
                 withCredentials: true,
                 credentials: 'include'
             }).then(response => {
-                
-                return response.json().message
-                
+                console.log(response)
+                if (response.status === 200){
+                    return '刪除成功'
+                }
+                else{
+                    return '刪除失敗'
+                }
             })
                 .catch(err => {
                     console.error(err);
@@ -219,9 +217,8 @@ export default function DBManagement(props){
                 });
         }
         const delResult = await delAPI()
-        alert(delResult.message)
-        window.location.reload()
-        
+        alert(delResult)
+        window.location.reload()   
     }
 
     return(
