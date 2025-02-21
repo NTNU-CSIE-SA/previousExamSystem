@@ -1,28 +1,16 @@
 import Select from 'react-select'
-import "../style/management.css"
+import "../style/user_management.css"
 import React, { useState, useEffect } from 'react';
 import { basicURL } from '../App';
 
-export default function Management(){
+export default function UserManagement(){
 
     return(
         <div className="management-container">
-            <UserManagement></UserManagement>
-            <DBManagement></DBManagement>
+            <UserManagementObj></UserManagementObj>
         </div>
     )
 
-}
-
-
-
-const DBManagement = (props) =>{
-
-    return(
-        <div className="db-management">
-            <h1>考古題檔案管理</h1>
-        </div>
-    )
 }
 
 function ban_time_translator(ban_time_id){
@@ -59,7 +47,7 @@ function ban_time_translator(ban_time_id){
     }
 }
 
-const UserManagement = (props) =>{
+const UserManagementObj = (props) =>{
     const [bannedList, setBannedList] = useState([]);
     const [normalList, setNormalList] = useState([]);
     useEffect(() => {
@@ -191,8 +179,8 @@ const UserManagement = (props) =>{
     return(
         <div className='user-management-container'>
             <h1>使用者管理</h1>
-            <container>
-                <containerchild>
+            <div className='container'>
+                <div className='containerchild'>
                     <h2>封禁使用者</h2>
                     <Select className='select-object'
                         options={normalList}
@@ -227,8 +215,8 @@ const UserManagement = (props) =>{
                         >
                         送出
                     </button>
-                </containerchild>
-                <containerchild>
+                </div>
+                <div className='containerchild'>
                     <h2 style={{color: 'white',}}>解封使用者</h2>
                     <Select className='select-object'
                         options={bannedList}
@@ -255,9 +243,8 @@ const UserManagement = (props) =>{
                         >
                         送出
                     </button>
-                </containerchild>
-            </container>
-            <hr size="1" align="center" noshade width="90%" color="white"></hr>
+                </div>
+            </div>
         </div>
     )
 
