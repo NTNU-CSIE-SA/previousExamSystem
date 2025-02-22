@@ -26,7 +26,18 @@ export default function Home() {
                 'Content-Type': 'application/json'
             },
             credentials: 'include'
-        }).then(res => res.json())
+        }).then(res => {
+            if (res.status === 200) {
+                return res.json()
+            } else {
+                console.error('Error:', res);
+                return {
+                    semester: [],
+                    course: [],
+                    year: []
+                };
+            }
+        })
             .then(data => {
                 data.semester = data.semester.map((item: any) => ({ label: item, value: item }));
                 data.subject = data.subject.map((item: any) => ({ label: item, value: item }));
@@ -72,9 +83,14 @@ export default function Home() {
             },
             body: JSON.stringify(toFetchFilter),
             credentials: 'include'
-        }).then(response => {
-
-            return response.json()
+        }).then(res => {
+            if (res.status === 200) {
+                return res.json()
+            }
+            else {
+                console.error('Error:', res);
+                return [];
+            }
         })
             .catch(err => {
                 console.error(err);
@@ -97,12 +113,17 @@ export default function Home() {
                         'Content-Type': 'application/json'
                     },
                     credentials: 'include'
-                }).then(response => {
-                    return response.blob()
+                }).then(res => {
+                    if (res.status === 200) {
+                        return res.blob();
+                    } else {
+                        console.error('Error:', res);
+                        throw new Error('Failed to fetch file');
+                    }
                 })
                     .catch(err => {
                         console.error(err);
-                        return [];
+                        throw new Error('Failed to fetch file');
                     });
             }
 
@@ -119,6 +140,7 @@ export default function Home() {
         }
 
         let result = await searchResult();
+        console.log(result);
         const resultList = result.map((item: any, i: number) => {
             item = result[i].semester + ' ' + result[i].exam_type + ' ' + result[i].subject;
             return (

@@ -66,7 +66,18 @@ export default function Upload() {
         'Content-Type': 'application/json'
       },
       credentials: 'include'
-    }).then(res => res.json())
+    }).then(res => {
+      if (res.status === 200) {
+        return res.json()
+      } else {
+        console.error('Error:', res);
+        return {
+          semester: [],
+          course: [],
+          exam_type: []
+        };
+      }
+    })
       .then(data => {
         return {
           semester: data.semester,

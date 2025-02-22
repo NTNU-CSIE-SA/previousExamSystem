@@ -30,8 +30,14 @@ export default function DBManagement() {
                 verified: -1
             }),
             credentials: 'include'
-        }).then(response => {
-            return response.json()
+        }).then(res => {
+            if (res.status === 200) {
+                return res.json()
+            }
+            else {
+                console.error('Error:', res);
+                return [];
+            }
         })
             .catch(err => {
                 console.error(err);
@@ -97,12 +103,17 @@ export default function DBManagement() {
                     'Content-Type': 'application/json'
                 },
                 credentials: 'include'
-            }).then(response => {
-                return response.blob()
+            }).then(res => {
+                if (res.status === 200) {
+                    return res.blob();
+                } else {
+                    console.error('Error:', res);
+                    throw new Error('Failed to fetch PDF file');
+                }
             })
                 .catch(err => {
                     console.error(err);
-                    return [];
+                    throw new Error('Failed to fetch PDF file');
                 });
         }
         setCurrentFile(e)
@@ -143,10 +154,13 @@ export default function DBManagement() {
                     "verified": (currentFileVerified === "已驗證" ? 1 : 0) // can have it or not, 0 or 1
                 }),
                 credentials: 'include'
-            }).then(response => {
-
-                return response.json()
-
+            }).then(res => {
+                if (res.status === 200) {
+                    return res.json()
+                }
+                else {
+                    return 'modify file failed'
+                }
             })
                 .catch(err => {
                     console.error(err);
@@ -174,9 +188,9 @@ export default function DBManagement() {
                         })
                 ),
                 credentials: 'include'
-            }).then(response => {
-                if (response.status === 200) {
-                    return response.json()
+            }).then(res => {
+                if (res.status === 200) {
+                    return res.json()
                 }
                 else {
                     return 'watermark failed'
@@ -209,8 +223,8 @@ export default function DBManagement() {
                     "file_id": currentFile.value
                 }),
                 credentials: 'include'
-            }).then(response => {
-                if (response.status === 200) {
+            }).then(res => {
+                if (res.status === 200) {
                     return '刪除成功'
                 }
                 else {

@@ -76,7 +76,14 @@ const UserManagementObj = () => {
                         'Content-Type': 'application/json'
                     },
                     credentials: 'include'
-                }).then(res => res.json())
+                }).then(res => {
+                    if (res.status === 200) {
+                        return res.json()
+                    } else {
+                        console.error('Error:', res);
+                        return []
+                    }
+                })
                     .then(data => {
                         return data
                     })

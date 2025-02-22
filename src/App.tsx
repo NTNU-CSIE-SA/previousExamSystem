@@ -55,7 +55,14 @@ function App() {
         'Content-Type': 'application/json'
       },
       credentials: 'include'
-    }).then(res => res.json())
+    }).then(res => {
+      if (res.status === 200) {
+        return res.json();
+      } else {
+        console.error('Error:', res);
+        return { ban: false, modify_file: false };
+      }
+    })
       .then(data => {
         return { ban: data.ban, modify: data.modify_file };
       })

@@ -22,14 +22,14 @@ async function loginUser(credentials: Credentials) {
         body: JSON.stringify(credentials),
         credentials: 'include'
     })
-        .then(response => {
-            if (response.status === 200) {
+        .then(res => {
+            if (res.status === 200) {
                 window.location.href = "/";
                 alert("登入成功！")
-                return response.json()
-            } else if (response.status === 400) {
+                return res.json()
+            } else if (res.status === 400) {
                 alert('登入失敗！')
-                console.error('Error:', response);
+                console.error('Error:', res);
             } else {
                 alert("登入失敗！")
                 throw new Error('Login failed');

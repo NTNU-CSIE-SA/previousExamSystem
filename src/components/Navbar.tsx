@@ -15,11 +15,11 @@ export default function Navbar({ isAdmin }: { isAdmin: { ban: boolean, modify: b
             body: JSON.stringify(document),
             credentials: 'include'
         })
-            .then(response => {
-                if (response.status === 200) {
+            .then(res => {
+                if (res.status === 200) {
                     window.location.href = "/login";
-                } else if (response.status === 400) {
-                    console.error('Error:', response);
+                } else if (res.status === 400) {
+                    console.error('Error:', res);
                 } else {
                     throw new Error('Login failed');
                 }
