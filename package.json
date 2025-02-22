@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@9.6.0",
+  "pnpm": {
+    "overrides": {
+      "nth-check": ">=2.0.1",
+      "postcss": ">=8.4.31"
+    }
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
