@@ -3,9 +3,9 @@ import "../style/user_management.css"
 import React, { useState, useEffect } from 'react';
 import { basicURL } from '../App';
 
-export default function UserManagement(){
+export default function UserManagement() {
 
-    return(
+    return (
         <div className="management-container">
             <UserManagementObj></UserManagementObj>
         </div>
@@ -13,10 +13,10 @@ export default function UserManagement(){
 
 }
 
-function ban_time_translator(ban_time_id){
+function ban_time_translator(ban_time_id: string) {
     // return ISO time string
     let now_time = new Date()
-    switch(ban_time_id){
+    switch (ban_time_id) {
         case '1':
             now_time.setDate(now_time.getDate() + 1);
             return now_time.toISOString();
@@ -47,9 +47,9 @@ function ban_time_translator(ban_time_id){
     }
 }
 
-const UserManagementObj = (props) =>{
-    const [bannedList, setBannedList] = useState([]);
-    const [normalList, setNormalList] = useState([]);
+const UserManagementObj = () => {
+    const [bannedList, setBannedList] = useState<{ label: string; value: string }[]>([]);
+    const [normalList, setNormalList] = useState<{ label: string; value: string }[]>([]);
     useEffect(() => {
         async function getUserList() {
             const [banned, normal] = await fetchUserList();
@@ -57,143 +57,159 @@ const UserManagementObj = (props) =>{
             setNormalList(normal);
         }
         getUserList();
-    }, []);
-    async function fetchUserList(){
+    });
+    interface Users {
+        school_id: string;
+        name: string | null;
+        ban_until: string | null;
+    }
+    async function fetchUserList() {
         //TODO: fetch userList to setup bannedList and normalList
         //bannedList = users that is banned right now
         //normalList = users that is not banned right now
         //fetch user list
-        try{
-            const allList = await fetch(basicURL + 'api/admin/user-list', {
+        try {
+            const allList: Users[]
+                = await fetch(basicURL + 'api/admin/user-list', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    withCredentials: true,
                     credentials: 'include'
-                }).then(res => res.json())
-                .then(data => {
-                    return data
+                }).then(res => {
+                    if (res.status === 200) {
+                        return res.json()
+                    } else {
+                        console.error('Error:', res);
+                        return []
+                    }
                 })
-                .catch(err => {
-                    console.error(err);
-                    return [[],[]]
-                });
-            if(allList[0].length === 0 && allList[1].length === 0){
-                return [[],[]]
+                    .then(data => {
+                        return data
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        return []
+                    });
+            if (allList.length === 0) {
+                return [[], []]
             }
-            const normalList = allList.filter(user => user.ban_until === null).map(user => ({label: user.school_id , value: user.school_id}))
-            const bannedList = allList.filter(user => user.ban_until !== null).map(user => ({label: `${user.school_id} (${new Date(user.ban_until).toISOString().split("T")[0]})`, value: user.school_id}))
-        } catch(err){
+            const normalList: { label: string, value: string }[] = allList.filter(
+                (user: Users) =>
+                    user.ban_until === null).map((user: Users) =>
+                        ({ label: user.school_id, value: user.school_id }))
+            const bannedList: { label: string, value: string }[] = allList.filter(
+                (user: Users) =>
+                    user.ban_until !== null).map((user: Users) =>
+                        ({ label: `${user.school_id} (${user.ban_until ? new Date(user.ban_until).toISOString().split("T")[0] : 'N/A'})`, value: user.school_id }))
+            return [bannedList, normalList]
+        } catch (err) {
             console.error(err)
-            return [[],[]]
+            return [[], []]
         }
-        return [bannedList , normalList]
     }
 
-    async function confirmBanned(){
+    async function confirmBanned() {
         //TODO: confirm banned user
         //update bannedList and normalList to backend
         //the list that is going to be banned = selectedNormalUser
         try {
-            const ban_time = await fetch(basicURL + 'api/admin/ban', {
+            await fetch(basicURL + 'api/admin/ban', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                withCredentials: true,
                 credentials: 'include',
                 body: JSON.stringify({
                     school_id: selectedNormalUser.map(user => user.value),
                     ban_until: ban_time_translator(bannedTime.value)
                 })
             }).then(res => {
-                if(res.status === 200){
+                if (res.status === 200) {
                     alert("封禁成功")
                     window.location.reload()
-                }else{
+                } else {
                     console.error(res)
                     alert("封禁失敗")
                 }
             })
-        } catch(err){
+        } catch (err) {
             console.error(err)
             alert("封禁失敗")
         }
     }
 
-    function confirmUnbanned(){
+    function confirmUnbanned() {
         //TODO: confirm unbanned user
         //update bannedList and normalList to backend
         //the list that is going to be unbanned = selectedBannedUser
         try {
-            const unban = fetch(basicURL + 'api/admin/unban', {
+            fetch(basicURL + 'api/admin/unban', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                withCredentials: true,
                 credentials: 'include',
                 body: JSON.stringify({
                     school_id: selectedBannedUser.map(user => user.value)
                 })
             }).then(res => {
-                if(res.status === 200){
+                if (res.status === 200) {
                     alert("解封成功")
                     window.location.reload()
-                }else{
+                } else {
                     console.error(res)
                     alert("解封失敗")
                 }
             })
-        } catch(err){
+        } catch (err) {
             console.error(err)
             alert("解封失敗")
         }
     }
 
     const bannedTimeList = [
-        {label : "1 day",value : "1"},
-        {label : "3 days",value : "2"},
-        {label : "7 days",value : "3"},
-        {label : "14 days",value : "4"},
-        {label : "28 days",value : "5"},
-        {label : "3 months",value : "6"},
-        {label : "1 year",value : "7"},
-        {label : "10 years",value : "8"},
-    ]
+        { label: "1 day", value: "1" },
+        { label: "3 days", value: "2" },
+        { label: "7 days", value: "3" },
+        { label: "14 days", value: "4" },
+        { label: "28 days", value: "5" },
+        { label: "3 months", value: "6" },
+        { label: "1 year", value: "7" },
+        { label: "10 years", value: "8" },
+    ];
 
-    const [selectedBannedUser , setSelectedBannedUser] = useState([])
-    const [selectedNormalUser , setSelectedNormalUser] = useState([])
-    const [bannedTime , setBannedTime] = useState("1")
-    
+    const [selectedBannedUser, setSelectedBannedUser] = useState<{ label: string, value: string }[]>([])
+    const [selectedNormalUser, setSelectedNormalUser] = useState<{ label: string, value: string }[]>([])
+    const [bannedTime, setBannedTime] = useState<{ label: string, value: string }>(bannedTimeList[0])
+
     const selectStyle = {
 
-        control: (provided, state) => ({
+        control: (provided: any, state: any) => ({
             ...provided,
             height: '2.85rem',
             boxShadow: "none",
             border: state.isFocused && "none"
-          }),
-          valueContainer: (provided, state) => ({
+        }),
+        valueContainer: (provided: any, state: any) => ({
             ...provided,
             fontSize: '1.2rem'
 
-          }),
-          menu: (provided, state) => ({
+        }),
+        menu: (provided: any, state: any) => ({
             ...provided,
             border: "none",
             boxShadow: "none"
-          }),
-          option: (provided, state) => ({
-             ...provided,
-             backgroundColor: state.isFocused && "lightgray",
-             
-          })
-        
+        }),
+        option: (provided: any, state: any) => ({
+            ...provided,
+            backgroundColor: state.isFocused && "lightgray",
+
+        })
+
     }
 
-    return(
+    return (
         <div className='user-management-container'>
             <h1>使用者管理</h1>
             <div className='container'>
@@ -201,7 +217,7 @@ const UserManagementObj = (props) =>{
                     <h2>封禁使用者</h2>
                     <Select className='select-object'
                         options={normalList}
-                        onChange={(value)=>setSelectedNormalUser(value)}
+                        onChange={(value) => setSelectedNormalUser(value as { label: string; value: string }[])}
                         value={selectedNormalUser}
                         placeholder="選擇封禁使用者"
                         isMulti={true}
@@ -209,7 +225,7 @@ const UserManagementObj = (props) =>{
                     />
                     <Select className='select-object'
                         options={bannedTimeList}
-                        onChange={(value)=>setBannedTime(value)}
+                        onChange={(value) => setBannedTime(value as { label: string; value: string })}
                         value={bannedTime}
                         placeholder="選擇封禁時長"
                         isMulti={false}
@@ -229,15 +245,15 @@ const UserManagementObj = (props) =>{
                             }
                         }
                         onClick={confirmBanned}
-                        >
+                    >
                         送出
                     </button>
                 </div>
                 <div className='containerchild'>
-                    <h2 style={{color: 'white',}}>解封使用者</h2>
+                    <h2 style={{ color: 'white', }}>解封使用者</h2>
                     <Select className='select-object'
                         options={bannedList}
-                        onChange={(value)=>setSelectedBannedUser(value)}
+                        onChange={(value) => setSelectedBannedUser(value as { label: string; value: string }[])}
                         value={selectedBannedUser}
                         placeholder="選擇解封使用者"
                         isMulti={true}
@@ -257,7 +273,7 @@ const UserManagementObj = (props) =>{
                             }
                         }
                         onClick={confirmUnbanned}
-                        >
+                    >
                         送出
                     </button>
                 </div>

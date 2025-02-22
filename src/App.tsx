@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar'
 import Login from './components/Login'
 import Footer from './components/Footer'
@@ -10,10 +10,15 @@ import DBManagement from './components/DBManagement'
 import TermsOfUse from './components/TermsOfUse';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import './style/app.css'
-import { Routes, Route , useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 
 export const basicURL = 'http://localhost:5000/';
+
+interface AdminPermissions {
+  ban: boolean;
+  modify: boolean;
+}
 
 function App() {
   //set useState(true) to test pages without login
@@ -24,7 +29,7 @@ function App() {
   let current_path = useLocation().pathname;
 
   let cookie = document.cookie
-  let cookieObj = {};
+  let cookieObj: { [key: string]: string } = {};
   cookie.split(';').forEach(cookie => {
     let [name, value] = cookie.split('=');
     cookieObj[name.trim()] = value;
@@ -32,32 +37,41 @@ function App() {
   let haveToken = cookieObj.token;
   const [token, setToken] = useState(haveToken);
 
-  const [isAdmin, setIsAdmin] = useState(checkIsAdmin());
-  
+  const [isAdmin, setIsAdmin] = useState<AdminPermissions>({ ban: false, modify: false });
+  useEffect(() => {
+    if (token)
+      checkIsAdmin();
+  }, [token]);
 
-  if (!token&&!paths_withoutLogin.includes(current_path)) {
+  if (!token && !paths_withoutLogin.includes(current_path)) {
     return <Login setToken={setToken} />
   }
 
   // TODO: frontend use this api
   async function checkIsAdmin() {
-      const admim_permission = await fetch(basicURL + 'api/admin/check', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        withCredentials: true,
-        credentials: 'include'
-      }).then(res => res.json())
-        .then(data => {
-          return { ban: data.ban, modify: data.modify_file };
-        })
-        .catch(err => {
-          console.error(err);
-          return { ban: false, modify: false };
-        });
-      setIsAdmin(admim_permission);
-      return;
+    const admim_permission = await fetch(basicURL + 'api/admin/check', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    }).then(res => {
+      if (res.status === 200) {
+        return res.json();
+      } else {
+        console.error('Error:', res);
+        return { ban: false, modify_file: false };
+      }
+    })
+      .then(data => {
+        return { ban: data.ban, modify: data.modify_file };
+      })
+      .catch(err => {
+        console.error(err);
+        return { ban: false, modify: false };
+      });
+    setIsAdmin(admim_permission as AdminPermissions);
+    return;
   }
 
   return (
@@ -79,7 +93,7 @@ function App() {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/setting" element={<Setting />} />
-      </Routes> 
+      </Routes>
       <Footer />
     </div>
   );

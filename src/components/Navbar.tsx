@@ -1,7 +1,8 @@
+import React from "react"
 import { Link, useMatch, useResolvedPath } from "react-router-dom"
 import "../style/nav.css"
 import { basicURL } from '../App'
-export default function Navbar({ isAdmin }) {
+export default function Navbar({ isAdmin }: { isAdmin: { ban: boolean, modify: boolean } }) {
 
     function logoutFunction() {
         //TODO : tell backend the token should be expired and clear cookie locally
@@ -12,15 +13,13 @@ export default function Navbar({ isAdmin }) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(document),
-            withCredntials: true,
             credentials: 'include'
         })
-            .then(response => {
-                console.log(response)
-                if (response.status === 200) {
+            .then(res => {
+                if (res.status === 200) {
                     window.location.href = "/login";
-                } else if (response.status === 400) {
-                    console.error('Error:', response);
+                } else if (res.status === 400) {
+                    console.error('Error:', res);
                 } else {
                     throw new Error('Login failed');
                 }
@@ -51,7 +50,7 @@ export default function Navbar({ isAdmin }) {
     )
 }
 
-function CustomLink({ to, children, onClick, ...props }) {
+function CustomLink({ to, children, onClick = () => { }, ...props }: { to: string, children: React.ReactNode, onClick?: () => void }) {
     const resolvedPath = useResolvedPath(to)
     const isActive = useMatch({ path: resolvedPath.pathname, end: true })
 
