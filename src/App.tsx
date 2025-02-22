@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar'
 import Login from './components/Login'
 import Footer from './components/Footer'
@@ -37,8 +37,11 @@ function App() {
   let haveToken = cookieObj.token;
   const [token, setToken] = useState(haveToken);
 
-  const [isAdmin, setIsAdmin] = useState<AdminPermissions>({ ban: true, modify: true });
-
+  const [isAdmin, setIsAdmin] = useState<AdminPermissions>({ ban: false, modify: false });
+  useEffect(() => {
+    if (token)
+      checkIsAdmin();
+  }, [token]);
 
   if (!token && !paths_withoutLogin.includes(current_path)) {
     return <Login setToken={setToken} />
