@@ -106,7 +106,6 @@ export default function DBManagement() {
                 });
         }
         setCurrentFile(e)
-        //console.log(e.value)
         for (let i = 0; i < fileData.length; i++) {
             if (fileData[i].id === e.value) {
                 setCurrentFileExamType(fileData[i].exam_type)
@@ -211,7 +210,6 @@ export default function DBManagement() {
                 }),
                 credentials: 'include'
             }).then(response => {
-                console.log(response)
                 if (response.status === 200) {
                     return '刪除成功'
                 }

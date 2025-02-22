@@ -16,7 +16,6 @@ export default function Navbar({ isAdmin }: { isAdmin: { ban: boolean, modify: b
             credentials: 'include'
         })
             .then(response => {
-                console.log(response)
                 if (response.status === 200) {
                     window.location.href = "/login";
                 } else if (response.status === 400) {
