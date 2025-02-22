@@ -4,14 +4,22 @@ import React, { useState } from 'react';
 import { basicURL } from '../App'
 
 //TODO : connect with backend and backend should return a token
-async function loginUser(credentials) {
+interface Credentials {
+    school_id: string;
+    password: string;
+}
+
+interface LoginProps {
+    setToken: React.Dispatch<React.SetStateAction<string>>;
+}
+
+async function loginUser(credentials: Credentials) {
     return fetch(basicURL + 'api/auth/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(credentials),
-        withCredntials: true,
         credentials: 'include'
     })
         .then(response => {
@@ -31,46 +39,45 @@ async function loginUser(credentials) {
             console.error('Error:', error);
         });
 }
-export default function Login() {
-    const [username, setUserName] = useState();
-    const [password, setPassword] = useState();
-    const handleSubmit = async e => {
+
+export default function Login({ setToken }: LoginProps) {
+    const [username, setUserName] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const response = await loginUser({
+        await loginUser({
             school_id: username,
             password
         });
-        //TODO : save and load token, the function loginUser should be the function 
-        // that connect with backend and backend should return a token.
     }
     return (
         <>
-            <form class="login-box" onSubmit={handleSubmit}>
-                <div class="login-header">
+            <form className="login-box" onSubmit={handleSubmit}>
+                <div className="login-header">
                     <header>Login</header>
                 </div>
-                <div class="input-box">
-                    <input type="text" class="input-field" placeholder="StudentID" autocomplete="off" required onChange={e => setUserName(e.target.value)} />
+                <div className="input-box">
+                    <input type="text" className="input-field" placeholder="StudentID" autoComplete="on" required onChange={e => setUserName(e.target.value)} />
                 </div>
-                <div class="input-box">
-                    <input type="password" class="input-field" placeholder="Password" autocomplete="off" required onChange={e => setPassword(e.target.value)} />
+                <div className="input-box">
+                    <input type="password" className="input-field" placeholder="Password" autoComplete="off" required onChange={e => setPassword(e.target.value)} />
                 </div>
-                <div class="checkbox-label">
+                <div className="checkbox-label">
                     <section>
-                        <input class="checkbox" type="checkbox" id="check-terms-of-use" required/>
-                        <label for="check">Accept <a href='./terms-of-use'>Terms Of Use</a></label>
+                        <input className="checkbox" type="checkbox" id="check-terms-of-use" required />
+                        <label htmlFor="check">Accept <a href='./terms-of-use'>Terms Of Use</a></label>
                     </section>
                 </div>
-                <div class="checkbox-label">
+                <div className="checkbox-label">
                     <section>
-                        <input class="checkbox" type="checkbox" id="check-privacy-policy" required/>
-                        <label for="check">Accept <a href='./privacy-policy'>Privacy Policy</a></label>
+                        <input className="checkbox" type="checkbox" id="check-privacy-policy" required />
+                        <label htmlFor="check">Accept <a href='./privacy-policy'>Privacy Policy</a></label>
                     </section>
                 </div>
-                <div class="input-submit">
-                    <button type="submit" class="submit-btn" id="submit">
-                        <label for="submit">Sign In</label>
-                    </button>    
+                <div className="input-submit">
+                    <button type="submit" className="submit-btn" id="submit">
+                        <label htmlFor="submit">Sign In</label>
+                    </button>
                 </div>
             </form>
         </>
