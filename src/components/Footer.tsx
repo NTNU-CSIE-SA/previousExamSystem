@@ -1,10 +1,11 @@
+import React from "react";
 import { Link, useMatch, useResolvedPath } from "react-router-dom"
 import "../style/footer.css"
 
 export default function Footer() {
   return (
     <footer className="footer">
-        
+
       <ul>
         <CustomLink to="/">Policy</CustomLink>
         <CustomLink to="https://ntnucsie.info/">NTNU SA Official Website</CustomLink>
@@ -13,7 +14,13 @@ export default function Footer() {
   )
 }
 
-function CustomLink({ to, children, ...props }) {
+interface CustomLinkProps {
+  to: string;
+  children: React.ReactNode;
+  [key: string]: any;
+}
+
+function CustomLink({ to, children, ...props }: CustomLinkProps) {
   const resolvedPath = useResolvedPath(to)
   const isActive = useMatch({ path: resolvedPath.pathname, end: true })
 
