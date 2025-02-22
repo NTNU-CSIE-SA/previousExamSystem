@@ -47,3 +47,27 @@
     background-color: rgb(243, 222, 222);
     cursor: pointer;
 }
+
+.result-label{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.result-tag{
+    border-radius: .5rem;
+    padding: .5rem 2rem;
+    margin: 0 .5rem;
+}
+
+.tag-a{
+    background-color: rgb(181, 146, 125);
+}
+
+.tag-b{
+    background-color: rgb(185, 175, 175);
+}
+
+.tag-c{
+    background-color: rgb(225, 203, 191);
+}
