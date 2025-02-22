@@ -144,7 +144,13 @@ export default function Home() {
         const resultList = result.map((item: any, i: number) => {
             item = result[i].semester + ' ' + result[i].exam_type + ' ' + result[i].subject;
             return (
-                <div className={"result-item r_" + item} id={result[i].id} onClick={getFile}>{item}</div>
+                <div className={"result-item r_" + item} id={result[i].id} onClick={getFile}>
+                    <div className='result-label' id={result[i].id}>
+                        <div className='result-tag tag-a' id={result[i].id}>{result[i].semester}</div>
+                        <div className='result-tag tag-b' id={result[i].id}>{result[i].exam_type}</div>
+                        <div className='result-tag tag-c' id={result[i].id}>{result[i].subject}</div>
+                    </div>
+                </div>
             )
         });
         setResultLabels(resultList)
