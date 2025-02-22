@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "NTNU CSIE PES",
+  "name": "NTNU CSIE PreviousExamSystem",
   "icons": [
     {
       "src": "favicon.ico",
