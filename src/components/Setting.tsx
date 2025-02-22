@@ -1,18 +1,21 @@
-import React , {useRef} from 'react'
+import React, { useRef } from 'react'
 import '../style/setting.css'
 import { basicURL } from '../App'
 
-async function passwordReset(oldPassword , newPassword){
+async function passwordReset(oldPassword: React.RefObject<HTMLInputElement | null>, newPassword: React.RefObject<HTMLInputElement | null>) {
+    if (!oldPassword.current || !newPassword.current) {
+        alert('需填入舊密碼與新密碼！');
+        return;
+    }
     return fetch(basicURL + 'api/auth/change-password', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            old_password : oldPassword.current.value,
-            new_password : newPassword.current.value
+            old_password: oldPassword.current.value,
+            new_password: newPassword.current.value
         }),
-        withCredntials: true,
         credentials: 'include'
     })
         .then(response => {
@@ -33,45 +36,51 @@ async function passwordReset(oldPassword , newPassword){
         });
 }
 
-export default function Setting(){
+export default function Setting() {
 
-    const resetPassword = async (oldPassword , newPassword) => {
-        const response = await passwordReset(oldPassword , newPassword);
-        // TODO: frontend should handle the response and show the message to user
+    const resetPassword = async (oldPassword: React.RefObject<HTMLInputElement | null>, newPassword: React.RefObject<HTMLInputElement | null>) => {
+        await passwordReset(oldPassword, newPassword);
     }
-    return(
+    return (
         <div className="setting-container">
-            <ResetPassword resetFn={resetPassword}/>
+            <ResetPassword resetFn={resetPassword} />
         </div>
     )
 
 }
 
-const ResetPassword = (props) => {
+interface ResetPasswordProps {
+    resetFn: (oldPassword: React.RefObject<HTMLInputElement | null>, newPassword: React.RefObject<HTMLInputElement | null>) => Promise<void>;
+}
 
-    const oldPassword = useRef('');
-    const newPassword = useRef('');
+const ResetPassword = (props: ResetPasswordProps) => {
 
-    async function onClickFunction(e){
+    const oldPassword = useRef<HTMLInputElement>(null);
+    const newPassword = useRef<HTMLInputElement>(null);
 
-        if(oldPassword.current.value.length < 6 || newPassword.current.value.length < 6){
+    async function onClickFunction(e: React.MouseEvent<HTMLButtonElement>) {
+        if (!oldPassword.current || !newPassword.current) {
+            alert('需填入舊密碼與新密碼！');
+            return;
+        }
+        if (oldPassword.current.value.length < 6 || newPassword.current.value.length < 6) {
             alert('密碼長度不得低於 6 個字元');
             return;
         }
 
-        await props.resetFn(oldPassword , newPassword);
+        await props.resetFn(oldPassword, newPassword);
         oldPassword.current.value = '';
         newPassword.current.value = '';
 
     }
 
 
-    return (    
-      <div className="resetPassword-container">
+    return (
+        <div className="resetPassword-container">
             <h2 className='resetPassword-title'>重設密碼 :</h2>
             <input placeholder='Old Password' type="password" ref={oldPassword}></input>
             <input placeholder='New Password' type="password" ref={newPassword}></input>
             <button onClick={onClickFunction}>送出</button>
-      </div>
+        </div>
     );
-  };
+};
