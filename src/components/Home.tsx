@@ -1,7 +1,6 @@
 import Select from 'react-select'
 import "../style/home.css"
 import React, { useState, useEffect } from 'react';
-import { data } from 'react-router-dom';
 import { basicURL } from '../App';
 export default function Home() {
     const [data_from_backend, setDataFromBackend] = useState({
@@ -26,20 +25,17 @@ export default function Home() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            withCredentials: true,
             credentials: 'include'
         }).then(res => res.json())
             .then(data => {
-
-                data.semester = data.semester.map(item => ({ label: item, value: item }));
-                data.subject = data.subject.map(item => ({ label: item, value: item }));
-                data.exam_type = data.exam_type.map(item => ({ label: item, value: item }));
+                data.semester = data.semester.map((item: any) => ({ label: item, value: item }));
+                data.subject = data.subject.map((item: any) => ({ label: item, value: item }));
+                data.exam_type = data.exam_type.map((item: any) => ({ label: item, value: item }));
                 return {
                     semester: data.semester,
                     course: data.subject,
                     year: data.exam_type
                 }
-
             })
             .catch(err => {
                 console.error(err);
@@ -52,9 +48,9 @@ export default function Home() {
 
     }
 
-    const [selectedSemester, setSelectedSemester] = useState()
-    const [selectedCourse, setSelectedCourse] = useState()
-    const [selectedYear, setSelectedYear] = useState()
+    const [selectedSemester, setSelectedSemester] = useState<{ label: string, value: string }[] | null>(null)
+    const [selectedCourse, setSelectedCourse] = useState<{ label: string, value: string }[] | null>(null)
+    const [selectedYear, setSelectedYear] = useState<{ label: string, value: string }[] | null>(null)
 
 
     async function searchResult() {
@@ -63,9 +59,9 @@ export default function Home() {
         //all selected options contain in selectedSemester, selectedCourse, selectedYear
 
         const toFetchFilter = {
-            semester: selectedSemester === undefined ? [] : selectedSemester.map(item => item.value),
-            subject: selectedCourse === undefined ? [] : selectedCourse.map(item => item.value),
-            exam_type: selectedYear === undefined ? [] : selectedYear.map(item => item.value),
+            semester: selectedSemester === null ? [] : selectedSemester.map(item => item.value),
+            subject: selectedCourse === null ? [] : selectedCourse.map(item => item.value),
+            exam_type: selectedYear === null ? [] : selectedYear.map(item => item.value),
             verified: 1
         }
 
@@ -75,10 +71,9 @@ export default function Home() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(toFetchFilter),
-            withCredentials: true,
             credentials: 'include'
         }).then(response => {
-            
+
             return response.json()
         })
             .catch(err => {
@@ -91,17 +86,16 @@ export default function Home() {
 
     async function generateResult() {
 
-        
 
-        const getFile = async (e) =>{
+
+        const getFile = async (e: React.MouseEvent<HTMLDivElement>) => {
 
             async function getFile() {
-                return fetch(basicURL + 'api/view-file/' + e.target.id, {
+                return fetch(basicURL + 'api/view-file/' + (e.target as HTMLDivElement).id, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    withCredentials: true,
                     credentials: 'include'
                 }).then(response => {
                     return response.blob()
@@ -113,15 +107,22 @@ export default function Home() {
             }
 
             const fileSelected = await getFile();
-            const fileUrl = URL.createObjectURL(fileSelected);
-            window.open(fileUrl).focus();
+            if (fileSelected instanceof Blob) {
+                const fileUrl = URL.createObjectURL(fileSelected);
+                const newWindow = window.open(fileUrl);
+                if (newWindow) {
+                    newWindow.focus();
+                }
+            } else {
+                console.error('Expected fileSelected to be a Blob, but got:', fileSelected);
+            }
         }
 
-        let result = await searchResult();  
-        const resultList = result.map((item, i) => {
+        let result = await searchResult();
+        const resultList = result.map((item: any, i: number) => {
             item = result[i].semester + ' ' + result[i].exam_type + ' ' + result[i].subject;
             return (
-                <div className={"result-item r_"+item} id={result[i].id} onClick={getFile} value={0}>{item}</div>
+                <div className={"result-item r_" + item} id={result[i].id} onClick={getFile}>{item}</div>
             )
         });
         setResultLabels(resultList)
@@ -130,23 +131,23 @@ export default function Home() {
 
     const selectStyle = {
 
-        control: (provided, state) => ({
+        control: (provided: any, state: any) => ({
             ...provided,
             height: '2.85rem',
             boxShadow: "none",
             border: state.isFocused && "none"
         }),
-        valueContainer: (provided, state) => ({
+        valueContainer: (provided: any, state: any) => ({
             ...provided,
             fontSize: '1.2rem'
 
         }),
-        menu: (provided, state) => ({
+        menu: (provided: any, state: any) => ({
             ...provided,
             border: "none",
             boxShadow: "none"
         }),
-        option: (provided, state) => ({
+        option: (provided: any, state: any) => ({
             ...provided,
             backgroundColor: state.isFocused && "lightgray",
 
@@ -159,7 +160,7 @@ export default function Home() {
             <div className='home-select-container'>
                 <Select className='select-object'
                     options={data_from_backend.semester}
-                    onChange={(value) => setSelectedSemester(value)}
+                    onChange={(value) => setSelectedSemester(value as { label: string, value: string }[])}
                     value={selectedSemester}
                     placeholder="請選擇學期"
                     isMulti={true}
@@ -167,7 +168,7 @@ export default function Home() {
                 />
                 <Select className='select-object'
                     options={data_from_backend.course}
-                    onChange={(value) => setSelectedCourse(value)}
+                    onChange={(value) => setSelectedCourse(value as { label: string, value: string }[])}
                     value={selectedCourse}
                     placeholder="請選擇科目"
                     isMulti={true}
@@ -175,7 +176,7 @@ export default function Home() {
                 />
                 <Select className='select-object'
                     options={data_from_backend.year}
-                    onChange={(value) => setSelectedYear(value)}
+                    onChange={(value) => setSelectedYear(value as { label: string, value: string }[])}
                     value={selectedYear}
                     placeholder="請選擇年份"
                     isMulti={true}
