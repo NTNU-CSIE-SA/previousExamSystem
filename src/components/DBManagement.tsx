@@ -367,7 +367,7 @@ const ElementComponent: React.FC<ElementComponentProps> = ({ id, defaultValue, o
     return (
         <div className='element-container'>
             <div className='element-label'>{label}</div>
-            <input className='ele-input' type='text' id={id} defaultValue={defaultValue} onChange={onChange}></input>
+            <input className='ele-input' type='text' id={id} value={defaultValue} onChange={onChange}></input>
         </div>
     )
 }
