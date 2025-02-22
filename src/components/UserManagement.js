@@ -63,23 +63,31 @@ const UserManagementObj = (props) =>{
         //bannedList = users that is banned right now
         //normalList = users that is not banned right now
         //fetch user list
-        const allList = await fetch(basicURL + 'api/admin/user-list', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                withCredentials: true,
-                credentials: 'include'
-            }).then(res => res.json())
-            .then(data => {
-                return data
-            })
-            .catch(err => {
-                console.error(err);
+        try{
+            const allList = await fetch(basicURL + 'api/admin/user-list', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    withCredentials: true,
+                    credentials: 'include'
+                }).then(res => res.json())
+                .then(data => {
+                    return data
+                })
+                .catch(err => {
+                    console.error(err);
+                    return [[],[]]
+                });
+            if(allList[0].length === 0 && allList[1].length === 0){
                 return [[],[]]
-            });
-        const normalList = allList.filter(user => user.ban_until === null).map(user => ({label: user.school_id , value: user.school_id}))
-        const bannedList = allList.filter(user => user.ban_until !== null).map(user => ({label: `${user.school_id} (${new Date(user.ban_until).toISOString().split("T")[0]})`, value: user.school_id}))
+            }
+            const normalList = allList.filter(user => user.ban_until === null).map(user => ({label: user.school_id , value: user.school_id}))
+            const bannedList = allList.filter(user => user.ban_until !== null).map(user => ({label: `${user.school_id} (${new Date(user.ban_until).toISOString().split("T")[0]})`, value: user.school_id}))
+        } catch(err){
+            console.error(err)
+            return [[],[]]
+        }
         return [bannedList , normalList]
     }
 
@@ -87,52 +95,61 @@ const UserManagementObj = (props) =>{
         //TODO: confirm banned user
         //update bannedList and normalList to backend
         //the list that is going to be banned = selectedNormalUser
-        const ban_time = await fetch(basicURL + 'api/admin/ban', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            withCredentials: true,
-            credentials: 'include',
-            body: JSON.stringify({
-                school_id: selectedNormalUser.map(user => user.value),
-                ban_until: ban_time_translator(bannedTime.value)
+        try {
+            const ban_time = await fetch(basicURL + 'api/admin/ban', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                withCredentials: true,
+                credentials: 'include',
+                body: JSON.stringify({
+                    school_id: selectedNormalUser.map(user => user.value),
+                    ban_until: ban_time_translator(bannedTime.value)
+                })
+            }).then(res => {
+                if(res.status === 200){
+                    alert("封禁成功")
+                    window.location.reload()
+                }else{
+                    console.error(res)
+                    alert("封禁失敗")
+                }
             })
-        }).then(res => {
-            if(res.status === 200){
-                alert("封禁成功")
-                window.location.reload()
-            }else{
-                console.error(res)
-                alert("封禁失敗")
-            }
-        })
+        } catch(err){
+            console.error(err)
+            alert("封禁失敗")
+        }
     }
 
     function confirmUnbanned(){
         //TODO: confirm unbanned user
         //update bannedList and normalList to backend
         //the list that is going to be unbanned = selectedBannedUser
-
-        const unban = fetch(basicURL + 'api/admin/unban', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            withCredentials: true,
-            credentials: 'include',
-            body: JSON.stringify({
-                school_id: selectedBannedUser.map(user => user.value)
+        try {
+            const unban = fetch(basicURL + 'api/admin/unban', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                withCredentials: true,
+                credentials: 'include',
+                body: JSON.stringify({
+                    school_id: selectedBannedUser.map(user => user.value)
+                })
+            }).then(res => {
+                if(res.status === 200){
+                    alert("解封成功")
+                    window.location.reload()
+                }else{
+                    console.error(res)
+                    alert("解封失敗")
+                }
             })
-        }).then(res => {
-            if(res.status === 200){
-                alert("解封成功")
-                window.location.reload()
-            }else{
-                console.error(res)
-                alert("解封失敗")
-            }
-        })
+        } catch(err){
+            console.error(err)
+            alert("解封失敗")
+        }
     }
 
     const bannedTimeList = [

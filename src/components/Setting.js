@@ -69,8 +69,8 @@ const ResetPassword = (props) => {
     return (    
       <div className="resetPassword-container">
             <h2 className='resetPassword-title'>重設密碼 :</h2>
-            <input placeholder='Old Password' ref={oldPassword}></input>
-            <input placeholder='New Password' ref={newPassword}></input>
+            <input placeholder='Old Password' type="password" ref={oldPassword}></input>
+            <input placeholder='New Password' type="password" ref={newPassword}></input>
             <button onClick={onClickFunction}>送出</button>
       </div>
     );
