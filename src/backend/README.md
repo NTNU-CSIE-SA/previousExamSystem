@@ -404,12 +404,14 @@ GET `/api/user-info/my-info`
 
 ---
 
-## upload file
+## upload
+
+### upload file
 allow file type: PDF only
 Can set UPLOADS_DIR in .env to change the directory where uploaded files are stored. (default: `.uploads`)
 Can set MAX_FILE_SIZE in .env to change the maximum file size allowed.(MB) (default: 10MB)
 
-### Request
+#### Request
 POST `/api/upload-file/upload`
 
 cookie with token
@@ -420,7 +422,7 @@ cookie with token
 - `semester`: (string)
 - `exam_type`: (string)
 
-### Response
+#### Response
 - **Success**
 ```json
 {
@@ -455,6 +457,17 @@ cookie with token
 }
 ```
 
+### upload limit
+can set MAX_FILE_SIZE in .env to change the maximum file size allowed.(MB) (default: 100MB)
+#### Request
+GET `/api/upload-file/upload-limit`
+
+#### Response
+```json
+{
+  "limit_MB": 100
+}
+```
 ---
 
 ## View file details
