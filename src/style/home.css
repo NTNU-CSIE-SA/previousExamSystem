@@ -32,7 +32,8 @@
 
 
 .result-item{
-    width: 80%;
+    min-width: 80%;
+    width: fit-content;
     font-size: 2rem;
     background-color: rgb(239, 230, 230);
     border-radius: .5rem;
