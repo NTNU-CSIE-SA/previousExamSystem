@@ -121,7 +121,6 @@ export default function Upload() {
   }
   return (
     <div className="upload__container">
-
       <Dropdown
         buttonText={isNaN(currentSemester) ? " 選擇學期" : `${semesterList[currentSemester]}`}
         dropdown_list={semesterList} modify_dropdown_selection={modifySemester}
@@ -164,7 +163,8 @@ export default function Upload() {
       >
         上傳
       </button>
-
+      <div className="upload-limit">檔案大小限制：{uploadLimit}MB</div>
+      <div className="upload-limit">檔案格式限制：PDF</div>
 
 
     </div>
