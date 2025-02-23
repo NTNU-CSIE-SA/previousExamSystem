@@ -118,12 +118,12 @@ export default function Home() {
                         return res.blob();
                     } else {
                         console.error('Error:', res);
-                        throw new Error('Failed to fetch file');
+                        throw new Error('Failed to get file');
                     }
                 })
                     .catch(err => {
                         console.error(err);
-                        throw new Error('Failed to fetch file');
+                        return
                     });
             }
 

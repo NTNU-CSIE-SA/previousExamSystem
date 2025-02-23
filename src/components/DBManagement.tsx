@@ -107,13 +107,13 @@ export default function DBManagement() {
                 if (res.status === 200) {
                     return res.blob();
                 } else {
-                    console.error('Error:', res);
-                    throw new Error('Failed to fetch PDF file');
+                    console.error('Error:', res.status);
+                    return
                 }
             })
                 .catch(err => {
                     console.error(err);
-                    throw new Error('Failed to fetch PDF file');
+                    return
                 });
         }
         setCurrentFile(e)
@@ -123,14 +123,19 @@ export default function DBManagement() {
                 setCurrentFileSubject(fileData[i].subject)
                 setCurrentFileSemester(fileData[i].semester)
                 setCurrentFileVerified(fileData[i].verified ? "已驗證" : "未驗證")
-                const pdf_file = await getPdfFile(fileData[i].id)
-                if (pdf_file instanceof Blob) {
-                    const url = URL.createObjectURL(pdf_file)
-                    setpdfIframe(<iframe src={url} title={fileData[i].id}></iframe>)
-                } else {
-                    console.error("Failed to load PDF file.");
+                try {
+                    const pdf_file = await getPdfFile(fileData[i].id)
+                    if (pdf_file instanceof Blob) {
+                        const url = URL.createObjectURL(pdf_file)
+                        setpdfIframe(<iframe src={url} title={fileData[i].id}></iframe>)
+                    } else {
+                        console.error("Failed to load PDF file.");
+                    }
+                    break
+                } catch (err) {
+                    console.error(err);
+                    break
                 }
-                break
             }
         }
     }
