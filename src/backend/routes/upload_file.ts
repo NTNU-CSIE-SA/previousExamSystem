@@ -15,11 +15,11 @@ const UPLOADS_DIR = process.env.UPLOADS_DIR || './uploads';
 if (!fs.existsSync(UPLOADS_DIR)) {
     fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
-let UPLOADS_SIZE = 100;
-if (process.env.UPLOADS_SIZE !== undefined) {
-    UPLOADS_SIZE = parseInt(process.env.UPLOADS_SIZE);
-    if (isNaN(UPLOADS_SIZE)) {
-        UPLOADS_SIZE = 100;
+let MAX_FILE_SIZE = 100;
+if (process.env.MAX_FILE_SIZE !== undefined) {
+    MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE);
+    if (isNaN(MAX_FILE_SIZE)) {
+        MAX_FILE_SIZE = 100;
     }
 }
 
