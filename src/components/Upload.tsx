@@ -38,6 +38,7 @@ export default function Upload() {
   //2 = success to upload
   //3 = fail to upload
   const [uploadStatus, updateUploadStatus] = useState(NaN);
+  const [uploadLimit, updateUploadLimit] = useState(100);
   useEffect(() => {
     const fetchData = async () => {
       const fetchedData = await getData();
@@ -56,6 +57,30 @@ export default function Upload() {
       semester.push('其他');
       fetchSemester(semester);
 
+    };
+    fetchData();
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      const fetchData:{ limit_MB: number } = await fetch(basicURL + 'api/upload-file/upload-limit', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      }).then(res => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          console.error('Error:', res);
+          return { limit_MB: 100 };
+        }
+      })
+        .catch(err => {
+          console.error(err);
+          return { limit_MB: 100 };
+        });
+      updateUploadLimit(fetchData.limit_MB);
     };
     fetchData();
   }, []);
@@ -170,8 +195,8 @@ export default function Upload() {
       alert("請選擇檔案！");
       return;
     }
-    if (inputFile.current.files[0].size > 10 * 1024 * 1024) {
-      alert("檔案大小超過 10MB！");
+    if (inputFile.current.files[0].size > uploadLimit * 1024 * 1024) {
+      alert(`檔案大小不得超過 ${uploadLimit}MB`);
       return;
     }
     if (inputFile.current.files[0].type !== 'application/pdf') {
