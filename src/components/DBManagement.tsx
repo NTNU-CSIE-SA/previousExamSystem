@@ -90,7 +90,7 @@ export default function DBManagement() {
             const data = await setFileList_fetch();
             setFileList(data);
         }())
-    });
+    },[]);
 
     const [FileList, setFileList] = useState<Array<{ label: string; value: any }>>([]);
 
