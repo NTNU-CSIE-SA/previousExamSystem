@@ -57,7 +57,7 @@ const UserManagementObj = () => {
             setNormalList(normal);
         }
         getUserList();
-    });
+    },[]);
     interface Users {
         school_id: string;
         name: string | null;
