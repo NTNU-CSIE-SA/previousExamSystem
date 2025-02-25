@@ -17,20 +17,31 @@ if (process.env.MODIFY_FILE_LEVEL !== undefined) {
 const router = express.Router();
 
 router.get('/tags', async (req: Request, res: Response) => {
-    try{
+    try {
+        console.log(req.query);
+        let tags_opt = req.query.tags || 'verified';
+        if (tags_opt !== 'all' && tags_opt !== 'unverified' && tags_opt !== 'verified') {
+            tags_opt = 'verified';
+        }
         const subject_tags = await db
             .selectFrom('Document')
             .select('subject')
+            .$if(tags_opt === 'verified' || tags_opt === undefined, (qb) => qb.where('verified', '=', 1))
+            .$if(tags_opt === 'unverified', (qb) => qb.where('verified', '=', 0))
             .distinct()
             .execute();
         const semester_tags = await db
             .selectFrom('Document')
             .select('semester')
+            .$if(tags_opt === 'verified' || tags_opt === undefined, (qb) => qb.where('verified', '=', 1))
+            .$if(tags_opt === 'unverified', (qb) => qb.where('verified', '=', 0))
             .distinct()
             .execute();
         const exam_type_tags = await db
             .selectFrom('Document')
             .select('exam_type')
+            .$if(tags_opt === 'verified' || tags_opt === undefined, (qb) => qb.where('verified', '=', 1))
+            .$if(tags_opt === 'unverified', (qb) => qb.where('verified', '=', 0))
             .distinct()
             .execute();
         const tags = {
@@ -47,7 +58,7 @@ router.get('/tags', async (req: Request, res: Response) => {
 });
 
 router.post('/file-lists', async (req: Request, res: Response) => {
-    try{
+    try {
         const school_id = await school_id_from_token(req, res);
         if (!school_id) {
             res.status(401).json({ message: 'Invalid token' });
@@ -56,7 +67,7 @@ router.post('/file-lists', async (req: Request, res: Response) => {
         const subject = req.body.subject;
         const semester = req.body.semester;
         const exam_type = req.body.exam_type;
-        
+
         if (!subject || !semester || !exam_type) {
             res.status(400).json({ message: 'Subject, semester and exam type are required' });
             return;
