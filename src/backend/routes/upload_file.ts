@@ -76,7 +76,6 @@ router.post('/upload', upload.single('file'), (err: any, req: Request, res: Resp
                 return;
             }
             //確認是否有上傳檔案
-            console.log(req.file);
             if (!req.file) {
                 res.status(400).json({ message: 'No file uploaded' });
                 return;

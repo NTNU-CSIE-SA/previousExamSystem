@@ -18,7 +18,6 @@ const router = express.Router();
 
 router.get('/tags', async (req: Request, res: Response) => {
     try {
-        console.log(req.query);
         let tags_opt = req.query.tags || 'verified';
         if (tags_opt !== 'all' && tags_opt !== 'unverified' && tags_opt !== 'verified') {
             tags_opt = 'verified';
@@ -86,7 +85,6 @@ router.post('/file-lists', async (req: Request, res: Response) => {
                 .$if(exam_type.length > 0, (qb) => qb.where('exam_type', '=', exam_type))
                 .where('verified', '=', 1)
                 .execute();
-            console.log(file_list);
             res.json(file_list);
         }
         else {
