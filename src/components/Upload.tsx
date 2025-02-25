@@ -62,7 +62,7 @@ export default function Upload() {
   }, []);
   useEffect(() => {
     const fetchData = async () => {
-      const fetchData:{ limit_MB: number } = await fetch(basicURL + 'api/upload-file/upload-limit', {
+      const fetchData: { limit_MB: number } = await fetch(basicURL + 'api/upload-file/upload-limit', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -85,7 +85,7 @@ export default function Upload() {
     fetchData();
   }, []);
   async function getData() {
-    return fetch(basicURL + 'api/filter/tags', {
+    return fetch(basicURL + 'api/filter/tags?tags=all', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
