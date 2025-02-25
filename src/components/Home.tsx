@@ -6,7 +6,7 @@ export default function Home() {
     const [data_from_backend, setDataFromBackend] = useState({
         semester: [],
         course: [],
-        year: []
+        exam_type: []
     });
 
     useEffect(() => {
@@ -34,7 +34,7 @@ export default function Home() {
                 return {
                     semester: [],
                     course: [],
-                    year: []
+                    exam_type: []
                 };
             }
         })
@@ -45,7 +45,7 @@ export default function Home() {
                 return {
                     semester: data.semester,
                     course: data.subject,
-                    year: data.exam_type
+                    exam_type: data.exam_type
                 }
             })
             .catch(err => {
@@ -53,7 +53,7 @@ export default function Home() {
                 return {
                     semester: [],
                     course: [],
-                    year: []
+                    exam_type: []
                 };
             });
 
@@ -202,10 +202,10 @@ export default function Home() {
                     styles={selectStyle}
                 />
                 <Select className='select-object'
-                    options={data_from_backend.year}
+                    options={data_from_backend.exam_type}
                     onChange={(value) => setSelectedYear(value as { label: string, value: string }[])}
                     value={selectedYear}
-                    placeholder="請選擇年份"
+                    placeholder="請選擇考試種類"
                     isMulti={true}
                     styles={selectStyle}
                 />

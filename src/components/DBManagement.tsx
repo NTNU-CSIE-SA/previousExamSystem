@@ -19,7 +19,7 @@ export default function DBManagement() {
     const [data_from_backend, setDataFromBackend] = useState({
         semester: [],
         course: [],
-        year: []
+        exam_type: []
     });
 
     useEffect(() => {
@@ -47,7 +47,7 @@ export default function DBManagement() {
                 return {
                     semester: [],
                     course: [],
-                    year: []
+                    exam_type: []
                 };
             }
         })
@@ -58,7 +58,7 @@ export default function DBManagement() {
                 return {
                     semester: data.semester,
                     course: data.subject,
-                    year: data.exam_type
+                    exam_type: data.exam_type
                 }
             })
             .catch(err => {
@@ -66,7 +66,7 @@ export default function DBManagement() {
                 return {
                     semester: [],
                     course: [],
-                    year: []
+                    exam_type: []
                 };
             });
 
@@ -391,12 +391,12 @@ export default function DBManagement() {
                     styles={selectStyle}
                 />
                 <Select className='select-object'
-                    options={data_from_backend.year}
+                    options={data_from_backend.exam_type}
                     onChange={async (value) => {
                         setSelectedYear(value as { label: string, value: string }[])
                     }}
                     value={selectedYear}
-                    placeholder="請選擇年份"
+                    placeholder="請選擇考試種類"
                     isMulti={true}
                     styles={selectStyle}
                 />
