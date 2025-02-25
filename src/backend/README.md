@@ -19,9 +19,12 @@
 ### get all tags
 Can set MODIFY_FILE_LEVEL in .env to change the minimum user level required to view unverified files. (default 3)
 #### path
-`/api/filter/tags`
+`/api/filter/tags?tags=<params>`
 #### Request method
-POST
+GET
+params: `verified`, `unverified`, `all`
+
+if no params, return `verified` tags
 #### Response
 ```json
 {
