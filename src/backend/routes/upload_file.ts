@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import multer from 'multer';
 import crypto from 'crypto';
 import fs from 'fs';
-import { school_id_from_token } from './auth';
+import { school_id_from_token, check_is_banned } from './auth';
 import { db } from '../db';
 import DotenvFlow from 'dotenv-flow';
 
@@ -68,6 +68,11 @@ router.post('/upload', upload.single('file'), (err: any, req: Request, res: Resp
             const school_id = await school_id_from_token(req, res);
             if (!school_id) {
                 res.status(401).json({ message: 'Unauthorized' });
+                return;
+            }
+            const ban_until = await check_is_banned(school_id);
+            if (ban_until !== false) {
+                res.status(403).json({ message: 'You are banned', Ban_until: ban_until });
                 return;
             }
             //確認是否有上傳檔案
