@@ -140,7 +140,6 @@ export default function Home() {
         }
 
         let result = await searchResult();
-        console.log(result);
         const resultList = result.map((item: any, i: number) => {
             item = result[i].semester + ' ' + result[i].exam_type + ' ' + result[i].subject;
             return (

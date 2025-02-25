@@ -18,7 +18,6 @@ export const loadSchema = () => {
 			  .map((s) => s.trim())
 			  .filter((s) => s.length > 0);
 		  for (const stmt of stmts) {
-			console.log(stmt);
       sql`${sql.raw(stmt)}`.execute(db);
 		}
       console.log('SQL executed successfully');
