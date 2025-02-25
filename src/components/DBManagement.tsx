@@ -14,6 +14,69 @@ export default function DBManagement() {
     const [waterMarkText, setWaterMarkText] = useState("")
     const [pdfIframe, setpdfIframe] = useState<JSX.Element | null>(null)
 
+
+
+    const [data_from_backend, setDataFromBackend] = useState({
+        semester: [],
+        course: [],
+        year: []
+    });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const fetchedData = await getData();
+            setDataFromBackend(fetchedData);
+        };
+
+        fetchData();
+    }, []);
+
+
+    async function getData() {
+        return fetch(basicURL + 'api/filter/tags', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        }).then(res => {
+            if (res.status === 200) {
+                return res.json()
+            } else {
+                console.error('Error:', res);
+                return {
+                    semester: [],
+                    course: [],
+                    year: []
+                };
+            }
+        })
+            .then(data => {
+                data.semester = data.semester.map((item: any) => ({ label: item, value: item }));
+                data.subject = data.subject.map((item: any) => ({ label: item, value: item }));
+                data.exam_type = data.exam_type.map((item: any) => ({ label: item, value: item }));
+                return {
+                    semester: data.semester,
+                    course: data.subject,
+                    year: data.exam_type
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                return {
+                    semester: [],
+                    course: [],
+                    year: []
+                };
+            });
+
+    }
+
+    const [selectedSemester, setSelectedSemester] = useState<{ label: string, value: string }[] | null>(null)
+    const [selectedCourse, setSelectedCourse] = useState<{ label: string, value: string }[] | null>(null)
+    const [selectedYear, setSelectedYear] = useState<{ label: string, value: string }[] | null>(null)
+
+    const [selectedVerify , setSelectedVerify] = useState<{ label: string, value: string }[] | null>(null)
     //0 : None , 1 : image , 2 : text
     const [waterMarkCategory, setWaterMarkCategory] = useState("不新增")
 
@@ -89,11 +152,12 @@ export default function DBManagement() {
         (async function () {
             const data = await setFileList_fetch();
             setFileList(data);
+            setstoredFileList(data);
         }())
     },[]);
 
     const [FileList, setFileList] = useState<Array<{ label: string; value: any }>>([]);
-
+    const [storedFileList , setstoredFileList] = useState<Array<{ label: string; value: any }>>([]);
     async function inspectFile(e: any) {
 
         async function getPdfFile(id: number) {
@@ -246,9 +310,126 @@ export default function DBManagement() {
         window.location.reload()
     }
 
+    async function searchResult() {
+        //all the valid options.
+        //you should return an array of objects, each object has a name.
+        //all selected options contain in selectedSemester, selectedCourse, selectedYear
+
+        const toFetchFilter = {
+            semester: selectedSemester === null ? [] : selectedSemester.map(item => item.value),
+            subject: selectedCourse === null ? [] : selectedCourse.map(item => item.value),
+            exam_type: selectedYear === null ? [] : selectedYear.map(item => item.value),
+            verified: -1
+        }
+
+        const verifiedList = {
+            verifiedList: selectedVerify == null ? [] : selectedVerify.map(item => item.value)
+        }
+
+        if(verifiedList.verifiedList.includes("全部")) toFetchFilter.verified = -1
+        else if(verifiedList.verifiedList.includes("已驗證") && verifiedList.verifiedList.includes("未驗證")) toFetchFilter.verified = -1
+        else if(verifiedList.verifiedList.includes("已驗證")) toFetchFilter.verified = 1
+        else if(verifiedList.verifiedList.includes("未驗證")) toFetchFilter.verified = 0
+
+        return fetch(basicURL + 'api/filter/file-lists', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(toFetchFilter),
+            credentials: 'include'
+        }).then(res => {
+            if (res.status === 200) {
+                return res.json()
+            }
+            else {
+                console.error('Error:', res);
+                return [];
+            }
+        })
+            .catch(err => {
+                console.error(err);
+                return [];
+            });
+    }
+
+    async function generateResult() {
+
+        let result = await searchResult();
+        const filterResult = result.map((item:any) => {
+            return {
+                value: item.id,
+                label: item.semester + " " + item.subject + " " +
+                item.exam_type
+            }
+        })
+        setFileList(filterResult);
+        
+    }
+
     return (
         <div className="db-management">
             <div className='db-options-container'>
+            <Select className='select-object'
+                    options={data_from_backend.semester}
+                    onChange={async (value) => {
+                        setSelectedSemester(value as { label: string, value: string }[])
+                    }}
+                    value={selectedSemester}
+                    placeholder="請選擇學期"
+                    isMulti={true}
+                    styles={selectStyle}
+                />
+                <Select className='select-object'
+                    options={data_from_backend.course}
+                    onChange={async (value) => {
+                        setSelectedCourse(value as { label: string, value: string }[])
+                    }}
+                    value={selectedCourse}
+                    placeholder="請選擇科目"
+                    isMulti={true}
+                    styles={selectStyle}
+                />
+                <Select className='select-object'
+                    options={data_from_backend.year}
+                    onChange={async (value) => {
+                        setSelectedYear(value as { label: string, value: string }[])
+                    }}
+                    value={selectedYear}
+                    placeholder="請選擇年份"
+                    isMulti={true}
+                    styles={selectStyle}
+                />
+                <Select className='select-object'
+                    options={[
+                        { label: '全部', value: '全部' },
+                        { label: '已驗證', value: '已驗證' },
+                        { label: '未驗證', value: '未驗證' },
+                    ]}
+                    onChange={async (value) => {
+                        setSelectedVerify(value as { label: string, value: string }[])
+                    }}
+                    value={selectedVerify}
+                    placeholder="請選擇驗證狀態"
+                    isMulti={true}
+                    styles={selectStyle}
+                />
+                <button
+                    style={
+                        {
+                            display: 'flex',
+                            justifyContent: 'center',
+                            width: '6rem',
+                            height: '3rem',
+                            borderRadius: '5px',
+                            fontSize: '1rem',
+                            marginTop: '0',
+                        }
+                    }
+                    onClick={generateResult}
+                >
+                    搜尋
+                </button>
                 <Select className='select-file'
                     options={FileList}
                     onChange={inspectFile}
