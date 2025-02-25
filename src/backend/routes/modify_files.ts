@@ -36,7 +36,7 @@ router.post('/verify', async (req: Request, res: Response) => {
             return;
         }
         const admin_level = await check_admin_level(school_id);
-        if (!admin_level) {
+        if (admin_level === undefined) {
             res.status(401).json({ message: 'Invalid school ID' });
             return;
         }
@@ -97,7 +97,7 @@ router.post('/delete', async (req: Request, res: Response) => {
             return;
         }
         const admin_level = await check_admin_level(school_id);
-        if (!admin_level) {
+        if (admin_level === undefined) {
             res.status(401).json({ message: 'Invalid school ID' });
             return;
         }
@@ -154,7 +154,7 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
             return;
         }
         const admin_level = await check_admin_level(school_id);
-        if (!admin_level) {
+        if (admin_level === undefined) {
             res.status(401).json({ message: 'Invalid school ID' });
             return;
         }
