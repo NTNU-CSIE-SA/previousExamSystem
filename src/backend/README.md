@@ -2,12 +2,12 @@
 - `BACKEND_PORT`: port number (default: 5000)
 - `UPLOADS_DIR`: directory where uploaded files are stored (default: `./uploads`)
 - `VERIFIED_DIR`: directory where verified files are stored (default: `./verified`)
+- `ORIGIN_FILE_PATH`: path to original file (default: `./original`)
 - `TOKEN_EXPIRY_DAYS`: token expiry time in days (default: 30)
 - `MAX_FILE_SIZE`: maximum file size allowed in MB (default: 10)
 - `WATERMARK_PATH`: path to watermark image (if not set, can't watermark image)
 - `WATERMARK_OPACITY`: opacity of watermark (default: 0.3)
 - `WATERMARK_WIDTH`: width of watermark(0 ~ 1) (default: 0.5)
-- `ORIGIN_FILE_PATH`: path to original file (default: `./original`)
 - `JWT_SECRET`: secret key for JWT
 - `BCRYPT_SALT_ROUNDS`: number of salt rounds for bcrypt (default: 10)
 - `BAN_LEVEL`: minimum user level required to ban users (default 2)
