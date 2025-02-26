@@ -13,9 +13,9 @@ const VERIFIED_DIR = process.env.VERIFIED_DIR || path.join(__dirname, './verifie
 if (!fs.existsSync(VERIFIED_DIR)) {
     fs.mkdirSync(VERIFIED_DIR, { recursive: true });
 }
-const UPLOAD_PATH = process.env.UPLOADS_PATH || path.join(__dirname, './uploads');
-if (!fs.existsSync(UPLOAD_PATH)) {
-    fs.mkdirSync(UPLOAD_PATH, { recursive: true });
+const UPLOADS_DIR = process.env.UPLOADS_DIR || path.join(__dirname, './uploads');
+if (!fs.existsSync(UPLOADS_DIR)) {
+    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
 let MODIFY_FILE_LEVEL = 3;
 if (process.env.MODIFY_FILE_LEVEL !== undefined) {
@@ -62,7 +62,7 @@ router.get('/:file_id', async (req: Request, res: Response) => {
             return;
         }
         if (file.verified === 0) {
-            const filePath = path.join(UPLOAD_PATH, path.normalize(file.file_path));
+            const filePath = path.join(UPLOADS_DIR, path.normalize(file.file_path));
             if (!fs.existsSync(filePath)) {
                 res.status(404).json({ message: 'File not found in upload directory' });
                 return;

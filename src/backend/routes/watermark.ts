@@ -16,9 +16,9 @@ if (process.env.MODIFY_FILE_LEVEL !== undefined) {
     }
 }
 
-let UPLOADS_PATH = './uploads';
-if (process.env.UPLOADS_PATH !== undefined) {
-    UPLOADS_PATH = process.env.UPLOADS_PATH;
+let UPLOADS_DIR = './uploads';
+if (process.env.UPLOADS_DIR !== undefined) {
+    UPLOADS_DIR = process.env.UPLOADS_DIR;
 }
 
 const WATERMARK_PATH = process.env.WATERMARK_PATH;
@@ -117,11 +117,11 @@ router.post('/watermark', async (req: Request, res: Response) => {
             res.status(400).json({ message: 'File is already verified' });
             return;
         }
-        if (!fs.existsSync(`${UPLOADS_PATH}/${pdf_path.pdf_locate}`)) {
+        if (!fs.existsSync(`${UPLOADS_DIR}/${pdf_path.pdf_locate}`)) {
             res.status(404).json({ message: 'File not found' });
             return;
         }
-        const file_path = `${UPLOADS_PATH}/${pdf_path.pdf_locate}`;
+        const file_path = `${UPLOADS_DIR}/${pdf_path.pdf_locate}`;
         const origin_file_path = `${ORIGIN_FILE_PATH}/${pdf_path.id}.pdf`;
         await fs.promises.copyFile(file_path, origin_file_path);
         const pdf_file = await fs.promises.readFile(file_path);
