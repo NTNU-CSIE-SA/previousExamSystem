@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import NextTopLoader from 'nextjs-toploader';
 import Navbar from './components/Navbar'
 import Login from './components/Login'
 import Footer from './components/Footer'
@@ -76,6 +77,7 @@ function App() {
 
   return (
     <div className='app-container'>
+      <NextTopLoader color='#565656' showSpinner={false} />
       {paths_withoutLogin.includes(current_path) ? <></> : <Navbar isAdmin={isAdmin} />}
       <Routes>
         {
