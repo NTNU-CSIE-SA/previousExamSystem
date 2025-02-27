@@ -1,71 +1,159 @@
 # previousExamSystem
-# Getting Started with Create React App
+## How to run the project
+1. Clone the repository
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+2. Install the dependencies
+```bash
+pnpm install
+```
 
-## Available Scripts
+3. Run the project(dev mode)
+```bash
+pnpm dev
+```
 
-In the project directory, you can run:
+4. Build the project
+```bash
+pnpm build
+```
 
-### `npm start`
+5. Run the project
+```bash
+pnpm start
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Setting up backend (environment variables)
+### BACKEND_PORT
+- The port the backend server will run on.
+- Default: 5000
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### UPLOAD_DIR
+- The directory where the uploaded files will be stored.
+- Default: ./uploads
 
-### `npm test`
+### VERIFIED_DIR
+- The directory where the verified files will be stored.
+- Default: ./verified
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### ORIGIN_FILE_PATH
+- The directory where the watermark file's original files.
+- Default: ./origin
 
-### `npm run build`
+### TOKEN_EXPIRY_DAYS
+- The number of days the token will expire.
+- Default: 30
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### MAX_FILE_SIZE
+- The maximum file size(MB) that can be uploaded.
+- Default: 100
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### JWT_SECRET
+- The secret key for JWT.
+**Required**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### BCRYPT_SALT_ROUNDS
+- The number of salt rounds for bcrypt.
+- Default: 10
 
-### `npm run eject`
+### BAN_LEVEL
+- The admin level required to ban a user and see all users.
+- Default: 2
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### MODIFY_FILE_LEVEL
+- The admin level required to verify and modify a file, required to see all files and delete or watermakr unverified files.
+- Default: 3
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### WATERMARK_PATH
+- The path to the watermark file. (Only png and jpeg files are supported)
+- **required**
+- Example: ./watermark.png
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### WATERMARK_OPACITY
+- The opacity of the watermark.
+- Default: 0.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### WATERMARK_WIDTH
+- The width ratio of the watermark in the PDF. (0 ~ 1)
+- Default: 0.5
 
-## Learn More
+## Website
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Login
+需要先登入，並且同意「使用者條款」和「隱私權政策」才能進入網站。\
+登入會需要輸入帳號和密碼，如果輸入錯誤會顯示錯誤訊息。\
+登入成功後會將 token 存在 cookie 中。
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Logout
+登出會清除 cookie 中的 token。
 
-### Code Splitting
+### Home
+#### 搜尋考古題
+可以選擇「學期」、「科目」和「考試類型」，來搜尋考古題。\
+頁面上會有所有已驗證考古題的標籤\
+每項當沒有選擇任何標籤時，會視為選擇全部。\
+搜尋方式是每個項目內先進行聯集，再將三個項目交集。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+#### 查看考古題
+搜尋後點擊跳出的結果，會跳出新分頁顯示考古題。
 
-### Analyzing the Bundle Size
+### Upload
+#### 標籤
+關於標籤的年份只能選近十年的學期，或是「其他」。\
+科目和考試類型則是可以選擇所有存在系統中的標籤以及「其他」，選擇「其他」時會顯示一個輸入框，可以輸入自己的標籤選項。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+#### 選擇檔案
+在頁面下方會有顯示檔案上傳限制的訊息，包含檔案大小和檔案類型。\
+可以按下「上傳檔案」按鈕，選擇要上傳的檔案。
 
-### Making a Progressive Web App
+#### 上傳檔案
+上傳檔案後會顯示檔案的資訊，包含檔案名稱、檔案大小、標籤、檔案類型。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Setting
+#### 修改密碼
+可以修改密碼，需要輸入舊密碼和新密碼，如果輸入錯誤會顯示錯誤訊息。
 
-### Advanced Configuration
+### DB Management
+#### 篩選
+可以選擇「學期」、「科目」和「考試類型」以及「驗證狀態」，來篩選考古題。\
+篩選方式大致和搜尋考古題相同，但是會顯示所有考古題，包含未驗證的考古題。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+#### 選擇考古題
+可以根據篩選結果，去在下拉式選單中選擇要編輯狀態的考古題。
 
-### Deployment
+#### 編輯考古題
+- 可以去手動更改檔案屬性，包含「學期」、「科目」和「考試類型」
+- 可以去更改檔案的驗證狀態，包含「已驗證」和「未驗證」
+- 可以在未驗證檔案上浮水印
+  - 內建的圖片浮水印
+  - 打上自己的文字浮水
+  - 不去處理浮水印
+- 刪除未驗證的檔案
+按下「送出」按鈕後會進行更改檔案的屬性，並且會顯示成功訊息。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+#### 預覽
+會在畫面右側顯示選擇的檔案的預覽。
 
-### `npm run build` fails to minify
+#### 其他注意事項
+- 已驗證檔案不可刪除
+- 已驗證檔案不可上浮水印
+- 如果選擇要上浮水印，之後送出，會先進行上浮水印的動作，才會去更改檔案的屬性（含驗證狀態）
+- 在未驗證檔案可以直接在同一次「送出」進行驗證與浮水印的動作
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+#### 檔案儲存位置
+- 未驗證檔案會儲存在 `UPLOAD_DIR` 中
+- 已驗證檔案會儲存在 `VERIFIED_DIR` 中
+- 每進行一次上浮水印的動作，會在 `ORIGIN_FILE_PATH` 中儲存原始檔案
+
+### User Management
+#### Ban User
+可以選擇要封鎖的使用者，並選擇要封鎖的時長。\
+按下「送出」按鈕後會進行封鎖使用者的動作，並且會顯示成功訊息。\
+可以在時常選擇欄，選擇封鎖的時長，最短可選擇 1 天，最長可以選擇 10 年。
+
+#### Unban User
+可以選擇要解封的使用者，而使用者解封的日期會顯示下拉式選單使用者 ID 後方。
+
+#### 封鎖後
+- 使用者無法查看任何考古題
+- 使用者無法上傳任何考古題
+- 仍可查看目前有哪些考古題，並且可以搜尋，但無法查看考古題的內容
