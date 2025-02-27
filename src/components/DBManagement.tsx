@@ -112,7 +112,7 @@ export default function DBManagement() {
 
         control: (provided: any, state: any) => ({
             ...provided,
-            height: '2.85rem',
+            height: 'auto',
             boxShadow: "none",
             border: state.isFocused && "none"
         }),
