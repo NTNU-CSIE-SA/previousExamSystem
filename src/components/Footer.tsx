@@ -6,6 +6,7 @@ export default function Footer() {
   return (
     <footer className="footer">
       <ul>
+      <CustomLink to="https://github.com/NTNU-CSIE-SA/previousExamSystem">GitHub Repo</CustomLink>
         <CustomLink to="https://github.com/NTNU-CSIE-SA/previousExamSystem/issues">Bugs Report</CustomLink>
         <CustomLink to="/">Policy</CustomLink>
         <CustomLink to="https://ntnucsie.info/">NTNU SA Official Website</CustomLink>

@@ -44,7 +44,7 @@ export default function Navbar({ isAdmin }: { isAdmin: { ban: boolean, modify: b
                 <CustomLink to="/">Home</CustomLink>
                 <CustomLink to="/upload">Upload</CustomLink>
                 <CustomLink to="/setting">Setting</CustomLink>
-                <CustomLink to="/" onClick={logoutFunction}>logout</CustomLink>
+                <CustomLink to="/" onClick={logoutFunction}>Logout</CustomLink>
             </ul>
         </nav>
     )
