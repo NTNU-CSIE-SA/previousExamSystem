@@ -57,9 +57,10 @@ const ResetPassword = (props: ResetPasswordProps) => {
 
     const oldPassword = useRef<HTMLInputElement>(null);
     const newPassword = useRef<HTMLInputElement>(null);
+    const confirmPassword = useRef<HTMLInputElement>(null);
 
     async function onClickFunction(e: React.MouseEvent<HTMLButtonElement>) {
-        if (!oldPassword.current || !newPassword.current) {
+        if (!oldPassword.current || !newPassword.current || !confirmPassword.current) {
             alert('需填入舊密碼與新密碼！');
             return;
         }
@@ -67,10 +68,15 @@ const ResetPassword = (props: ResetPasswordProps) => {
             alert('密碼長度不得低於 6 個字元');
             return;
         }
+        if (newPassword.current.value !== confirmPassword.current.value) {
+            alert('新密碼與確認密碼不符');
+            return;
+        }
 
         await props.resetFn(oldPassword, newPassword);
         oldPassword.current.value = '';
         newPassword.current.value = '';
+        confirmPassword.current.value = '';
 
     }
 
@@ -80,6 +86,7 @@ const ResetPassword = (props: ResetPasswordProps) => {
             <h2 className='resetPassword-title'>重設密碼 :</h2>
             <input placeholder='Old Password' type="password" ref={oldPassword}></input>
             <input placeholder='New Password' type="password" ref={newPassword}></input>
+            <input placeholder='Confirm Password' type="password" ref={confirmPassword}></input>
             <button onClick={onClickFunction}>送出</button>
         </div>
     );
