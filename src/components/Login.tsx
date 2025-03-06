@@ -74,6 +74,11 @@ export default function Login({ setToken }: LoginProps) {
                         <label htmlFor="check">Accept <a href='./privacy-policy'>Privacy Policy</a></label>
                     </section>
                 </div>
+                <div className="checkbox-label">
+                    <section>
+                        <label>&emsp;&emsp;&emsp;Forget Password?&ensp;<a href="https://discord.gg/byydwBR2Hc">Contact NTNU CSIE SA</a></label>
+                    </section>
+                </div>
                 <div className="input-submit">
                     <button type="submit" className="submit-btn" id="submit">
                         <label htmlFor="submit">Sign In</label>
