@@ -8,7 +8,7 @@ export default function Footer() {
       <ul>
       <CustomLink to="https://github.com/NTNU-CSIE-SA/previousExamSystem">GitHub Repo</CustomLink>
         <CustomLink to="https://github.com/NTNU-CSIE-SA/previousExamSystem/issues">Bugs Report</CustomLink>
-        <CustomLink to="/">Policy</CustomLink>
+        <CustomLink to="/privacy-policy">Policy</CustomLink>
         <CustomLink to="https://ntnucsie.info/">NTNU SA Official Website</CustomLink>
       </ul>
     </footer>
