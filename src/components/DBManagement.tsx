@@ -33,7 +33,7 @@ export default function DBManagement() {
 
 
     async function getData() {
-        return fetch(basicURL + 'api/filter/tags', {
+        return fetch(basicURL + 'api/filter/tags?tags=all', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
