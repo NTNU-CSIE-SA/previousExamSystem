@@ -25,18 +25,22 @@ pnpm start
 ## Setting up backend (environment variables)
 ### BACKEND_PORT
 - The port the backend server will run on.
+- In docker container, the port need to set to 5000, if you want to change the port, you will also need to change docker-compose.yml and rebuild the image.
 - Default: 5000
 
 ### UPLOAD_DIR
 - The directory where the uploaded files will be stored.
+- In docker container, the directory need to set to /uploads
 - Default: ./uploads
 
 ### VERIFIED_DIR
 - The directory where the verified files will be stored.
+- In docker container, the directory need to set to /verified
 - Default: ./verified
 
 ### ORIGIN_FILE_PATH
 - The directory where the watermark file's original files.
+- In docker container, the directory need to set to /origin
 - Default: ./origin
 
 ### TOKEN_EXPIRY_DAYS
@@ -66,6 +70,7 @@ pnpm start
 ### WATERMARK_PATH
 - The path to the watermark file. (Only png and jpeg files are supported)
 - **required**
+- In docker container, if you want to change the watermark file, you will also need to change Dockerfile and rebuild the image.
 - Example: ./watermark.png
 
 ### WATERMARK_OPACITY
