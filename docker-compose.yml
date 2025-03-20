@@ -1,0 +1,13 @@
+services:
+
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - .env.backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./volumes/uploads:/app/uploads
+      - ./volumes/verified:/app/verified
+      - ./volumes/origin:/app/origin
