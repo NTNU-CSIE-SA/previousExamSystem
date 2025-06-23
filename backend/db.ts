@@ -6,7 +6,7 @@ import { Kysely, SqliteDialect ,sql} from 'kysely'
 
 const app = express();
 const dialect = new SqliteDialect({
-  database: new SQLite('db.sqlite'),
+  database: new SQLite('data/db.sqlite'),
 })
 export const db = new Kysely<Database>({dialect});
 

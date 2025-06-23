@@ -1,10 +1,8 @@
-FROM node:22-bookworm
+FROM node:22-alpine
 
 WORKDIR /app
 
 COPY . /app
-COPY .env /app
-RUN apt-get update && apt-get install -y sqlite3
 
 RUN corepack enable && corepack prepare pnpm@9.6.0 --activate
 

@@ -4,8 +4,7 @@
   "private": true,
   "packageManager": "pnpm@9.6.0",
   "pnpm": {
-    "overrides": {
-    }
+    "overrides": {}
   },
   "dependencies": {
     "ajv": "^8.17.1",
@@ -23,7 +22,7 @@
   },
   "scripts": {
     "start": "node ./build/server.js",
-    "build": "tsc"
+    "build": "pnpm tsc"
   },
   "browserslist": {
     "production": [
@@ -48,6 +47,7 @@
     "@types/node": "^22.13.10",
     "@types/node-cron": "^3.0.11",
     "@types/prop-types": "^15.7.14",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   }
 }

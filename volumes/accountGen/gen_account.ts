@@ -3,9 +3,9 @@ import fs from 'fs';
 import readline from 'readline';
 import sqlite3 from 'better-sqlite3';
 
-const db = new sqlite3('db.sqlite');
+const db = new sqlite3('data/db.sqlite');
 
-const csvFilePath = './src/backend/test/account.csv';
+const csvFilePath = './accountGen/account.csv';
 
 async function importCSVToSQLite() {
     const fileStream = fs.createReadStream(csvFilePath);
