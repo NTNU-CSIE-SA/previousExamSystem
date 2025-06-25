@@ -1,0 +1,27 @@
+services:
+
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./volumes/data:/app/data
+      - ./volumes/uploads:/app/uploads
+      - ./volumes/verified:/app/verified
+      - ./volumes/origin:/app/origin
+      - ./volumes/resources:/app/resources
+      - ./volumes/accountGen:/app/accountGen
+    command: pnpm start
+  frontend:
+    build:
+      context: ./frontend
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    command: pnpm start

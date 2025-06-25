@@ -28,6 +28,11 @@ yarn-error.log*
 uploads/
 verified/
 origin/
-
-
-
+backend/node_modules/
+backend/.env
+backend/build/
+backend/uploads/
+backend/verified/
+backend/origin/
+.env.backend
+volume/
