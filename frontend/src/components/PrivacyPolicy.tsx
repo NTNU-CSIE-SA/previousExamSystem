@@ -2,10 +2,10 @@ import React from 'react'
 import '../style/docs.css'
 export default function TermsOfUse() {
     return (
-        <>
+        <div className="legal-page-container">
             <div className='TermsOfUse-Box'>
                 <h1>隱私權政策</h1>
-                <p><strong>最後更新日期：</strong>114 年 6 月 25 日<br />
+                <p><strong>最後更新日期：</strong>114 年 6 月 26 日<br />
                     <strong>生效日期：</strong>同上</p>
 
                 <h2>一、前言</h2>
@@ -95,6 +95,6 @@ export default function TermsOfUse() {
                     回首頁
                 </button>
             </div>
-        </>
+        </div>
     )
 }
