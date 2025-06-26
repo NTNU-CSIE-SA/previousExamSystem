@@ -10,10 +10,12 @@ export default function TermsOfUse() {
 
                 <h2>一、前言</h2>
                 <p>
-                    歡迎使用本「考古題系統」（以下簡稱「本系統」），由國立臺灣師範大學資訊工程學系學會（以下簡稱「系學會」）負責營運與管理。
-                    為保障使用者權益與確保系統正常運作，您在使用本系統前，請務必詳閱下列條款。您一經登入或使用，即表示您已閱讀、瞭解並同意接受本條款之所有內容。
+                    歡迎使用本「考古題系統」（以下簡稱「本系統」）。本系統由國立臺灣師範大學資訊工程學系學會（以下簡稱「系學會」）負責營運與管理，
+                    並依據《<a href='https://drive.google.com/file/d/1W4NVe9Egw3HSWqflPO4Nhub0yW6FXrFy/view?usp=sharing'>國立臺灣師範大學資訊工程學系學會考古題管理辦法</a>》執行各項作業。<br />
+                    為保障您的權益，並確保系統能穩定、安全地運作，請在使用本系統前，詳閱以下服務條款。<br />
+                    當您登入或使用本系統，即表示您已閱讀、瞭解並同意遵守本條款的所有內容。<br />
+                    若您不同意本條款的任何部分，請勿使用本系統。如有任何疑問，歡迎聯繫系學會以獲得進一步說明。
                 </p>
-
                 <h2>二、使用資格</h2>
                 <ul>
                     <li>本系統僅供系學會之當然會員使用。帳號申請與存取權限之審核與發放，均由系學會保留最終決定權。</li>
@@ -60,7 +62,7 @@ export default function TermsOfUse() {
                     <li>本系統不主動收集個人敏感資訊，僅基於會員驗證及使用紀錄之管理進行基本資料處理。</li>
                     <li>系學會將遵守相關資料保護法規，合理保護使用者所提供之資訊。</li>
                     <li>然而，系學會不對使用者未進行去識別化所可能導致之個人資料外洩負責。</li>
-                    <li>詳細的相關內容請見<a href="/privacy-policy" className="underline text-blue-600">《隱私權政策》</a>。</li>
+                    <li>詳細的相關內容請見<a href="/privacy-policy">《隱私權政策》</a>。</li>
                 </ol>
 
                 <h2>八、條款變更與解釋權</h2>
@@ -73,8 +75,8 @@ export default function TermsOfUse() {
                 <h2>九、聯絡資訊</h2>
                 <p>若您對本條款有任何疑問，請聯絡資訊工程學系學會以取得協助。</p>
                 <ul>
-                    <li>Email: <a href="mailto:ntnucsie.union@gmail.com" className="underline text-blue-600">ntnucsie.union@gmail.com</a></li>
-                    <li>Instagram: <a href="https://www.instagram.com/ntnu_csie" className="underline text-blue-600">@ntnu_csie</a></li>
+                    <li>Email: <a href="mailto:ntnucsie.union@gmail.com">ntnucsie.union@gmail.com</a></li>
+                    <li>Instagram: <a href="https://www.instagram.com/ntnu_csie">@ntnu_csie</a></li>
                 </ul>
             </div>
 
