@@ -163,9 +163,9 @@ export default function Upload() {
       >
         上傳
       </button>
-      <div className="upload-limit">檔案大小限制：{uploadLimit}MB</div>
+      <div className="upload-limit">檔案大小限制：{uploadLimit} MB</div>
       <div className="upload-limit">檔案格式限制：PDF</div>
-
+      <div className="upload-limit">請自行去識別化（如遮蔽姓名、學號等個資），系學會不負責進一步處理或校驗</div>
 
     </div>
   )
