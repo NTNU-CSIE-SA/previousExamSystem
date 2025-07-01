@@ -1,8 +1,4 @@
 ## ENV
-- `BACKEND_PORT`: port number (default: 5000)
-- `UPLOADS_DIR`: directory where uploaded files are stored (default: `./uploads`)
-- `VERIFIED_DIR`: directory where verified files are stored (default: `./verified`)
-- `ORIGIN_FILE_PATH`: path to original file (default: `./original`)
 - `TOKEN_EXPIRY_DAYS`: token expiry time in days (default: 30)
 - `MAX_FILE_SIZE`: maximum file size allowed in MB (default: 10)
 - `WATERMARK_PATH`: path to watermark image (if not set, can't watermark image)
@@ -260,7 +256,8 @@ If WATERMARK_PATH is not set, can't watermark image
 Can set MODIFY_FILE_LEVEL in .env to change the minimum user level required to watermark files. (default 3)
 Can set WATERMARK_OPACITY in .env to change the opacity of watermark. (default: 0.3)
 Can set WATERMARK_WIDTH in .env to change the width of watermark.(0 ~ 1 of all page) (default: 0.5)
-Can set ORIGIN_FILE_PATH in .env to change the directory where original files are stored. (default: `./original`)
+Will store original files in `./original` directory.
+
 #### path
 `/api/watermark`
 #### Request
@@ -411,7 +408,7 @@ GET `/api/user-info/my-info`
 
 ### upload file
 allow file type: PDF only
-Can set UPLOADS_DIR in .env to change the directory where uploaded files are stored. (default: `.uploads`)
+Will store file in `./uploads` directory by default.
 Can set MAX_FILE_SIZE in .env to change the maximum file size allowed.(MB) (default: 10MB)
 
 #### Request
@@ -476,7 +473,7 @@ GET `/api/upload-file/upload-limit`
 ## View file details
 Retrieve detailed information about a specific file and serve the file for download.
 
-Can set VERIFIED_DIR in .env to change the directory where verified files are stored. (default: `./verified`)
+Will store verified files in `./verified` directory.
 Can set VIEW_FILE_LEVEL in .env to change the minimum user level required to view files. (default 2)
 
 
