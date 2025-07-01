@@ -1,15 +1,128 @@
+.legal-page-container {
+    width: 100vw;
+    height: 100vh;
+    overflow: auto; /* 覆蓋 app.css 的 overflow: hidden */
+    background-color: rgb(38, 35, 35); /* 與 body 一致 */
+    margin: 0;
+    padding: 0;
+}
+
 .TermsOfUse-Box{
     width: 100%;
+    max-width: 1200px;
+    margin: 5px auto;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 50px;
+    align-items: flex-start;
+    /* 設定固定高度並啟用內部滾動 */
+    height: calc(100vh - 115px); /* 視窗高度減去一定距離 */
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #666666 #2d2d2d;
+    /* 黑色背景的文字顏色 */
+    color: #ffffff;
 }
 
 .TermsOfUse-Box h1{
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.TermsOfUse-Box h2{
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #f0f0f0; 
+    border-bottom: 2px solid #666666; 
+    padding-bottom: 5px;
+}
+
+.TermsOfUse-Box p{
+    line-height: 1.6;
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.TermsOfUse-Box ul, .TermsOfUse-Box ol{
+    margin-bottom: 20px;
+    padding-left: 20px;
+}
+
+.TermsOfUse-Box li{
+    line-height: 1.6;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.TermsOfUse-Box ul ul{
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.TermsOfUse-Box a{
+    color: #60a5fa;
+}
+
+.TermsOfUse-Box a:hover{
+    color: #93c5fd;
+    text-decoration: underline;
+}
+
+.TermsOfUse-Box::-webkit-scrollbar {
+    width: 8px;
+}
+
+.TermsOfUse-Box::-webkit-scrollbar-track {
+    background: #2d2d2d; 
+    border-radius: 4px;
+}
+
+.TermsOfUse-Box::-webkit-scrollbar-thumb {
+    background: #666666;
+    border-radius: 4px;
+}
+
+.TermsOfUse-Box::-webkit-scrollbar-thumb:hover {
+    background: #888888;
+}
+
+
+/* 回首頁按鈕樣式，類似 Sign In 按鈕 */
+.back-to-home {
+    margin: 10px auto;
+    padding: 0 10px;
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: center;
+}
+
+.back-to-home-btn {
+    margin: 5px auto;
+    width: 200px; 
+    height: 50px; 
+    background: #796868;
+    color: #fff; 
+    border: none;
+    border-radius: 30px; 
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: .3s; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.back-to-home-btn:hover {
+    background: #7a5757;
+    transform: scale(1.05,1); 
 }
 

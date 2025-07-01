@@ -2,46 +2,53 @@
 ## How to run the project
 1. Clone the repository
 
-2. Install the dependencies
-```bash
-pnpm install
+2. Create `.env` files
+Make sure you have create `.env` inside `backend` directory and the root directory of this project. You can copy the `.env.devlopement` file and rename it to `.env` and change the environment variables as needed. (Both need to be the same file)
+
+3. Start up server
+```
+docker-compose up
 ```
 
-3. Run the project(dev mode)
-```bash
-pnpm dev
+4. Set up the accounts
+You can edit the `volumes/accountGen/account.csv` to help you to generate accounts.
+And you can run the following command to generate non-existing accounts in `account.csv`:
+``` 
+docker exec -it <your_backend container_name> bash
+pnpm ts-node /app/accountGen/gen_account.ts
+# make sure the salt rounds in gen_account.ts is the same as the one in .env file
+```
+Or you can edit the SQLite database directly. (Make sure password is hashed with bcrypt when you edit the database directly)
+```
+sqlite3 /app/data/db.sqlite
 ```
 
-4. Build the project
-```bash
-pnpm build
-```
-
-5. Run the project
-```bash
-pnpm start
-```
+## basic info
+- All the pdf file will store in `volumes`. (`volumes/uploads` for unverified files, `volumes/verified` for verified files, and `volumes/origin` for original files before watermarking)
+- The backend server will run on port `5000` (default).
+- The frontend server will run on port `3000` (defalut).
+- You can edit the watermark file in `volumes/resources` directory. (Make sure the file is a png or jpeg file and same name in .env file or you need to rename it and restart the server)
 
 ## Setting up backend (environment variables)
-### BACKEND_PORT
+### BACKEND_PORT(inside docker container)
 - The port the backend server will run on.
-- In docker container, the port need to set to 5000, if you want to change the port, you will also need to change docker-compose.yml and rebuild the image.
-- Default: 5000
+- In docker container, the port need to set to `5000`. (If you want to change the port, you will also need to change `docker-compose.yml` and rebuild the image.)
+- Default: `5000`
 
 ### UPLOAD_DIR
 - The directory where the uploaded files will be stored.
-- In docker container, the directory need to set to /uploads
-- Default: ./uploads
+- In docker container, the directory need to set to `./uploads` (If you want to change the directory, you will also need to change `docker-compose.yml` and rebuild the image)
+- Default: `./uploads`
 
 ### VERIFIED_DIR
 - The directory where the verified files will be stored.
-- In docker container, the directory need to set to /verified
-- Default: ./verified
+- In docker container, the directory need to set to `./verified` (If you want to change the directory, you will also need to change `docker-compose.yml` and rebuild the image)
+- Default: `./verified`
 
 ### ORIGIN_FILE_PATH
 - The directory where the watermark file's original files.
-- In docker container, the directory need to set to /origin
-- Default: ./origin
+- In docker container, the directory need to set to `./origin` (If you want to change the directory, you will also need to change `docker-compose.yml` and rebuild the image)
+- Default: `./origin`
 
 ### TOKEN_EXPIRY_DAYS
 - The number of days the token will expire.
@@ -69,7 +76,7 @@ pnpm start
 
 ### WATERMARK_PATH
 - The path to the watermark file. (Only png and jpeg files are supported)
-- **required**
+- **required** (suggested: `./resources/<file_name>` or you need to change `docker-compose.yml`)
 - In docker container, if you want to change the watermark file, you will also need to change Dockerfile and rebuild the image.
 - Example: ./watermark.png
 
@@ -145,9 +152,9 @@ pnpm start
 - 在未驗證檔案可以直接在同一次「送出」進行驗證與浮水印的動作
 
 #### 檔案儲存位置
-- 未驗證檔案會儲存在 `UPLOAD_DIR` 中
-- 已驗證檔案會儲存在 `VERIFIED_DIR` 中
-- 每進行一次上浮水印的動作，會在 `ORIGIN_FILE_PATH` 中儲存原始檔案
+- 未驗證檔案會儲存在 `volumes/uploads` 中
+- 已驗證檔案會儲存在 `volumes/verified` 中
+- 每進行一次上浮水印的動作，會在 ``volumes/origin` 中儲存原始檔案
 
 ### User Management
 #### Ban User
