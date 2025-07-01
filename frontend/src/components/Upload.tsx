@@ -37,7 +37,6 @@ export default function Upload() {
   //1 = uploading
   //2 = success to upload
   //3 = fail to upload
-  const [uploadStatus, updateUploadStatus] = useState(NaN);
   const [uploadLimit, updateUploadLimit] = useState(100);
   useEffect(() => {
     const fetchData = async () => {
@@ -183,7 +182,6 @@ export default function Upload() {
 
   //this function is for uploading file to backend
   async function uploadFile() {
-    updateUploadStatus(1);
 
     //should connect to backend and upload file here
     const formUpload = new FormData();

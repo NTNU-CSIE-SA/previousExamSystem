@@ -51,63 +51,49 @@ const UserManagementObj = () => {
     const [bannedList, setBannedList] = useState<{ label: string; value: string }[]>([]);
     const [normalList, setNormalList] = useState<{ label: string; value: string }[]>([]);
     useEffect(() => {
+        async function fetchUserList() {
+            try {
+                const allList: Users[] = await fetch(basicURL + 'api/admin/user-list', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                })
+                    .then(res => (res.status === 200 ? res.json() : []))
+                    .catch(() => []);
+
+                if (allList.length === 0) return [[], []];
+
+                const normalList = allList
+                    .filter(user => user.ban_until === null)
+                    .map(user => ({ label: user.school_id, value: user.school_id }));
+
+                const bannedList = allList
+                    .filter(user => user.ban_until !== null)
+                    .map(user => ({
+                        label: `${user.school_id} (${user.ban_until ? new Date(user.ban_until).toISOString().split("T")[0] : 'N/A'})`,
+                        value: user.school_id,
+                    }));
+
+                return [bannedList, normalList];
+            } catch {
+                return [[], []];
+            }
+        }
+
         async function getUserList() {
             const [banned, normal] = await fetchUserList();
             setBannedList(banned);
             setNormalList(normal);
         }
+
         getUserList();
-    },[]);
+    }, []);
     interface Users {
         school_id: string;
         name: string | null;
         ban_until: string | null;
     }
-    async function fetchUserList() {
-        //TODO: fetch userList to setup bannedList and normalList
-        //bannedList = users that is banned right now
-        //normalList = users that is not banned right now
-        //fetch user list
-        try {
-            const allList: Users[]
-                = await fetch(basicURL + 'api/admin/user-list', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include'
-                }).then(res => {
-                    if (res.status === 200) {
-                        return res.json()
-                    } else {
-                        console.error('Error:', res);
-                        return []
-                    }
-                })
-                    .then(data => {
-                        return data
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        return []
-                    });
-            if (allList.length === 0) {
-                return [[], []]
-            }
-            const normalList: { label: string, value: string }[] = allList.filter(
-                (user: Users) =>
-                    user.ban_until === null).map((user: Users) =>
-                        ({ label: user.school_id, value: user.school_id }))
-            const bannedList: { label: string, value: string }[] = allList.filter(
-                (user: Users) =>
-                    user.ban_until !== null).map((user: Users) =>
-                        ({ label: `${user.school_id} (${user.ban_until ? new Date(user.ban_until).toISOString().split("T")[0] : 'N/A'})`, value: user.school_id }))
-            return [bannedList, normalList]
-        } catch (err) {
-            console.error(err)
-            return [[], []]
-        }
-    }
+    
 
     async function confirmBanned() {
         //TODO: confirm banned user
