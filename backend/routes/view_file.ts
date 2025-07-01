@@ -9,11 +9,11 @@ import DotenvFlow from 'dotenv-flow';
 DotenvFlow.config();
 
 const router = express.Router();
-const VERIFIED_DIR = process.env.VERIFIED_DIR || path.join(__dirname, './verified');
+const VERIFIED_DIR = path.join(__dirname, './verified');
 if (!fs.existsSync(VERIFIED_DIR)) {
     fs.mkdirSync(VERIFIED_DIR, { recursive: true });
 }
-const UPLOADS_DIR = process.env.UPLOADS_DIR || path.join(__dirname, './uploads');
+const UPLOADS_DIR = path.join(__dirname, './uploads');
 if (!fs.existsSync(UPLOADS_DIR)) {
     fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
