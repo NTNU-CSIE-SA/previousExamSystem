@@ -37,6 +37,6 @@ services:
       - frontend
     networks:
       - exam_sys
-  networks:
-    exam_sys:
-      driver: bridge
+networks:
+  exam_sys:
+    driver: bridge
