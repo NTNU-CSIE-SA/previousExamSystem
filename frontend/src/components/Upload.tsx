@@ -37,7 +37,6 @@ export default function Upload() {
   //1 = uploading
   //2 = success to upload
   //3 = fail to upload
-  const [uploadStatus, updateUploadStatus] = useState(NaN);
   const [uploadLimit, updateUploadLimit] = useState(100);
   useEffect(() => {
     const fetchData = async () => {
@@ -163,9 +162,9 @@ export default function Upload() {
       >
         上傳
       </button>
-      <div className="upload-limit">檔案大小限制：{uploadLimit}MB</div>
+      <div className="upload-limit">檔案大小限制：{uploadLimit} MB</div>
       <div className="upload-limit">檔案格式限制：PDF</div>
-
+      <div className="upload-limit">請自行去識別化（如遮蔽姓名、學號等個資），系學會不負責進一步處理或校驗</div>
 
     </div>
   )
@@ -183,7 +182,6 @@ export default function Upload() {
 
   //this function is for uploading file to backend
   async function uploadFile() {
-    updateUploadStatus(1);
 
     //should connect to backend and upload file here
     const formUpload = new FormData();

@@ -76,7 +76,7 @@ export default function DBManagement() {
     const [selectedCourse, setSelectedCourse] = useState<{ label: string, value: string }[] | null>(null)
     const [selectedYear, setSelectedYear] = useState<{ label: string, value: string }[] | null>(null)
 
-    const [selectedVerify , setSelectedVerify] = useState<{ label: string, value: string }[] | null>(null)
+    const [selectedVerify, setSelectedVerify] = useState<{ label: string, value: string }[] | null>(null)
     //0 : None , 1 : image , 2 : text
     const [waterMarkCategory, setWaterMarkCategory] = useState("不新增")
 
@@ -131,33 +131,28 @@ export default function DBManagement() {
             backgroundColor: state.isFocused && "lightgray",
         })
     }
-    async function setFileList_fetch() {
-
-        async function ParseResult(result: Array<any>) {
-            let data = []
-            for (let i = 0; i < result.length; i++) {
-                data[i] = {
-                    label: result[i].semester + " " + result[i].subject + " " +
-                        result[i].exam_type, value: result[i].id
-                }
-            }
-            return data
-        }
-        const result = await getFileList()
-        setFileData(result)
-        const data = await ParseResult(result)
-        return data
-    }
     useEffect(() => {
-        (async function () {
-            const data = await setFileList_fetch();
-            setFileList(data);
-            setstoredFileList(data);
-        }())
-    },[]);
+        async function setFileList_fetch() {
+            async function ParseResult(result: Array<any>) {
+                let data = []
+                for (let i = 0; i < result.length; i++) {
+                    data[i] = {
+                        label: result[i].semester + " " + result[i].subject + " " + result[i].exam_type,
+                        value: result[i].id,
+                    }
+                }
+                return data
+            }
 
+            const result = await getFileList()
+            setFileData(result)
+            const data = await ParseResult(result)
+            setFileList(data)
+        }
+
+        setFileList_fetch()
+    }, [])
     const [FileList, setFileList] = useState<Array<{ label: string; value: any }>>([]);
-    const [storedFileList , setstoredFileList] = useState<Array<{ label: string; value: any }>>([]);
     async function inspectFile(e: any) {
 
         async function getPdfFile(id: number) {
@@ -326,10 +321,10 @@ export default function DBManagement() {
             verifiedList: selectedVerify == null ? [] : selectedVerify.map(item => item.value)
         }
 
-        if(verifiedList.verifiedList.includes("全部")) toFetchFilter.verified = -1
-        else if(verifiedList.verifiedList.includes("已驗證") && verifiedList.verifiedList.includes("未驗證")) toFetchFilter.verified = -1
-        else if(verifiedList.verifiedList.includes("已驗證")) toFetchFilter.verified = 1
-        else if(verifiedList.verifiedList.includes("未驗證")) toFetchFilter.verified = 0
+        if (verifiedList.verifiedList.includes("全部")) toFetchFilter.verified = -1
+        else if (verifiedList.verifiedList.includes("已驗證") && verifiedList.verifiedList.includes("未驗證")) toFetchFilter.verified = -1
+        else if (verifiedList.verifiedList.includes("已驗證")) toFetchFilter.verified = 1
+        else if (verifiedList.verifiedList.includes("未驗證")) toFetchFilter.verified = 0
 
         return fetch(basicURL + 'api/filter/file-lists', {
             method: 'POST',
@@ -356,21 +351,21 @@ export default function DBManagement() {
     async function generateResult() {
 
         let result = await searchResult();
-        const filterResult = result.map((item:any) => {
+        const filterResult = result.map((item: any) => {
             return {
                 value: item.id,
                 label: item.semester + " " + item.subject + " " +
-                item.exam_type
+                    item.exam_type
             }
         })
         setFileList(filterResult);
-        
+
     }
 
     return (
         <div className="db-management">
             <div className='db-options-container'>
-            <Select className='select-object'
+                <Select className='select-object'
                     options={data_from_backend.semester}
                     onChange={async (value) => {
                         setSelectedSemester(value as { label: string, value: string }[])
