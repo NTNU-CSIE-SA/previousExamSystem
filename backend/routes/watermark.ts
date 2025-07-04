@@ -17,9 +17,6 @@ if (process.env.MODIFY_FILE_LEVEL !== undefined) {
 }
 
 let UPLOADS_DIR = './uploads';
-if (process.env.UPLOADS_DIR !== undefined) {
-    UPLOADS_DIR = process.env.UPLOADS_DIR;
-}
 
 const WATERMARK_PATH = process.env.WATERMARK_PATH;
 let WATERMARK_TYPE = 'none';
@@ -73,9 +70,6 @@ if (process.env.WATERMARK_WIDTH !== undefined) {
 }
 
 let ORIGIN_FILE_PATH = './origin';
-if (process.env.ORIGIN_FILE_PATH !== undefined) {
-    ORIGIN_FILE_PATH = process.env.ORIGIN_FILE_PATH;
-}
 if (!fs.existsSync(ORIGIN_FILE_PATH)) {
     fs.mkdirSync(ORIGIN_FILE_PATH, { recursive: true });
 }

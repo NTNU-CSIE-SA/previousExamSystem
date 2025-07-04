@@ -17,14 +17,8 @@ if (process.env.MODIFY_FILE_LEVEL !== undefined) {
 }
 
 let VERIFIED_DIR = './verified';
-if (process.env.VERIFIED_DIR !== undefined) {
-    VERIFIED_DIR = process.env.VERIFIED_DIR;
-}
-
 let UPLOADS_DIR = './uploads';
-if (process.env.UPLOADS_DIR !== undefined) {
-    UPLOADS_DIR = process.env.UPLOADS_DIR;
-}
+
 
 const router = express.Router();
 

@@ -17,7 +17,7 @@ const corsOptions = {
 const app = express();
 
 init_server();
-const BACKEND_PORT = process.env.BACKEND_PORT || 5000;
+const BACKEND_PORT = 5000;
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());

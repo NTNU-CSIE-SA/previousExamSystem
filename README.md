@@ -30,20 +30,6 @@ sqlite3 /app/data/db.sqlite
 - You can edit the watermark file in `volumes/resources` directory. (Make sure the file is a png or jpeg file and same name in .env file or you need to rename it and restart the server)
 
 ## Setting up backend (environment variables)
-### BACKEND_PORT(inside docker container)
-- The port the backend server will run on.
-- In docker container, the port need to set to `5000`. (If you want to change the port, you will also need to change `docker-compose.yml` and rebuild the image.)
-- Default: `5000`
-
-### UPLOAD_DIR
-- The directory where the uploaded files will be stored.
-- In docker container, the directory need to set to `./uploads` (If you want to change the directory, you will also need to change `docker-compose.yml` and rebuild the image)
-- Default: `./uploads`
-
-### VERIFIED_DIR
-- The directory where the verified files will be stored.
-- In docker container, the directory need to set to `./verified` (If you want to change the directory, you will also need to change `docker-compose.yml` and rebuild the image)
-- Default: `./verified`
 
 ### ORIGIN_FILE_PATH
 - The directory where the watermark file's original files.
