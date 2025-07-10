@@ -65,13 +65,13 @@ export default function Login({ setToken }: LoginProps) {
                 <div className="checkbox-label">
                     <section>
                         <input className="checkbox" type="checkbox" id="check-terms-of-use" required />
-                        <label htmlFor="check">Accept <a href='./terms-of-use'>Terms Of Use</a></label>
+                        <label htmlFor="check-terms-of-use">Accept <a href='./terms-of-use'>Terms Of Use</a></label>
                     </section>
                 </div>
                 <div className="checkbox-label">
                     <section>
                         <input className="checkbox" type="checkbox" id="check-privacy-policy" required />
-                        <label htmlFor="check">Accept <a href='./privacy-policy'>Privacy Policy</a></label>
+                        <label htmlFor="check-privacy-policy">Accept <a href='./privacy-policy'>Privacy Policy</a></label>
                     </section>
                 </div>
                 <div className="checkbox-label">

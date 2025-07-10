@@ -11,7 +11,7 @@ export default function TermsOfUse() {
                 <h2>一、前言</h2>
                 <p>
                     歡迎使用本「考古題系統」（以下簡稱「本系統」）。本系統由國立臺灣師範大學資訊工程學系學會（以下簡稱「系學會」）負責營運與管理，
-                    並依據《<a href='https://drive.google.com/file/d/1W4NVe9Egw3HSWqflPO4Nhub0yW6FXrFy/view?usp=sharing' target="_blank">國立臺灣師範大學資訊工程學系學會考古題管理辦法</a>》執行各項作業。<br />
+                    並依據《<a href='https://drive.google.com/file/d/1W4NVe9Egw3HSWqflPO4Nhub0yW6FXrFy/view?usp=sharing' target="_blank" rel="noreferrer">國立臺灣師範大學資訊工程學系學會考古題管理辦法</a>》執行各項作業。<br />
                     為保障您的權益，並確保系統能穩定、安全地運作，請在使用本系統前，詳閱以下服務條款。<br />
                     當您登入或使用本系統，即表示您已閱讀、瞭解並同意遵守本條款的所有內容。<br />
                     若您不同意本條款的任何部分，請勿使用本系統。如有任何疑問，歡迎聯繫系學會以獲得進一步說明。
