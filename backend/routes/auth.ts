@@ -227,4 +227,28 @@ router.post('/change-password', async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
+router.get('/is-first-login', async (req: Request, res: Response) => {
+    try {
+        const school_id = await school_id_from_token(req, res);
+        if (!school_id) {
+            res.status(401).json({ message: 'Unauthorized' });
+            return;
+        }
+        const is_first_login = await db
+            .selectFrom('Profile')
+            .select('first_login')
+            .where('school_id', '=', school_id)
+            .executeTakeFirst();
+        if (is_first_login && is_first_login.first_login) {
+            res.json({ is_first_login: true });
+            return;
+        }
+        res.json({ is_first_login: false });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 export default router;

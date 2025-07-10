@@ -13,6 +13,7 @@ export interface Profile {
     password: string;
     ban_until: string | null;
     admin_level: number;
+    first_login: number;
 }
 export interface Document {
     id: number;
