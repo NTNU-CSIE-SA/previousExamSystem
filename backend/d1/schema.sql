@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS Profile (
     name TEXT,
     password TEXT NOT NULL,
     ban_until TEXT, -- end time
-    admin_level INT NOT NULL
+    admin_level INT NOT NULL,
+    first_login INT NOT NULL DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS Document (
