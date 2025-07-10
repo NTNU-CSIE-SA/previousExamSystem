@@ -8,6 +8,6 @@ RUN apt-get update && apt-get install -y sqlite3
 RUN corepack enable && corepack prepare pnpm@9.6.0 --activate
 
 RUN pnpm install
-COPY .env.backend /app
-COPY . /app
+COPY .env.backend .env
+COPY . .
 RUN pnpm build

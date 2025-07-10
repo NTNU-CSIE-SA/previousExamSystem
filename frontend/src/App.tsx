@@ -14,7 +14,7 @@ import './style/app.css'
 import { Routes, Route, useLocation } from "react-router-dom";
 
 
-export const basicURL = 'http://localhost:5000/';
+export const basicURL = '/';
 
 interface AdminPermissions {
   ban: boolean;
@@ -43,7 +43,6 @@ function App() {
     if (token)
       checkIsAdmin();
   }, [token]);
-
   if (!token && !paths_withoutLogin.includes(current_path)) {
     return <Login setToken={setToken} />
   }
