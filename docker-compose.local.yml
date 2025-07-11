@@ -1,0 +1,42 @@
+services:
+
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env.backend
+    expose:
+      - "80"
+    volumes:
+      - ./volumes/data:/app/data
+      - ./volumes/uploads:/app/uploads
+      - ./volumes/verified:/app/verified
+      - ./volumes/origin:/app/origin
+      - ./volumes/resources:/app/resources
+      - ./volumes/accountGen:/app/accountGen
+    command: pnpm start
+    networks:
+      - exam_sys
+  frontend:
+    build:
+      context: ./frontend
+    expose:
+      - "80"
+    depends_on:
+      - backend
+    networks:
+      - exam_sys
+  tunnel:
+    image: nginx:alpine
+    volumes:
+      - ./nginx-localtest/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "5000:5000"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - exam_sys
+networks:
+  exam_sys:
+    driver: bridge
