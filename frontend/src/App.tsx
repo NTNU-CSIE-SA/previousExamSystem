@@ -11,7 +11,7 @@ import DBManagement from './components/DBManagement'
 import TermsOfUse from './components/TermsOfUse';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import './style/app.css'
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
 
 export const basicURL = '/';
@@ -26,6 +26,7 @@ function App() {
 
   //paths_withoutLogin array is an array which imply that the paths that 
   //does not require login to reach
+  const navigate = useNavigate();
   const paths_withoutLogin = ['/terms-of-use', '/privacy-policy']
   let current_path = useLocation().pathname;
 
@@ -38,11 +39,21 @@ function App() {
   let haveToken = cookieObj.token;
   const [token, setToken] = useState(haveToken);
 
+  const [isFirstLogin, setIsFirstLogin] = useState(false);
   const [isAdmin, setIsAdmin] = useState<AdminPermissions>({ ban: false, modify: false });
   useEffect(() => {
-    if (token)
+    if (token) {
       checkIsAdmin();
-  }, [token]);
+      checkFirstLogin();
+    }
+  }, [token, isFirstLogin]);
+  useEffect(() => {
+    if (token && isFirstLogin && current_path !== '/setting') {
+      alert('請先重新設定密碼！');
+      navigate('/setting', { replace: true });
+    }
+  }, [token, isFirstLogin, current_path]);
+
   if (!token && !paths_withoutLogin.includes(current_path)) {
     return <Login setToken={setToken} />
   }
@@ -71,6 +82,26 @@ function App() {
         return { ban: false, modify: false };
       });
     setIsAdmin(admim_permission as AdminPermissions);
+    return;
+  }
+  async function checkFirstLogin() {
+    try {
+      const res = await fetch(basicURL + 'api/auth/is-first-login', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+      });
+      if (res.status === 200) {
+        const data = await res.json();
+        setIsFirstLogin(data.is_first_login ? true : false);
+      } else {
+        console.error('Failed to check first login:', res.status);
+      }
+    } catch (error) {
+      console.error('Error checking first login:', error);
+    }
     return;
   }
 
