@@ -216,7 +216,9 @@ router.post('/change-password', async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(new_password, BCRYPT_SALT_ROUNDS);
         await db
             .updateTable('Profile')
-            .set('password', hashedPassword)
+            .set({'password': hashedPassword,
+                'first_login': 0
+            })
             .where('school_id', '=', school_id)
             .execute();
         res.json({ message: 'Password changed' });
