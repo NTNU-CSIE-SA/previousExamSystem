@@ -5,9 +5,9 @@
 2. Create `.env` files
 Make sure you have create `.env` inside `backend` directory and the root directory of this project. You can copy the `.env.devlopement` file and rename it to `.env` and change the environment variables as needed. (Both need to be the same file)
 
-3. Start up server
+3. Start up server(local test)
 ```
-docker-compose up
+docker-compose -f docker-compose.local.yml up
 ```
 
 4. Set up the accounts
