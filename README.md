@@ -31,11 +31,6 @@ sqlite3 /app/data/db.sqlite
 
 ## Setting up backend (environment variables)
 
-### ORIGIN_FILE_PATH
-- The directory where the watermark file's original files.
-- In docker container, the directory need to set to `./origin` (If you want to change the directory, you will also need to change `docker-compose.yml` and rebuild the image)
-- Default: `./origin`
-
 ### TOKEN_EXPIRY_DAYS
 - The number of days the token will expire.
 - Default: 30
@@ -64,7 +59,7 @@ sqlite3 /app/data/db.sqlite
 - The path to the watermark file. (Only png and jpeg files are supported)
 - **required** (suggested: `./resources/<file_name>` or you need to change `docker-compose.yml`)
 - In docker container, if you want to change the watermark file, you will also need to change Dockerfile and rebuild the image.
-- Example: ./watermark.png
+- Example: WATERMARK_PATH=./resources/watermark.png
 
 ### WATERMARK_OPACITY
 - The opacity of the watermark.
@@ -79,10 +74,11 @@ sqlite3 /app/data/db.sqlite
 ### Login
 需要先登入，並且同意「使用者條款」和「隱私權政策」才能進入網站。\
 登入會需要輸入帳號和密碼，如果輸入錯誤會顯示錯誤訊息。\
-登入成功後會將 token 存在 cookie 中。
+登入成功後會將 token 存在 cookie 中。\
+首次登入需要去更改密碼。
 
 ### Logout
-登出會清除 cookie 中的 token。
+登出會清除 cookie 中的 token。（清除 token 也可以在前端達到登出效果，但不建議）
 
 ### Home
 #### 搜尋考古題
@@ -140,7 +136,7 @@ sqlite3 /app/data/db.sqlite
 #### 檔案儲存位置
 - 未驗證檔案會儲存在 `volumes/uploads` 中
 - 已驗證檔案會儲存在 `volumes/verified` 中
-- 每進行一次上浮水印的動作，會在 ``volumes/origin` 中儲存原始檔案
+- 每進行一次上浮水印的動作，會在 `volumes/origin` 中儲存原始檔案
 
 ### User Management
 #### Ban User
