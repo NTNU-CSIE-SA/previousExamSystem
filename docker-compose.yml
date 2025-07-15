@@ -26,6 +26,19 @@ services:
       - backend
     networks:
       - exam_sys
+  https-nginx:
+    image: nginx:latest
+    expose:
+      - "443"
+    volumes:
+      - ./nginx-https/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx-https/cf-origin.pem:/etc/nginx/ssl/cf-origin.pem:ro
+      - ./nginx-https/cf-origin.key:/etc/nginx/ssl/cf-origin.key:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - exam_sys
   cloudflared:
     image: cloudflare/cloudflared:latest
     env_file:
@@ -34,6 +47,7 @@ services:
     depends_on:
       - backend
       - frontend
+      - https-nginx
     networks:
       - exam_sys
 networks:
