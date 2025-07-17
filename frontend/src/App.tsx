@@ -124,7 +124,7 @@ function App() {
         <Route path="/terms-of-use" element={<TermsOfUse />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/upload" element={<Upload />} />
-        <Route path="/setting" element={<Setting />} />
+        <Route path="/setting" element={<Setting setIsFirstLogin={setIsFirstLogin}/> } />
       </Routes>
       <Footer />
     </div>
