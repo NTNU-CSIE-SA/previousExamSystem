@@ -38,3 +38,7 @@ backend/verified/
 backend/origin/
 .env.backend
 volume/
+
+# https
+*.pem
+*.key
