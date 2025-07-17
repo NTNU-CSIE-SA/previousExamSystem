@@ -36,10 +36,13 @@ async function passwordReset(oldPassword: React.RefObject<HTMLInputElement | nul
         });
 }
 
-export default function Setting() {
+export default function Setting({ setIsFirstLogin }: { setIsFirstLogin: (v: boolean) => void }) {
 
     const resetPassword = async (oldPassword: React.RefObject<HTMLInputElement | null>, newPassword: React.RefObject<HTMLInputElement | null>) => {
-        await passwordReset(oldPassword, newPassword);
+        const status = await passwordReset(oldPassword, newPassword);
+        if (status === 200) {
+            setIsFirstLogin(false);
+        }
     }
     return (
         <div className="setting-container">
