@@ -10,6 +10,8 @@ import modifyRouter from "./routes/modify_files";
 import watermarkRouter from "./routes/watermark";
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import helmet from 'helmet';
+
 const corsOptions = {
   origin: process.env.FRONTEND_URL || "http://localhost:3000",
   credentials: true,
@@ -18,6 +20,23 @@ const app = express();
 
 init_server();
 const BACKEND_PORT = 80;
+
+app.disable('x-powered-by');
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        frameAncestors: ["'self'"], // Clickjacking protection
+      },
+    },
+    frameguard: { action: "deny" },
+    hsts: { maxAge: 63072000, includeSubDomains: true, preload: true }, // HSTS
+    noSniff: true, // X-Content-Type-Options: nosniff
+  })
+);
+
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
