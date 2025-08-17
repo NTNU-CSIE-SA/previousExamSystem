@@ -9,11 +9,11 @@ import DotenvFlow from 'dotenv-flow';
 DotenvFlow.config();
 
 const router = express.Router();
-const VERIFIED_DIR = path.join(__dirname, './verified');
+const VERIFIED_DIR = './verified';
 if (!fs.existsSync(VERIFIED_DIR)) {
     fs.mkdirSync(VERIFIED_DIR, { recursive: true });
 }
-const UPLOADS_DIR = path.join(__dirname, './uploads');
+const UPLOADS_DIR = './uploads';
 if (!fs.existsSync(UPLOADS_DIR)) {
     fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
@@ -63,6 +63,7 @@ router.get('/:file_id', async (req: Request, res: Response) => {
         }
         if (file.verified === 0) {
             const filePath = path.join(UPLOADS_DIR, path.normalize(file.file_path));
+            console.log(filePath);
             if (!fs.existsSync(filePath)) {
                 res.status(404).json({ message: 'File not found in upload directory' });
                 return;

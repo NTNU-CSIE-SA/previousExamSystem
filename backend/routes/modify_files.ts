@@ -62,13 +62,22 @@ router.post('/verify', async (req: Request, res: Response) => {
         }
         if (!fs.existsSync(`${VERIFIED_DIR}`)) {
             fs.mkdirSync(`${VERIFIED_DIR}`, { recursive: true });
-        }
-        fs.rename(`${UPLOADS_DIR}/${file.pdf_locate}`, `${VERIFIED_DIR}/${file.id}.pdf`, (err) => { 
+        }   
+        const src = `${UPLOADS_DIR}/${file.pdf_locate}`;
+        const dest = `${VERIFIED_DIR}/${file.id}.pdf`;
+        fs.copyFile(src, dest, (err) => { 
             if (err) {
                 console.error(err);
                 res.status(500).json({ message: 'Internal server error' });
                 return;
             }
+            fs.unlink(src, (err) => {
+                if (err) {
+                    console.error(err);
+                    res.status(500).json({ message: 'Internal server error' });
+                    return;
+                }
+            });
         });
         await db
             .updateTable('Document')
@@ -200,12 +209,21 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
             if (!fs.existsSync(`${UPLOADS_DIR}`)) {
                 fs.mkdirSync(`${UPLOADS_DIR}`, { recursive: true });
             }
-            fs.rename(`${VERIFIED_DIR}/${file.pdf_locate}`, `${UPLOADS_DIR}/${file.pdf_locate}`, (err) => {
+            const src = `${VERIFIED_DIR}/${file.pdf_locate}`;
+            const dest = `${UPLOADS_DIR}/${file.pdf_locate}`;
+            fs.copyFile(src, dest, (err) => {
                 if (err) {
                     console.error(err);
                     res.status(500).json({ message: 'Internal server error' });
                     return;
                 }
+                fs.unlink(src, (err) => {
+                    if (err) {
+                        console.error(err);
+                        res.status(500).json({ message: 'Internal server error' });
+                        return;
+                    }
+                });
             });
         }
         else if (file.verified === 0 && verified === 1) {
@@ -216,12 +234,21 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
             if (!fs.existsSync(`${VERIFIED_DIR}`)) {
                 fs.mkdirSync(`${VERIFIED_DIR}`, { recursive: true });
             }
-            fs.rename(`${UPLOADS_DIR}/${file.pdf_locate}`, `${VERIFIED_DIR}/${file.id}.pdf`, (err) => {
+            const src = `${UPLOADS_DIR}/${file.pdf_locate}`;
+            const dest = `${VERIFIED_DIR}/${file.id}.pdf`;
+            fs.copyFile(src, dest, (err) => {
                 if (err) {
                     console.error(err);
                     res.status(500).json({ message: 'Internal server error' });
                     return;
                 }
+                fs.unlink(src, (err) => {
+                    if (err) {
+                        console.error(err);
+                        res.status(500).json({ message: 'Internal server error' });
+                        return;
+                    }
+                });
             });
             await db
                 .updateTable('Document')
