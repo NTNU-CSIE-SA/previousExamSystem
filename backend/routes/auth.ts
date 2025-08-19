@@ -204,6 +204,10 @@ router.post('/change-password', async (req: Request, res: Response) => {
             res.status(400).json({ message: 'Old password and new password are required' });
             return;
         }
+        if (old_password === new_password) {
+            res.status(400).json({ message: 'New password cannot be the same as the old password' });
+            return;
+        }
         const user = await db
             .selectFrom('Profile')
             .selectAll()

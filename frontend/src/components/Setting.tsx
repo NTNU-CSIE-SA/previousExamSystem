@@ -7,6 +7,10 @@ async function passwordReset(oldPassword: React.RefObject<HTMLInputElement | nul
         alert('需填入舊密碼與新密碼！');
         return;
     }
+    if (oldPassword.current.value === newPassword.current.value) {
+        alert('新密碼與舊密碼相同！');
+        return;
+    }
     return fetch(basicURL + 'api/auth/change-password', {
         method: 'POST',
         headers: {
