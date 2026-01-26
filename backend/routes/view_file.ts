@@ -38,7 +38,7 @@ router.get('/:file_id', async (req: Request, res: Response) => {
             res.status(403).json({ message: 'You are banned', Ban_until: ban_until });
             return;
         }
-        const file_id = parseInt(req.params.file_id, 10);
+        const file_id = parseInt(req.params.file_id as string, 10);
         if (isNaN(file_id)) {
             res.status(400).json({ message: 'Invalid file ID' });
             return;
