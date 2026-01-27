@@ -33,6 +33,10 @@ export default function Upload() {
   //this is the variable which store inputFile
   const inputFile = useRef<HTMLInputElement>(null);
 
+  //selectedFileName = the name of the file selected
+  //setSelectedFileName = function to set selectedFileName
+  const [selectedFileName, setSelectedFileName] = useState<string>("");
+
   //NaN = haven't clicked upload btn
   //1 = uploading
   //2 = success to upload
@@ -152,8 +156,28 @@ export default function Upload() {
       )
       }
 
-      <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} accept="application/pdf" />
-      <button className="local-upload-btn" onClick={LocalUploadFile}>上傳檔案</button>
+      <input 
+        type='file' 
+        id='file' 
+        ref={inputFile} 
+        style={{ display: 'none' }} 
+        accept="application/pdf" 
+        onChange={(e) => {
+          if (e.target.files && e.target.files.length > 0) {
+            setSelectedFileName(e.target.files[0].name);
+          } else {
+            setSelectedFileName("");
+          }
+        }}
+      />
+      <button className="local-upload-btn" onClick={LocalUploadFile}>
+        {selectedFileName ? "重新選擇檔案" : "上傳檔案"}
+      </button>
+      {selectedFileName && (
+        <div className="selected-file-display">
+          📄 已選擇：{selectedFileName}
+        </div>
+      )}
 
       <button
         className={`upload-btn ${isValidToUpload() ? 'enabled' : 'disabled'}`}
