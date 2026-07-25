@@ -19,7 +19,8 @@
     "multer": "2.0.2",
     "node-cron": "^3.0.3",
     "pdf-lib": "^1.17.1",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "async-rwlock": "^1.1.1"
   },
   "scripts": {
     "start": "node ./build/server.js",

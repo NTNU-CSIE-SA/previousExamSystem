@@ -5,6 +5,7 @@ import { school_id_from_token } from './auth';
 import { check_admin_level } from './admin';
 import { db } from '../db';
 import DotenvFlow from 'dotenv-flow';
+import { fileLockManager } from '../lock';
 
 DotenvFlow.config();
 
@@ -69,15 +70,43 @@ if (process.env.WATERMARK_WIDTH !== undefined) {
     }
 }
 
+let WATERMARK_POSITION = 'center';
+if (process.env.WATERMARK_POSITION !== undefined) {
+    WATERMARK_POSITION = process.env.WATERMARK_POSITION.toLowerCase();
+}
+
 let ORIGIN_FILE_PATH = './origin';
 if (!fs.existsSync(ORIGIN_FILE_PATH)) {
     fs.mkdirSync(ORIGIN_FILE_PATH, { recursive: true });
 }
 
 
+function getWatermarkPosition(position: string | undefined, width: number, height: number, itemWidth: number, itemHeight: number) {
+    const margin = 30;
+    let x = (width - itemWidth) / 2;
+    let y = (height - itemHeight) / 2;
+
+    const pos = position ? String(position).toLowerCase() : 'center';
+
+    if (pos.includes('left')) {
+        x = margin;
+    } else if (pos.includes('right')) {
+        x = width - itemWidth - margin;
+    }
+
+    if (pos.includes('top')) {
+        y = height - itemHeight - margin;
+    } else if (pos.includes('bottom')) {
+        y = margin;
+    }
+
+    return { x, y };
+}
+
 const router = express.Router();
 
 router.post('/watermark', async (req: Request, res: Response) => {
+    let needReleaseLock = false;
     try{
         const school_id = await school_id_from_token(req, res);
         if (!school_id) {
@@ -98,6 +127,8 @@ router.post('/watermark', async (req: Request, res: Response) => {
             res.status(400).json({ message: 'File ID is required' });
             return;
         }
+        await fileLockManager.writeLock(file_id);
+        needReleaseLock = true;
         const pdf_path = await db
             .selectFrom('Document')
             .selectAll()
@@ -126,15 +157,20 @@ router.post('/watermark', async (req: Request, res: Response) => {
             for (let i = 0; i < pages.length; i++) {
                 const { width, height } = pages[i].getSize();
                 const text_size = 50;
+                const itemWidth = watermark_text.length * (text_size / 2);
+                const itemHeight = text_size;
+                const { x, y } = getWatermarkPosition(WATERMARK_POSITION, width, height, itemWidth, itemHeight);
                 pages[i].drawText(watermark_text, {
-                    x: (width - (watermark_text.length * text_size / 2)) / 2,
-                    y: (height - text_size / 2) / 2,
+                    x,
+                    y,
                     size: 50,
                     opacity: WATERMARK_OPACITY,
                 });
             }
             const pdf_bytes = await pdfDoc.save();
-            fs.promises.writeFile(file_path, pdf_bytes);
+            await fs.promises.writeFile(file_path, pdf_bytes);
+            needReleaseLock = false;
+            await fileLockManager.writeUnlock(file_id);
             res.status(200).json({ message: `watermark image added to file: ${file_id}` });
             return;
         }
@@ -170,16 +206,19 @@ router.post('/watermark', async (req: Request, res: Response) => {
                 const { width, height } = pages[i].getSize();
                 const img_width = width * WATERMARK_WIDTH;
                 const img_height = (image.height / image.width) * img_width;
+                const { x, y } = getWatermarkPosition(WATERMARK_POSITION, width, height, img_width, img_height);
                 pages[i].drawImage(image, {
-                    x: (width - img_width) / 2,
-                    y: (height - img_height) / 2,
+                    x,
+                    y,
                     width: img_width,
                     height: img_height,
                     opacity: WATERMARK_OPACITY
                 });
             }
             const pdf_bytes = await pdfDoc.save();
-            fs.promises.writeFile(file_path, pdf_bytes);
+            await fs.promises.writeFile(file_path, pdf_bytes);
+            needReleaseLock = false;
+            await fileLockManager.writeUnlock(file_id);
             res.status(200).json({ message: `watermark (${watermark_text}) added to file: ${file_id}` });
             return;
         }
@@ -190,6 +229,10 @@ router.post('/watermark', async (req: Request, res: Response) => {
     } catch (error) {
         console.error('Error adding watermark:', error);
         res.status(500).json({ message: 'Internal server error' });
+    } finally {
+        if (needReleaseLock) {
+            await fileLockManager.writeUnlock(req.body.file_id);
+        }
     }
 });
 
