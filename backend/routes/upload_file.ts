@@ -64,6 +64,7 @@ router.post('/upload', upload.single('file'), (err: any, req: Request, res: Resp
     }
 },
     async (req: Request, res: Response) => {
+        let fileHandled = false;
         try {
             const school_id = await school_id_from_token(req, res);
             if (!school_id) {
@@ -81,12 +82,10 @@ router.post('/upload', upload.single('file'), (err: any, req: Request, res: Resp
                 return;
             }
             if (!req.body.subject || !req.body.semester || !req.body.exam_type) {
-                fs.promises.unlink(`${UPLOADS_DIR}/${req.file.filename}`);
                 res.status(400).json({ message: 'Subject, semester, and exam_type are required' });
                 return;
             }
             if (!((req.body.subject.length > 0 && typeof req.body.subject === 'string') && (req.body.semester.length > 0 && typeof req.body.semester === 'string') && (req.body.exam_type.length > 0 && typeof req.body.exam_type === 'string'))) {
-                fs.promises.unlink(`${UPLOADS_DIR}/${req.file.filename}`);
                 res.status(400).json({ message: 'Invalid input type' });
                 return;
             }
@@ -95,21 +94,19 @@ router.post('/upload', upload.single('file'), (err: any, req: Request, res: Resp
             const buffer = Buffer.alloc(4);
             const read_return = await magic.read(buffer, 0, 4, 0);
             if (read_return.bytesRead !== 4) {
-                fs.promises.unlink(`${UPLOADS_DIR}/${req.file.filename}`);
-                res.status(400).json({ message: 'Error reading file' });
                 await magic.close();
+                res.status(400).json({ message: 'Error reading file' });
                 return;
             }
             if (buffer.toString('hex') !== '25504446') {
-                fs.promises.unlink(`${UPLOADS_DIR}/${req.file.filename}`);
-                res.status(400).json({ message: 'Invalid file format' });
                 await magic.close();
+                res.status(400).json({ message: 'Invalid file format' });
                 return;
             }
             await magic.close();
             //生成唯一 ID
             const now_time = new Date().getTime();
-            const uniqueId = now_time * 1000 + parseInt(crypto.createHash('sha256').update(now_time.toString()).digest('hex').slice(0, 6), 16) % 1000;
+            const uniqueId = now_time * 1000 + parseInt(crypto.randomBytes(4).toString('hex'), 16) % 1000;
             //檔案相關資訊
             const { originalname, filename, size } = req.file;
             const uploadTime = new Date().toISOString();
@@ -128,6 +125,8 @@ router.post('/upload', upload.single('file'), (err: any, req: Request, res: Resp
                     verified: 0
                 })
                 .execute();
+            
+            fileHandled = true;
 
             //回傳成功訊息
             res.status(200).json({
@@ -141,6 +140,10 @@ router.post('/upload', upload.single('file'), (err: any, req: Request, res: Resp
             });
         } catch (error: any) {
             res.status(500).json({ message: 'Internal server error' });
+        } finally {
+            if (!fileHandled && req.file) {
+                await fs.promises.unlink(`${UPLOADS_DIR}/${req.file.filename}`).catch(() => {});
+            }
         }
     });
 

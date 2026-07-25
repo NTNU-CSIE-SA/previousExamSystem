@@ -5,6 +5,7 @@ import { school_id_from_token } from './auth';
 import { check_admin_level } from './admin';
 import { db } from '../db';
 import DotenvFlow from 'dotenv-flow';
+import { fileLockManager } from '../lock';
 
 DotenvFlow.config();
 
@@ -78,6 +79,7 @@ if (!fs.existsSync(ORIGIN_FILE_PATH)) {
 const router = express.Router();
 
 router.post('/watermark', async (req: Request, res: Response) => {
+    let needReleaseLock = false;
     try{
         const school_id = await school_id_from_token(req, res);
         if (!school_id) {
@@ -98,6 +100,8 @@ router.post('/watermark', async (req: Request, res: Response) => {
             res.status(400).json({ message: 'File ID is required' });
             return;
         }
+        await fileLockManager.writeLock(file_id);
+        needReleaseLock = true;
         const pdf_path = await db
             .selectFrom('Document')
             .selectAll()
@@ -134,7 +138,9 @@ router.post('/watermark', async (req: Request, res: Response) => {
                 });
             }
             const pdf_bytes = await pdfDoc.save();
-            fs.promises.writeFile(file_path, pdf_bytes);
+            await fs.promises.writeFile(file_path, pdf_bytes);
+            needReleaseLock = false;
+            await fileLockManager.writeUnlock(file_id);
             res.status(200).json({ message: `watermark image added to file: ${file_id}` });
             return;
         }
@@ -179,7 +185,9 @@ router.post('/watermark', async (req: Request, res: Response) => {
                 });
             }
             const pdf_bytes = await pdfDoc.save();
-            fs.promises.writeFile(file_path, pdf_bytes);
+            await fs.promises.writeFile(file_path, pdf_bytes);
+            needReleaseLock = false;
+            await fileLockManager.writeUnlock(file_id);
             res.status(200).json({ message: `watermark (${watermark_text}) added to file: ${file_id}` });
             return;
         }
@@ -190,6 +198,10 @@ router.post('/watermark', async (req: Request, res: Response) => {
     } catch (error) {
         console.error('Error adding watermark:', error);
         res.status(500).json({ message: 'Internal server error' });
+    } finally {
+        if (needReleaseLock) {
+            await fileLockManager.writeUnlock(req.body.file_id);
+        }
     }
 });
 

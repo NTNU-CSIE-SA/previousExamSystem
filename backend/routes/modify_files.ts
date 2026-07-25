@@ -4,9 +4,9 @@ import { school_id_from_token } from './auth';
 import { check_admin_level } from './admin';
 import { db } from '../db';
 import DotenvFlow from 'dotenv-flow';
+import { fileLockManager } from '../lock';
 
 DotenvFlow.config();
-
 
 let MODIFY_FILE_LEVEL = 3;
 if (process.env.MODIFY_FILE_LEVEL !== undefined) {
@@ -23,7 +23,9 @@ let UPLOADS_DIR = './uploads';
 const router = express.Router();
 
 router.post('/verify', async (req: Request, res: Response) => {
-    try{
+    let needReleaseLock = false;
+
+    try {
         const school_id = await school_id_from_token(req, res);
         if (!school_id) {
             res.status(401).json({ message: 'Invalid token' });
@@ -43,6 +45,8 @@ router.post('/verify', async (req: Request, res: Response) => {
             res.status(400).json({ message: 'File ID is required' });
             return;
         }
+        await fileLockManager.writeLock(file_id);
+        needReleaseLock = true;
         const file = await db
             .selectFrom('Document')
             .selectAll()
@@ -62,38 +66,33 @@ router.post('/verify', async (req: Request, res: Response) => {
         }
         if (!fs.existsSync(`${VERIFIED_DIR}`)) {
             fs.mkdirSync(`${VERIFIED_DIR}`, { recursive: true });
-        }   
+        }
         const src = `${UPLOADS_DIR}/${file.pdf_locate}`;
         const dest = `${VERIFIED_DIR}/${file.id}.pdf`;
-        fs.copyFile(src, dest, (err) => { 
-            if (err) {
-                console.error(err);
-                res.status(500).json({ message: 'Internal server error' });
-                return;
-            }
-            fs.unlink(src, (err) => {
-                if (err) {
-                    console.error(err);
-                    res.status(500).json({ message: 'Internal server error' });
-                    return;
-                }
-            });
-        });
+        await fs.promises.copyFile(src, dest);
+        await fs.promises.unlink(src);
         await db
             .updateTable('Document')
-            .set({ verified: 1 , pdf_locate: `${file.id}.pdf`})
+            .set({ verified: 1, pdf_locate: `${file.id}.pdf` })
             .where('id', '=', file_id)
             .execute();
         res.json({ message: `File ${file_id} verified` });
+        needReleaseLock = false;
+        await fileLockManager.writeUnlock(file_id);
     }
     catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
+    } finally {
+        if (needReleaseLock) {
+            await fileLockManager.writeUnlock(req.body.file_id);
+        }
     }
 });
 
 router.post('/delete', async (req: Request, res: Response) => {
-    try{
+    let needReleaseLock = false;
+    try {
         const school_id = await school_id_from_token(req, res);
         if (!school_id) {
             res.status(401).json({ message: 'Invalid token' });
@@ -113,6 +112,8 @@ router.post('/delete', async (req: Request, res: Response) => {
             res.status(400).json({ message: 'File ID is required' });
             return;
         }
+        await fileLockManager.writeLock(file_id);
+        needReleaseLock = true;
         const file = await db
             .selectFrom('Document')
             .selectAll()
@@ -130,27 +131,29 @@ router.post('/delete', async (req: Request, res: Response) => {
             res.status(404).json({ message: 'File not found' });
             return;
         }
-        fs.unlink(`${UPLOADS_DIR}/${file.pdf_locate}`, (err) => { 
-            if (err) {
-                console.error(err);
-                res.status(500).json({ message: 'Internal server error' });
-                return;
-            }
-        });
+        await fs.promises.unlink(`${UPLOADS_DIR}/${file.pdf_locate}`);
         await db
             .deleteFrom('Document')
             .where('id', '=', file_id)
             .execute();
         res.json({ message: `File ${file_id} deleted` });
+        needReleaseLock = false;
+        await fileLockManager.writeUnlock(file_id);
     }
     catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
     }
+    finally {
+        if (needReleaseLock) {
+            await fileLockManager.writeUnlock(req.body.file_id);
+        }
+    }
 });
 
 router.post('/modify-file-info', async (req: Request, res: Response) => {
-    try{
+    let needReleaseLock = false;
+    try {
         const school_id = await school_id_from_token(req, res);
         if (!school_id) {
             res.status(401).json({ message: 'Invalid token' });
@@ -170,6 +173,8 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
             res.status(400).json({ message: 'File ID is required' });
             return;
         }
+        await fileLockManager.writeLock(file_id);
+        needReleaseLock = true;
         const file = await db
             .selectFrom('Document')
             .selectAll()
@@ -193,7 +198,7 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
             res.status(400).json({ message: 'Invalid input type' });
             return;
         }
-        if(subject === '' || semester === '' || exam_type === ''){
+        if (subject === '' || semester === '' || exam_type === '') {
             res.status(400).json({ message: 'Subject, semester, and exam_type are required' });
             return;
         }
@@ -211,20 +216,8 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
             }
             const src = `${VERIFIED_DIR}/${file.pdf_locate}`;
             const dest = `${UPLOADS_DIR}/${file.pdf_locate}`;
-            fs.copyFile(src, dest, (err) => {
-                if (err) {
-                    console.error(err);
-                    res.status(500).json({ message: 'Internal server error' });
-                    return;
-                }
-                fs.unlink(src, (err) => {
-                    if (err) {
-                        console.error(err);
-                        res.status(500).json({ message: 'Internal server error' });
-                        return;
-                    }
-                });
-            });
+            await fs.promises.copyFile(src, dest);
+            await fs.promises.unlink(src);
         }
         else if (file.verified === 0 && verified === 1) {
             if (!fs.existsSync(`${UPLOADS_DIR}/${file.pdf_locate}`)) {
@@ -236,20 +229,8 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
             }
             const src = `${UPLOADS_DIR}/${file.pdf_locate}`;
             const dest = `${VERIFIED_DIR}/${file.id}.pdf`;
-            fs.copyFile(src, dest, (err) => {
-                if (err) {
-                    console.error(err);
-                    res.status(500).json({ message: 'Internal server error' });
-                    return;
-                }
-                fs.unlink(src, (err) => {
-                    if (err) {
-                        console.error(err);
-                        res.status(500).json({ message: 'Internal server error' });
-                        return;
-                    }
-                });
-            });
+            await fs.promises.copyFile(src, dest);
+            await fs.promises.unlink(src);
             await db
                 .updateTable('Document')
                 .set({ pdf_locate: `${file.id}.pdf` })
@@ -268,11 +249,18 @@ router.post('/modify-file-info', async (req: Request, res: Response) => {
             .$if(verified !== undefined, (qb) => qb.set({ verified: verified }))
             .where('id', '=', file_id)
             .execute();
+        needReleaseLock = false;
+        await fileLockManager.writeUnlock(file_id);
         res.json({ message: `File ${file_id} modified` });
     }
     catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
+    }
+    finally {
+        if (needReleaseLock) {
+            await fileLockManager.writeUnlock(req.body.file_id);
+        }
     }
 });
 
