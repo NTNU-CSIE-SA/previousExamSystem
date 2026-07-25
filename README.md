@@ -69,6 +69,11 @@ sqlite3 /app/data/db.sqlite
 - The width ratio of the watermark in the PDF. (0 ~ 1)
 - Default: 0.5
 
+### WATERMARK_POSITION
+- The position of the watermark in the PDF.
+- Options: `top-left`, `top-center`, `top-right`, `center-left`, `center`, `center-right`, `bottom-left`, `bottom-center`, `bottom-right`.
+- Default: `center`
+
 ## Website
 
 ### Login
