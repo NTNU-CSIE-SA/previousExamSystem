@@ -17,6 +17,7 @@ services:
     command: pnpm start
     networks:
       - exam_sys
+    restart: always
   frontend:
     build:
       context: ./frontend
@@ -26,6 +27,7 @@ services:
       - backend
     networks:
       - exam_sys
+    restart: always
   https-nginx:
     image: nginx:latest
     expose:
@@ -39,6 +41,7 @@ services:
       - backend
     networks:
       - exam_sys
+    restart: always
   cloudflared:
     image: cloudflare/cloudflared:latest
     env_file:
@@ -50,6 +53,7 @@ services:
       - https-nginx
     networks:
       - exam_sys
+    restart: always
 networks:
   exam_sys:
     driver: bridge
